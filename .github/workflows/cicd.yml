@@ -34,9 +34,10 @@ jobs:
 
       - name: Push to DockerHub
         run: |
+          cd ${{ env.working-directory }}
           docker login -u ${{secrets.DOCKERHUB_USERNAME}} -p ${{secrets.DOCKERHUB_TOKEN}}
-          docker build -t ${{ secrets.DOCKER_REPO }}/purithm-server .
-          docker push ${{secrets.DOCKERHUB_USERNAME}}/purithm-server
+          docker build -t ${{secrets.DOCKERHUB_USERNAME}}/${{secrets.DOCKER_REPO}} .
+          docker push ${{secrets.DOCKERHUB_USERNAME}}/${{secrets.DOCKER_REPO}}
 
 
   deploy:
