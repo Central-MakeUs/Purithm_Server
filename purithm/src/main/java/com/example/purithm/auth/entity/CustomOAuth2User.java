@@ -1,4 +1,4 @@
-package com.example.purithm.user.entity;
+package com.example.purithm.auth.entity;
 
 import java.util.Collection;
 import java.util.Map;

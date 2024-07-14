@@ -1,8 +1,8 @@
-package com.example.purithm.user.handler;
+package com.example.purithm.auth.handler;
 
-import com.example.purithm.user.controller.response.LoginSuccessResponseDto;
-import com.example.purithm.user.entity.CustomOAuth2User;
-import com.example.purithm.user.jwt.JWTUtil;
+import com.example.purithm.auth.dto.response.LoginSuccessResponseDto;
+import com.example.purithm.auth.entity.CustomOAuth2User;
+import com.example.purithm.auth.jwt.JWTUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

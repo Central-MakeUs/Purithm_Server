@@ -1,4 +1,4 @@
-package com.example.purithm.user.jwt;
+package com.example.purithm.auth.jwt;
 
 import io.jsonwebtoken.Jwts;
 import java.nio.charset.StandardCharsets;

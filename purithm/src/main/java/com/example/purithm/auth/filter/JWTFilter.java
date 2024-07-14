@@ -1,7 +1,7 @@
-package com.example.purithm.user.filter;
+package com.example.purithm.auth.filter;
 
-import com.example.purithm.user.entity.CustomOAuth2User;
-import com.example.purithm.user.jwt.JWTUtil;
+import com.example.purithm.auth.entity.CustomOAuth2User;
+import com.example.purithm.auth.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

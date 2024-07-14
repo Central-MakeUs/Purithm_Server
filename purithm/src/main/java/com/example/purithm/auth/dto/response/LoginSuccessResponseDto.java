@@ -1,4 +1,4 @@
-package com.example.purithm.user.controller.response;
+package com.example.purithm.auth.dto.response;
 
 import lombok.Builder;
 

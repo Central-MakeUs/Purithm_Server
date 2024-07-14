@@ -1,6 +1,6 @@
-package com.example.purithm.user.service;
+package com.example.purithm.auth.service;
 
-import com.example.purithm.user.entity.CustomOAuth2User;
+import com.example.purithm.auth.entity.CustomOAuth2User;
 import com.example.purithm.user.entity.User;
 import com.example.purithm.user.repository.UserRepository;
 import java.util.Map;
