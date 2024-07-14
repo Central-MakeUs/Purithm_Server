@@ -1,19 +1,20 @@
 package com.example.purithm.user.handler;
 
+import com.example.purithm.user.controller.response.LoginSuccessResponseDto;
 import com.example.purithm.user.entity.CustomOAuth2User;
 import com.example.purithm.user.jwt.JWTUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
   private final JWTUtil jwtUtil;
 
@@ -25,14 +26,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
     CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
-    String token = jwtUtil.createJwt(oAuth2User.getName(), 60*60*60L);
+    String token = jwtUtil.createJwt(oAuth2User.getName(), 60 * 60 * 60 * 1000L);
 
-    Cookie cookie = new Cookie("Authorization", token);
-    cookie.setMaxAge(60*60*60);
-    cookie.setPath("/api");
-    cookie.setHttpOnly(true);
+    response.setContentType("application/json");
+    response.setStatus(response.SC_OK);
+    LoginSuccessResponseDto body = LoginSuccessResponseDto.builder()
+        .code(200).message("login success").token(token).build();
 
-    response.addCookie(cookie);
-    response.sendRedirect("/");
+    ObjectMapper objectMapper = new ObjectMapper();
+    String json = objectMapper.writeValueAsString(body);
+
+    response.getOutputStream().println(json);
   }
 }
