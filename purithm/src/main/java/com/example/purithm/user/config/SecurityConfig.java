@@ -1,5 +1,6 @@
 package com.example.purithm.user.config;
 
+import com.example.purithm.user.exception.JWTAuthenticationEntryPoint;
 import com.example.purithm.user.filter.JWTFilter;
 import com.example.purithm.user.handler.OAuth2AuthenticationFailureHandler;
 import com.example.purithm.user.handler.OAuth2AuthenticationSuccessHandler;
@@ -20,16 +21,19 @@ public class SecurityConfig {
   private final OAuth2UserService oAuth2UserService;
   private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
   private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+  private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
   private final JWTUtil jwtUtil;
 
   public SecurityConfig(
       OAuth2UserService oAuth2UserService,
       OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
       OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler,
+      JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint,
       JWTUtil jwtUtil) {
     this.oAuth2UserService = oAuth2UserService;
     this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
     this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
+    this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     this.jwtUtil = jwtUtil;
   }
   @Bean
@@ -54,7 +58,8 @@ public class SecurityConfig {
             .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(oAuth2UserService))
             .successHandler(oAuth2AuthenticationSuccessHandler)
             .failureHandler(oAuth2AuthenticationFailureHandler)
-        );
+        )
+        .exceptionHandling(handler -> handler.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 
     return http.build();
   }
