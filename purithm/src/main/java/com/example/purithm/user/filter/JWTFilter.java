@@ -23,24 +23,28 @@ public class JWTFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
-    String token = request.getHeader("Authorization");
+    try {
+      String token = request.getHeader("Authorization");
 
-    if (token == null || !token.startsWith("Bearer ")) {
-      filterChain.doFilter(request, response);
-      return;
+      if (token == null || !token.startsWith("Bearer ")) {
+        filterChain.doFilter(request, response);
+        return;
+      }
+
+      token = token.substring(7);
+      if (jwtUtil.isExpired(token)) {
+        filterChain.doFilter(request, response);
+        return;
+      }
+
+      String username = jwtUtil.getUsername(token);
+
+      CustomOAuth2User oAuth2User = new CustomOAuth2User(username);
+      Authentication authToken = new UsernamePasswordAuthenticationToken(oAuth2User, null, null);
+      SecurityContextHolder.getContext().setAuthentication(authToken);
+    } catch (Exception e) {
+      request.setAttribute("exception", e);
     }
-
-    token = token.substring(7);
-    if (jwtUtil.isExpired(token)) {
-      filterChain.doFilter(request, response);
-      return;
-    }
-
-    String username = jwtUtil.getUsername(token);
-
-    CustomOAuth2User oAuth2User = new CustomOAuth2User(username);
-    Authentication authToken = new UsernamePasswordAuthenticationToken(oAuth2User, null, null);
-    SecurityContextHolder.getContext().setAuthentication(authToken);
 
     filterChain.doFilter(request, response);
   }
