@@ -1,4 +1,4 @@
-package com.example.purithm.user.exception;
+package com.example.purithm.auth.exception;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

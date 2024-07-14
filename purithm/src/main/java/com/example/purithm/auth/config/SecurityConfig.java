@@ -1,11 +1,11 @@
-package com.example.purithm.user.config;
+package com.example.purithm.auth.config;
 
-import com.example.purithm.user.exception.JWTAuthenticationEntryPoint;
-import com.example.purithm.user.filter.JWTFilter;
-import com.example.purithm.user.handler.OAuth2AuthenticationFailureHandler;
-import com.example.purithm.user.handler.OAuth2AuthenticationSuccessHandler;
-import com.example.purithm.user.jwt.JWTUtil;
-import com.example.purithm.user.service.OAuth2UserService;
+import com.example.purithm.auth.exception.JWTAuthenticationEntryPoint;
+import com.example.purithm.auth.filter.JWTFilter;
+import com.example.purithm.auth.handler.OAuth2AuthenticationFailureHandler;
+import com.example.purithm.auth.handler.OAuth2AuthenticationSuccessHandler;
+import com.example.purithm.auth.jwt.JWTUtil;
+import com.example.purithm.auth.service.OAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
