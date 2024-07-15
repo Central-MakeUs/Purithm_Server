@@ -41,6 +41,7 @@ jobs:
 
 
   deploy:
+    needs: build
     name: Deploy project
     runs-on: ubuntu-latest
     steps:
