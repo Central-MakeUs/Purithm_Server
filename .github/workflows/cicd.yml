@@ -59,7 +59,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             if sudo docker ps | grep ":8080->8080"; then
-            sudo docker stop $(sudo docker ps -q --filter "publish=8080:8080")
+            sudo docker stop $(sudo docker ps --filter "publish=8080/tcp")
             fi
             sudo docker login -u ${{secrets.DOCKERHUB_USERNAME}} -p ${{secrets.DOCKERHUB_TOKEN}}
             sudo docker pull ${{secrets.DOCKERHUB_USERNAME}}/${{secrets.DOCKER_REPO}}
