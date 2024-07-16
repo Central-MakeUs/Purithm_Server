@@ -1,7 +1,6 @@
 package com.example.purithm.user.service;
 
-import com.example.purithm.auth.dto.response.AppleUserInfoResponseDto;
-import com.example.purithm.auth.dto.response.KakaoUserInfoResponseDto;
+import com.example.purithm.auth.dto.response.SocialUserInfoDto;
 import com.example.purithm.user.entity.User;
 import com.example.purithm.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,37 +11,19 @@ import org.springframework.stereotype.Service;
 public class UserService {
   private final UserRepository userRepository;
 
-  public String signUpKakaoUser(KakaoUserInfoResponseDto kakaoUserInfoResponseDto) {
-    String username = "KAKAO "+kakaoUserInfoResponseDto.getId();
-    User existUser = userRepository.findByUsername(username);
+  public String signUp(SocialUserInfoDto socialUserInfoDto) {
+    User existUser = userRepository.findByUsername(socialUserInfoDto.getUsername());
 
     if (existUser == null) {
       User user = User.builder()
-          .profile(kakaoUserInfoResponseDto.getProperties().getProfile_image())
-          .nickname(kakaoUserInfoResponseDto.getProperties().getNickname())
-          .username(username)
+          .profile(socialUserInfoDto.getProfile())
+          .nickname(socialUserInfoDto.getNickname())
+          .username(socialUserInfoDto.getUsername())
           .build();
 
       userRepository.save(user);
     }
 
-    return username;
-  }
-
-  public String signUpAppleUser(AppleUserInfoResponseDto appleUserInfoResponseDto) {
-    String username = "APPLE "+appleUserInfoResponseDto.getUsername();
-    User existUser = userRepository.findByUsername(username);
-
-    if (existUser == null) {
-      User user = User.builder()
-          .profile(null)
-          .nickname(appleUserInfoResponseDto.getNickname())
-          .username(username)
-          .build();
-
-      userRepository.save(user);
-    }
-
-    return username;
+    return socialUserInfoDto.getUsername();
   }
 }

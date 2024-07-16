@@ -1,8 +1,8 @@
 package com.example.purithm.auth.controller;
 
-import com.example.purithm.auth.dto.response.AppleUserInfoResponseDto;
 import com.example.purithm.auth.dto.response.KakaoUserInfoResponseDto;
 import com.example.purithm.auth.dto.response.LoginResponseDto;
+import com.example.purithm.auth.dto.response.SocialUserInfoDto;
 import com.example.purithm.auth.jwt.JWTUtil;
 import com.example.purithm.config.WebClientConfig;
 import com.example.purithm.user.service.UserService;
@@ -45,7 +45,13 @@ public class AuthController {
         .retrieve()
         .bodyToMono(KakaoUserInfoResponseDto.class)
         .flatMap(res -> {
-          String username = userService.signUpKakaoUser(res);
+
+          SocialUserInfoDto userInfoDto = SocialUserInfoDto.builder()
+              .profile(res.getProperties().getProfile_image())
+              .nickname(res.getProperties().getNickname())
+              .username("KAKAO " + res.getId())
+              .build();
+          String username = userService.signUp(userInfoDto);
           String jwtToken = jwtUtil.createJwt(username, 60 * 60 * 60 * 1000L);
 
           LoginResponseDto body = LoginResponseDto.builder()
@@ -81,13 +87,14 @@ public class AuthController {
         .parseClaimsJws(token)
         .getBody();
 
-    AppleUserInfoResponseDto appleUser = AppleUserInfoResponseDto.builder()
+    SocialUserInfoDto userInfoDto = SocialUserInfoDto.builder()
         .nickname((String) claims.get("nickname"))
-        .username((String) claims.get("sub"))
+        .username("APPLE " + (String) claims.get("sub"))
         .profile(null)
         .build();
 
-    String username = userService.signUpAppleUser(appleUser);
+
+    String username = userService.signUp(userInfoDto);
     String jwtToken = jwtUtil.createJwt(username, 60 * 60 * 60 * 1000L);
 
     return LoginResponseDto.builder()

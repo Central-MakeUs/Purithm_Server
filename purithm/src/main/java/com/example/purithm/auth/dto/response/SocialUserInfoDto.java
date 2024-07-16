@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class AppleUserInfoResponseDto {
+public class SocialUserInfoDto {
   private String nickname;
   private String username;
   private String profile;
