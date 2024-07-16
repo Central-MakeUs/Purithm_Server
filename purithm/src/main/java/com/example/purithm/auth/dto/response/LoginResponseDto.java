@@ -1,9 +1,11 @@
 package com.example.purithm.auth.dto.response;
 
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
-public class LoginSuccessResponseDto {
+@Getter
+public class LoginResponseDto {
   int code;
   String message;
   String token;
