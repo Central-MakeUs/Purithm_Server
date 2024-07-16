@@ -1,10 +1,22 @@
 package com.example.purithm.auth.controller;
 
+import com.example.purithm.auth.dto.response.AppleUserInfoResponseDto;
 import com.example.purithm.auth.dto.response.KakaoUserInfoResponseDto;
 import com.example.purithm.auth.dto.response.LoginResponseDto;
 import com.example.purithm.auth.jwt.JWTUtil;
 import com.example.purithm.config.WebClientConfig;
 import com.example.purithm.user.service.UserService;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jwt.SignedJWT;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import java.io.IOException;
+import java.net.URL;
+import java.security.interfaces.RSAPublicKey;
+import java.text.ParseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,5 +57,40 @@ public class AuthController {
               .code(401).message(err.getMessage()).token(null).build();
           return Mono.just(body);
         });
+  }
+
+  @GetMapping("/apple")
+  public LoginResponseDto appleLogin(@RequestHeader("Authorization") String token)
+      throws IOException, ParseException, JOSEException {
+    URL jwkSetURL = new URL("https://appleid.apple.com/auth/keys");
+    JWKSet jwkSet = JWKSet.load(jwkSetURL);
+
+    token = token.substring(7);
+    SignedJWT signedJWT = SignedJWT.parse(token);
+    JWSHeader header = signedJWT.getHeader();
+    RSAKey rsaKey = (RSAKey) jwkSet.getKeyByKeyId(header.getKeyID());
+
+    if (rsaKey == null) {
+      throw new RuntimeException("Unable to find key with kid: " + header.getKeyID());
+    }
+
+    RSAPublicKey publicKey = rsaKey.toRSAPublicKey();
+    Claims claims = Jwts.parser()
+        .verifyWith(publicKey)
+        .build()
+        .parseClaimsJws(token)
+        .getBody();
+
+    AppleUserInfoResponseDto appleUser = AppleUserInfoResponseDto.builder()
+        .nickname((String) claims.get("nickname"))
+        .username((String) claims.get("sub"))
+        .profile(null)
+        .build();
+
+    String username = userService.signUpAppleUser(appleUser);
+    String jwtToken = jwtUtil.createJwt(username, 60 * 60 * 60 * 1000L);
+
+    return LoginResponseDto.builder()
+        .code(200).message("login success").token(jwtToken).build();
   }
 }

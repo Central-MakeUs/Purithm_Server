@@ -1,5 +1,6 @@
 package com.example.purithm.user.service;
 
+import com.example.purithm.auth.dto.response.AppleUserInfoResponseDto;
 import com.example.purithm.auth.dto.response.KakaoUserInfoResponseDto;
 import com.example.purithm.user.entity.User;
 import com.example.purithm.user.repository.UserRepository;
@@ -19,6 +20,23 @@ public class UserService {
       User user = User.builder()
           .profile(kakaoUserInfoResponseDto.getProperties().getProfile_image())
           .nickname(kakaoUserInfoResponseDto.getProperties().getNickname())
+          .username(username)
+          .build();
+
+      userRepository.save(user);
+    }
+
+    return username;
+  }
+
+  public String signUpAppleUser(AppleUserInfoResponseDto appleUserInfoResponseDto) {
+    String username = "APPLE "+appleUserInfoResponseDto.getUsername();
+    User existUser = userRepository.findByUsername(username);
+
+    if (existUser == null) {
+      User user = User.builder()
+          .profile(null)
+          .nickname(appleUserInfoResponseDto.getNickname())
           .username(username)
           .build();
 
