@@ -6,6 +6,8 @@ import com.example.purithm.global.auth.dto.response.SocialUserInfoDto;
 import com.example.purithm.global.auth.jwt.JWTUtil;
 import com.example.purithm.global.config.WebClientConfig;
 import com.example.purithm.domain.user.service.UserService;
+import com.example.purithm.global.exception.CustomException;
+import com.example.purithm.global.response.SuccessResponse;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -35,7 +37,7 @@ public class AuthController {
   private final JWTUtil jwtUtil;
 
   @GetMapping("/kakao")
-  public Mono<LoginResponseDto> kakaoLogin(@RequestHeader("Authorization") String token) {
+  public Mono<SuccessResponse<String>> kakaoLogin(@RequestHeader("Authorization") String token) {
     return webClientConfig.webClient()
         .post()
         .uri("https://kapi.kakao.com/v2/user/me")
@@ -54,14 +56,14 @@ public class AuthController {
           String username = userService.signUp(userInfoDto);
           String jwtToken = jwtUtil.createJwt(username, 60 * 60 * 60 * 1000L);
 
-          LoginResponseDto body = LoginResponseDto.builder()
-              .code(200).message("login success").token(jwtToken).build();
+          SuccessResponse<String> body = SuccessResponse.of(jwtToken);
           return Mono.just(body);
         })
         .onErrorResume(err -> {
-          LoginResponseDto body = LoginResponseDto.builder()
-              .code(401).message(err.getMessage()).token(null).build();
-          return Mono.just(body);
+          throw CustomException.builder()
+              .code(401)
+              .message(err.getMessage())
+              .build();
         });
   }
 
