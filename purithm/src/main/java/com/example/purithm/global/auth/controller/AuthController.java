@@ -15,6 +15,10 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.SignedJWT;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.IOException;
 import java.net.URL;
 import java.security.interfaces.RSAPublicKey;
@@ -36,6 +40,12 @@ public class AuthController {
   private final UserService userService;
   private final JWTUtil jwtUtil;
 
+  @Operation(
+      summary = "Kakao Login",
+      parameters = {
+          @Parameter(name = "Authorization", description = "kakao access token을 보냅니다. Bearer ${token} 형식입니다.", required = true, in = ParameterIn.HEADER)
+      }
+  )
   @GetMapping("/kakao")
   public Mono<SuccessResponse<String>> kakaoLogin(@RequestHeader("Authorization") String token) {
     return webClientConfig.webClient()
@@ -67,6 +77,12 @@ public class AuthController {
         });
   }
 
+  @Operation(
+      summary = "Apple Login",
+      parameters = {
+          @Parameter(name = "Authorization", description = "Apple access token을 보냅니다. Bearer ${token} 형식입니다.", required = true, in = ParameterIn.HEADER, schema = @Schema(type = "string"))
+      }
+  )
   @GetMapping("/apple")
   public LoginResponseDto appleLogin(@RequestHeader("Authorization") String token)
       throws IOException, ParseException, JOSEException {
