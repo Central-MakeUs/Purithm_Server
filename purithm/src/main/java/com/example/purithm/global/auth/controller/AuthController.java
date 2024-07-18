@@ -1,7 +1,7 @@
 package com.example.purithm.global.auth.controller;
 
-import com.example.purithm.global.auth.dto.response.KakaoUserInfoResponseDto;
-import com.example.purithm.global.auth.dto.response.LoginResponseDto;
+import com.example.purithm.global.auth.dto.response.KakaoUserInfoDto;
+import com.example.purithm.global.auth.dto.response.LoginDto;
 import com.example.purithm.global.auth.dto.response.SocialUserInfoDto;
 import com.example.purithm.global.auth.jwt.JWTUtil;
 import com.example.purithm.global.config.WebClientConfig;
@@ -55,7 +55,7 @@ public class AuthController {
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         .bodyValue("property_keys=[\"properties.nickname\", \"properties.profile_image\"]")
         .retrieve()
-        .bodyToMono(KakaoUserInfoResponseDto.class)
+        .bodyToMono(KakaoUserInfoDto.class)
         .flatMap(res -> {
 
           SocialUserInfoDto userInfoDto = SocialUserInfoDto.builder()
@@ -84,7 +84,7 @@ public class AuthController {
       }
   )
   @GetMapping("/apple")
-  public LoginResponseDto appleLogin(@RequestHeader("Authorization") String token)
+  public LoginDto appleLogin(@RequestHeader("Authorization") String token)
       throws IOException, ParseException, JOSEException {
     URL jwkSetURL = new URL("https://appleid.apple.com/auth/keys");
     JWKSet jwkSet = JWKSet.load(jwkSetURL);
@@ -115,7 +115,7 @@ public class AuthController {
     String username = userService.signUp(userInfoDto);
     String jwtToken = jwtUtil.createJwt(username, 60 * 60 * 60 * 1000L);
 
-    return LoginResponseDto.builder()
+    return LoginDto.builder()
         .code(200).message("login success").token(jwtToken).build();
   }
 }

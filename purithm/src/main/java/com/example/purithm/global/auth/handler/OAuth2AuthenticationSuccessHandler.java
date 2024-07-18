@@ -1,6 +1,6 @@
 package com.example.purithm.global.auth.handler;
 
-import com.example.purithm.global.auth.dto.response.LoginSuccessResponseDto;
+import com.example.purithm.global.auth.dto.response.LoginSuccessDto;
 import com.example.purithm.global.auth.entity.CustomOAuth2User;
 import com.example.purithm.global.auth.jwt.JWTUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +30,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
     response.setContentType("application/json");
     response.setStatus(response.SC_OK);
-    LoginSuccessResponseDto body = LoginSuccessResponseDto.builder()
+    LoginSuccessDto body = LoginSuccessDto.builder()
         .code(200).message("login success").token(token).build();
 
     ObjectMapper objectMapper = new ObjectMapper();
