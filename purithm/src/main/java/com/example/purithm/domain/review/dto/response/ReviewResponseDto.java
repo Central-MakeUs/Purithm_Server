@@ -1,9 +1,9 @@
-package com.example.purithm.domain.review.response;
+package com.example.purithm.domain.review.dto.response;
 
 import java.util.Date;
 import java.util.List;
 
-public record ReviewDto(
+public record ReviewResponseDto (
     String content,
     String username,
     Date createdAt,
