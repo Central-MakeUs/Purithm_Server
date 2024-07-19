@@ -102,7 +102,7 @@ public class AuthController {
     Claims claims = Jwts.parser()
         .verifyWith(publicKey)
         .build()
-        .parseClaimsJws(token)
+        .parseSignedClaims(token)
         .getBody();
 
     SocialUserInfoDto userInfoDto = SocialUserInfoDto.builder()
