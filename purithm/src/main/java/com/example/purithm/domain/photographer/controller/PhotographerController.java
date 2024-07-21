@@ -24,6 +24,7 @@ public class PhotographerController {
   }
 
   @GetMapping("/{photographerId}/filters")
+  @Operation(summary = "특정 작가의 필터를 조회합니다.")
   public SuccessResponse<List<PhotographerFilterDto>> getFiltersByPhotographer(
       @PathVariable Long photographerId,
       @RequestParam(value = "sortedBy", required = false) String sortedBy) {

@@ -2,6 +2,7 @@ package com.example.purithm.domain.feed.controller;
 
 import com.example.purithm.domain.feed.dto.response.FeedDto;
 import com.example.purithm.global.response.SuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FeedController {
 
   @GetMapping
+  @Operation(summary = "피드를 조회합니다.")
   public SuccessResponse<List<FeedDto>> getFeeds(
       @RequestParam(value = "sortedBy", required = false) String sortedBy) {
     return null;
