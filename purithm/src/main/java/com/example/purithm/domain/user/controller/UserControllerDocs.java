@@ -24,12 +24,6 @@ public interface UserControllerDocs {
   @ApiResponse(responseCode = "200", description = "내 프로필 조회 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<UserInfoDto> getMyInfo(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization
   );
@@ -38,12 +32,6 @@ public interface UserControllerDocs {
   @ApiResponse(responseCode = "200", description = "내 프로필 수정 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<Void> changeProfile(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @RequestBody UserInfoRequestDto userInfoRequestDto);
@@ -52,12 +40,6 @@ public interface UserControllerDocs {
   @ApiResponse(responseCode = "200", description = "내 계정 정보 조회 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<AccountInfoDto> getAccountInfo(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization
   );
@@ -66,12 +48,6 @@ public interface UserControllerDocs {
   @ApiResponse(responseCode = "200", description = "내 스탬프 조회 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<List<StampDto>> getStamp(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization
   );
@@ -80,12 +56,6 @@ public interface UserControllerDocs {
   @ApiResponse(responseCode = "200", description = "내 필터 조회 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<List<MyFilterDto>> getMyFilter(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization
   );
@@ -94,12 +64,6 @@ public interface UserControllerDocs {
   @ApiResponse(responseCode = "200", description = "내 필터 삭제 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<Void> deleteFilter(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @PathVariable Long filterId);
@@ -108,12 +72,6 @@ public interface UserControllerDocs {
   @ApiResponse(responseCode = "200", description = "내 리뷰 조회 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<List<MyReviewDto>> getMyReview(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization
   );
@@ -122,12 +80,6 @@ public interface UserControllerDocs {
   @ApiResponse(responseCode = "200", description = "내 리뷰 삭제 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<Void> deleteReview(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @PathVariable Long reviewId);
@@ -136,12 +88,6 @@ public interface UserControllerDocs {
   @ApiResponse(responseCode = "200", description = "내 찜 목록 조회 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<List<MyPickDto>> getMyPick(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization
   );

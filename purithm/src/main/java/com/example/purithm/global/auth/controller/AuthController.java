@@ -36,7 +36,7 @@ public class AuthController {
   @Operation(
       summary = "Kakao Login",
       parameters = {
-          @Parameter(name = "Authorization", description = "kakao access token을 보냅니다. Bearer ${token} 형식입니다.", required = true, in = ParameterIn.HEADER)
+          @Parameter(name = "Authorization", description = "kakao access token을 보냅니다. Bearer token 형식입니다.", required = true, in = ParameterIn.HEADER)
       }
   )
   @GetMapping("/kakao")
@@ -73,7 +73,7 @@ public class AuthController {
   @Operation(
       summary = "Apple Login",
       parameters = {
-          @Parameter(name = "Authorization", description = "Apple access token을 보냅니다. Bearer ${token} 형식입니다.", required = true, in = ParameterIn.HEADER, schema = @Schema(type = "string"))
+          @Parameter(name = "Authorization", description = "Apple access token을 보냅니다. Bearer token 형식입니다.", required = true, in = ParameterIn.HEADER, schema = @Schema(type = "string"))
       }
   )
   @GetMapping("/apple")

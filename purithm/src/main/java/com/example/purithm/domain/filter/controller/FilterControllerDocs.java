@@ -21,12 +21,6 @@ public interface FilterControllerDocs {
   @ApiResponse(responseCode = "200", description = "필터 조회 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<List<FilterDto>> getFilters(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @RequestParam(value = "type", required = false) String type,
@@ -37,12 +31,6 @@ public interface FilterControllerDocs {
   @ApiResponse(responseCode = "200", description = "필터 상세 정보 조회 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<FilterDetailDto> getFilterDetail(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @PathVariable Long filterId);
@@ -51,12 +39,6 @@ public interface FilterControllerDocs {
   @ApiResponse(responseCode = "200", description = "작가의 말 조회 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<PhotographerDescriptionDto> getPhotographerDescription(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @PathVariable Long filterId);
@@ -65,12 +47,6 @@ public interface FilterControllerDocs {
   @ApiResponse(responseCode = "200", description = "필터 리뷰 조회 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<List<ReviewDto>> getReviews(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @PathVariable Long filterId);
@@ -79,12 +55,6 @@ public interface FilterControllerDocs {
   @ApiResponse(responseCode = "200", description = "필터 좋아요 누르기 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<Boolean> likes(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @PathVariable Long filterId);
@@ -93,12 +63,6 @@ public interface FilterControllerDocs {
   @ApiResponse(responseCode = "200", description = "필터 좋아요 취소하기 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<Boolean> deleteLikes(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @PathVariable Long filterId);

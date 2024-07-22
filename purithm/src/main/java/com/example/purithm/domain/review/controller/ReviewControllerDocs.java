@@ -17,12 +17,6 @@ public interface ReviewControllerDocs {
   @ApiResponse(responseCode = "200", description = "리뷰 조회 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<ReviewResponseDto> getReviewDetail(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @PathVariable Long reviewId);
@@ -31,12 +25,6 @@ public interface ReviewControllerDocs {
   @ApiResponse(responseCode = "200", description = "리뷰 작성 성공",
       content = @Content(mediaType = "application/json",
           schema = @Schema(implementation = SuccessResponse.class)))
-  @ApiResponse(responseCode = "401", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
-  @ApiResponse(responseCode = "404", description = "유저 인증 실패",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = ErrorResponse.class)))
   public SuccessResponse<Void> writeReview(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @RequestBody ReviewResponseDto request);
