@@ -13,47 +13,35 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/filters")
+@RequestMapping("/api/filters")
 public class FilterController implements FilterControllerDocs {
 
   @GetMapping
-  public SuccessResponse<List<FilterDto>> getFilters(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
-      @RequestParam(value = "type", required = false) String type,
-      @RequestParam(value = "sortedBy", required = false) String sortedBy
+  public SuccessResponse<List<FilterDto>> getFilters(String authorization, String type, String sortedBy
   ) {
     return null;
   }
 
   @GetMapping("/{filterId}")
-  public SuccessResponse<FilterDetailDto> getFilterDetail(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
-      @PathVariable Long filterId) {
+  public SuccessResponse<FilterDetailDto> getFilterDetail(String authorization, Long filterId) {
     return null;
   }
 
   @GetMapping("/{filterId}/photographer")
-  public SuccessResponse<PhotographerDescriptionDto> getPhotographerDescription(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
-      @PathVariable Long filterId) {
+  public SuccessResponse<PhotographerDescriptionDto> getPhotographerDescription(String authorization, Long filterId) {
     return null;
   }
 
   @GetMapping("/{filterId}/reviews")
-  public SuccessResponse<List<ReviewDto>> getReviews(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
-      @PathVariable Long filterId) {
+  public SuccessResponse<List<ReviewDto>> getReviews(String authorization, Long filterId) {
     return null;
   }
 
   @PostMapping("/{filterId}/likes")
-  public SuccessResponse<Boolean> likes(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
-      @PathVariable Long filterId) {
+  public SuccessResponse<Boolean> likes(String authorization, Long filterId) {
     return null;
   }
 
