@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FilterController implements FilterControllerDocs {
 
   @GetMapping
-  public SuccessResponse<List<FilterDto>> getFilters(String authorization, String type, String sortedBy
+  public SuccessResponse<List<FilterDto>> getFilters(String authorization, String os, String tag, String sortedBy
   ) {
     return null;
   }

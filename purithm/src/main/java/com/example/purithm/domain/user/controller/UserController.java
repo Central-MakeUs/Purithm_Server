@@ -39,17 +39,6 @@ public class UserController implements UserControllerDocs {
     return null;
   }
 
-  @GetMapping("/filters")
-  public SuccessResponse<List<MyFilterDto>> getMyFilter(String authorization) {
-    return null;
-  }
-
-  @DeleteMapping("/filters/{filterId}")
-  public SuccessResponse<Void> deleteFilter(String authorization, Long filterId) {
-    System.out.println(filterId);
-    return null;
-  }
-
   @GetMapping("/reviews")
   public SuccessResponse<List<MyReviewDto>> getMyReview(String authorization) {
     return null;

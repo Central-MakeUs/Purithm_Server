@@ -5,6 +5,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record FilterDto(
     @Schema(description = "필터 id")
     Long id,
+    @Schema(description = "필터 타입", example = "basic")
+    String type,
+    @Schema(description = "필터 태그", example = "뉴진스")
+    String tag,
     @Schema(description = "필터 이름")
     String name,
     @Schema(description = "필터 썸네일")

@@ -52,22 +52,6 @@ public interface UserControllerDocs {
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization
   );
 
-  @Operation(summary = "내 필터를 조회합니다.")
-  @ApiResponse(responseCode = "200", description = "내 필터 조회 성공",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = SuccessResponse.class)))
-  public SuccessResponse<List<MyFilterDto>> getMyFilter(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization
-  );
-
-  @Operation(summary = "내 필터를 삭제합니다.")
-  @ApiResponse(responseCode = "200", description = "내 필터 삭제 성공",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = SuccessResponse.class)))
-  public SuccessResponse<Void> deleteFilter(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
-      @PathVariable Long filterId);
-
   @Operation(summary = "내 리뷰를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "내 리뷰 조회 성공",
       content = @Content(mediaType = "application/json",
