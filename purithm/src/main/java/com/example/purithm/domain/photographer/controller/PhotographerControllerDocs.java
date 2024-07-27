@@ -1,8 +1,7 @@
 package com.example.purithm.domain.photographer.controller;
 
-import com.example.purithm.domain.photographer.response.PhotographerDto;
-import com.example.purithm.domain.photographer.response.PhotographerFilterDto;
-import com.example.purithm.global.response.ErrorResponse;
+import com.example.purithm.domain.photographer.dto.response.PhotographerDto;
+import com.example.purithm.domain.photographer.dto.response.PhotographerFilterDto;
 import com.example.purithm.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

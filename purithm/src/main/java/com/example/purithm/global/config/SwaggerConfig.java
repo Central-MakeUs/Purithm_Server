@@ -38,11 +38,7 @@ public class SwaggerConfig {
             .description("Purithm API 문서입니다."))
         .components(new Components()
             .addSecuritySchemes("bearer-key", apiKey)
-            .addSchemas("ErrorResponse", new Schema<ErrorResponse>()
-                .type("object")
-                .addProperties("message", new Schema<String>().type("string"))
-                .addProperties("code", new Schema<Integer>().type("integer"))))
-        .addSecurityItem(securityRequirement);
+        ).addSecurityItem(securityRequirement);
   }
 
   @Bean
@@ -52,12 +48,18 @@ public class SwaggerConfig {
           ApiResponse unauthorizedResponse = new ApiResponse()
               .description("유저 인증 실패")
               .content(new Content().addMediaType("application/json",
-                  new MediaType().schema(new Schema<ErrorResponse>())));
+                  new MediaType().schema(new Schema<ErrorResponse>()
+                      .type("object")
+                          .addProperties("message", new Schema<String>().type("string"))
+                          .addProperties("code", new Schema<Integer>().type("integer")))));
 
           ApiResponse notFoundResponse = new ApiResponse()
               .description("리소스를 찾을 수 없음")
               .content(new Content().addMediaType("application/json",
-                  new MediaType().schema(new Schema<ErrorResponse>())));
+                  new MediaType().schema(new Schema<ErrorResponse>()
+                      .type("object")
+                      .addProperties("message", new Schema<String>().type("string"))
+                      .addProperties("code", new Schema<Integer>().type("integer")))));
 
           operation.getResponses().addApiResponse("401", unauthorizedResponse);
           operation.getResponses().addApiResponse("404", notFoundResponse);

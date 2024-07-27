@@ -1,7 +1,7 @@
 package com.example.purithm.domain.photographer.controller;
 
-import com.example.purithm.domain.photographer.response.PhotographerDto;
-import com.example.purithm.domain.photographer.response.PhotographerFilterDto;
+import com.example.purithm.domain.photographer.dto.response.PhotographerDto;
+import com.example.purithm.domain.photographer.dto.response.PhotographerFilterDto;
 import com.example.purithm.global.response.SuccessResponse;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
