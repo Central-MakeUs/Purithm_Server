@@ -5,9 +5,7 @@ import com.example.purithm.domain.photographer.dto.response.PhotographerFilterDt
 import com.example.purithm.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 public interface PhotographerControllerDocs {
   @Operation(summary = "작가 정보를 조회합니다.")
-  @ApiResponse(responseCode = "200", description = "작가 조회 성공",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = SuccessResponse.class)))
+  @ApiResponse(responseCode = "200", description = "작가 조회 성공")
   public SuccessResponse<List<PhotographerDto>> getPhotographers(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @RequestParam(value = "sortedBy", required = false) @Parameter(description = "정렬순",
@@ -29,9 +25,7 @@ public interface PhotographerControllerDocs {
   );
 
   @Operation(summary = "특정 작가의 필터를 조회합니다.")
-  @ApiResponse(responseCode = "200", description = "작가의 필터 조회 성공",
-      content = @Content(mediaType = "application/json",
-          schema = @Schema(implementation = SuccessResponse.class)))
+  @ApiResponse(responseCode = "200", description = "작가의 필터 조회 성공")
   public SuccessResponse<List<PhotographerFilterDto>> getFiltersByPhotographer(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @PathVariable Long photographerId,

@@ -1,7 +1,9 @@
 package com.example.purithm.domain.filter.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
 
+@Getter
 public class AOSFilterDetailDto extends FilterDetailDto {
   @Schema(description = "라이트 밸런스")
   private int lightBalance;

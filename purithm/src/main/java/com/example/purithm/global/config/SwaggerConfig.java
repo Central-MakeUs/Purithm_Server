@@ -1,12 +1,14 @@
 package com.example.purithm.global.config;
 
 import com.example.purithm.global.response.ErrorResponse;
+import io.swagger.v3.core.converter.AnnotatedType;
+import io.swagger.v3.core.converter.ModelConverters;
+import io.swagger.v3.core.converter.ResolvedSchema;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.MediaType;
-import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
@@ -43,23 +45,22 @@ public class SwaggerConfig {
 
   @Bean
   public OpenApiCustomizer openApiCustomiser() {
+
+    ResolvedSchema resolvedSchema = ModelConverters.getInstance()
+        .resolveAsResolvedSchema(new AnnotatedType(ErrorResponse.class));
+
     return openApi -> openApi.getPaths().values()
         .forEach(pathItem -> pathItem.readOperations().forEach(operation -> {
           ApiResponse unauthorizedResponse = new ApiResponse()
               .description("유저 인증 실패")
               .content(new Content().addMediaType("application/json",
-                  new MediaType().schema(new Schema<ErrorResponse>()
-                      .type("object")
-                          .addProperties("message", new Schema<String>().type("string"))
-                          .addProperties("code", new Schema<Integer>().type("integer")))));
-
+                  new MediaType()
+                      .schema(resolvedSchema.schema)
+                      .example(new ErrorResponse(40100, "토큰 검증에 실패했습니다."))));
           ApiResponse notFoundResponse = new ApiResponse()
               .description("리소스를 찾을 수 없음")
               .content(new Content().addMediaType("application/json",
-                  new MediaType().schema(new Schema<ErrorResponse>()
-                      .type("object")
-                      .addProperties("message", new Schema<String>().type("string"))
-                      .addProperties("code", new Schema<Integer>().type("integer")))));
+                  new MediaType().schema(resolvedSchema.schema)));
 
           operation.getResponses().addApiResponse("401", unauthorizedResponse);
           operation.getResponses().addApiResponse("404", notFoundResponse);
