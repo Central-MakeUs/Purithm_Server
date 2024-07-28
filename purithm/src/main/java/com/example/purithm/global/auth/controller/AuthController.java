@@ -1,25 +1,20 @@
 package com.example.purithm.global.auth.controller;
 
 import com.example.purithm.global.auth.dto.response.KakaoUserInfoDto;
-import com.example.purithm.global.auth.dto.response.LoginDto;
 import com.example.purithm.global.auth.dto.response.SocialUserInfoDto;
 import com.example.purithm.global.auth.jwt.JWTUtil;
 import com.example.purithm.global.config.WebClientConfig;
 import com.example.purithm.domain.user.service.UserService;
 import com.example.purithm.global.exception.CustomException;
+import com.example.purithm.global.exception.Error;
 import com.example.purithm.global.response.SuccessResponse;
 import com.nimbusds.jose.JOSEException;
 import io.jsonwebtoken.Claims;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.IOException;
 import java.text.ParseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
@@ -27,20 +22,14 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
 
   private final WebClientConfig webClientConfig;
   private final UserService userService;
   private final JWTUtil jwtUtil;
 
-  @Operation(
-      summary = "Kakao Login",
-      parameters = {
-          @Parameter(name = "Authorization", description = "kakao access token을 보냅니다. Bearer token 형식입니다.", required = true, in = ParameterIn.HEADER)
-      }
-  )
   @GetMapping("/kakao")
-  public Mono<SuccessResponse<String>> kakaoLogin(@RequestHeader("Authorization") String token) {
+  public Mono<SuccessResponse<String>> kakaoLogin(String token) {
     return webClientConfig.webClient()
         .post()
         .uri("https://kapi.kakao.com/v2/user/me")
@@ -63,21 +52,12 @@ public class AuthController {
           return Mono.just(body);
         })
         .onErrorResume(err -> {
-          throw CustomException.builder()
-              .code(401)
-              .message(err.getMessage())
-              .build();
+          throw CustomException.of(Error.INVALID_TOKEN_ERROR);
         });
   }
 
-  @Operation(
-      summary = "Apple Login",
-      parameters = {
-          @Parameter(name = "Authorization", description = "Apple access token을 보냅니다. Bearer token 형식입니다.", required = true, in = ParameterIn.HEADER, schema = @Schema(type = "string"))
-      }
-  )
   @GetMapping("/apple")
-  public SuccessResponse<String> appleLogin(@RequestHeader("Authorization") String token)
+  public SuccessResponse<String> appleLogin(String token, String email)
       throws IOException, ParseException, JOSEException {
 
     token = token.substring(7);

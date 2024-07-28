@@ -1,7 +1,9 @@
 package com.example.purithm.domain.filter.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
 
+@Getter
 public class iOSFilterDetailDto extends FilterDetailDto {
   @Schema(description = "노출")
   private int exposure;

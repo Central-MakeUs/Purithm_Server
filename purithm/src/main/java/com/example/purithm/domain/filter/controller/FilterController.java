@@ -26,7 +26,7 @@ public class FilterController implements FilterControllerDocs {
   }
 
   @GetMapping("/{filterId}")
-  public SuccessResponse<FilterDetailDto> getFilterDetail(String authorization, Long filterId) {
+  public SuccessResponse<FilterDetailDto> getFilterDetail(String authorization, String os, Long filterId) {
     return null;
   }
 

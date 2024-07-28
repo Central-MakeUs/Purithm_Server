@@ -3,6 +3,7 @@ package com.example.purithm.global.auth.argumentresolver;
 import com.example.purithm.global.auth.annotation.LoginInfo;
 import com.example.purithm.global.auth.entity.CustomOAuth2User;
 import com.example.purithm.global.exception.CustomException;
+import com.example.purithm.global.exception.Error;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -31,10 +32,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     CustomOAuth2User user = (CustomOAuth2User) authentication.getPrincipal();
 
     if (user.getName().equals("anonymousUser")) {
-      throw CustomException.builder()
-          .code(401)
-          .message("로그인 되지 않은 사용자입니다.")
-          .build();
+      throw CustomException.of(Error.INVALID_TOKEN_ERROR);
     }
 
     return user;

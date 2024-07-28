@@ -33,4 +33,6 @@ public class Filter {
   @Convert(converter = StringListConverter.class)
   private List<String> pictures;
   private Membership membership;
+
+  private OS os;
 }

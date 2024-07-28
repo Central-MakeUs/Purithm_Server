@@ -2,7 +2,10 @@ package com.example.purithm.domain.filter.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
+import lombok.Getter;
 
+@Schema(description = "필터 상세 정보")
+@Getter
 public abstract class FilterDetailDto {
     @Schema(description = "필터 이름")
     String name;
