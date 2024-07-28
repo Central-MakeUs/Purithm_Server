@@ -34,6 +34,8 @@ public interface FilterControllerDocs {
   @ApiResponse(responseCode = "200", description = "Ok", useReturnTypeSchema = true)
   public SuccessResponse<FilterDetailDto> getFilterDetail(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
+      @RequestParam(value = "os", required = true) @Parameter(description = "휴대폰 os",
+          examples = {@ExampleObject(value = "AOS"), @ExampleObject(value = "iOS")}) String os,
       @PathVariable Long filterId);
 
   @Operation(summary = "작가의 말을 조회합니다.")

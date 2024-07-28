@@ -1,5 +1,7 @@
 package com.example.purithm.global.config;
 
+import com.example.purithm.global.exception.CustomException;
+import com.example.purithm.global.exception.Error;
 import com.example.purithm.global.response.ErrorResponse;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverters;
@@ -56,11 +58,13 @@ public class SwaggerConfig {
               .content(new Content().addMediaType("application/json",
                   new MediaType()
                       .schema(resolvedSchema.schema)
-                      .example(new ErrorResponse(40100, "토큰 검증에 실패했습니다."))));
+                      .example(ErrorResponse.of(CustomException.of(Error.INVALID_TOKEN_ERROR)))));
           ApiResponse notFoundResponse = new ApiResponse()
               .description("리소스를 찾을 수 없음")
               .content(new Content().addMediaType("application/json",
-                  new MediaType().schema(resolvedSchema.schema)));
+                  new MediaType()
+                      .schema(resolvedSchema.schema)
+                      .example(ErrorResponse.of(CustomException.of(Error.NOT_FOUND_ERROR)))));
 
           operation.getResponses().addApiResponse("401", unauthorizedResponse);
           operation.getResponses().addApiResponse("404", notFoundResponse);
