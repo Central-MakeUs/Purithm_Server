@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
@@ -22,10 +21,10 @@ public class SuccessResponse<T> {
 
   public static SuccessResponse of() {
 
-    return new SuccessResponse<>(HttpStatus.OK.value(), "ok");
+    return new SuccessResponse<>(20000, "정상 처리 되었습니다.");
   }
 
   public static <T> SuccessResponse<T> of(T data) {
-    return new SuccessResponse<>(HttpStatus.OK.value(), "ok", data);
+    return new SuccessResponse<>(20000, "정상 처리 되었습니다.", data);
   }
 }
