@@ -22,4 +22,9 @@ public class User {
   private String providerId;
   private String username;
   private String profile;
+  private boolean terms;
+
+  public void agreeToTerms() {
+    this.terms = true;
+  }
 }

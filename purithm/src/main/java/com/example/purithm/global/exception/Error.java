@@ -14,6 +14,9 @@ public enum Error {
   INVALID_TOKEN_ERROR(HttpStatus.UNAUTHORIZED, 40100, "유효하지 않은 토큰입니다."),
   EXPIRED_TOKEN_ERROR(HttpStatus.UNAUTHORIZED, 40101, "만료된 토큰입니다."),
 
+  /* 403 */
+  NOT_AGREED_TERM(HttpStatus.FORBIDDEN, 40300, "이용약관 동의가 필요합니다"),
+
   /* 404 */
   NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, 40400, "리소스를 찾을 수 없습니다."),
 

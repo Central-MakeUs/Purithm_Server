@@ -2,11 +2,12 @@ package com.example.purithm.domain.user.controller;
 
 import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
 import com.example.purithm.domain.user.dto.response.AccountInfoDto;
-import com.example.purithm.domain.user.dto.response.MyFilterDto;
 import com.example.purithm.domain.user.dto.response.MyPickDto;
 import com.example.purithm.domain.user.dto.response.MyReviewDto;
 import com.example.purithm.domain.user.dto.response.StampDto;
 import com.example.purithm.domain.user.dto.response.UserInfoDto;
+import com.example.purithm.domain.user.service.UserService;
+import com.example.purithm.global.auth.annotation.LoginInfo;
 import com.example.purithm.global.response.SuccessResponse;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,9 +16,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController implements UserControllerDocs {
+
+  private final UserService userService;
+
+  @PostMapping("/terms")
+  public SuccessResponse agreeTerm(@LoginInfo Long id) {
+    userService.agreeToTermsOfUse(id);
+    return SuccessResponse.of();
+  }
 
   @GetMapping("/me")
   public SuccessResponse<UserInfoDto> getMyInfo(String authorization) {
