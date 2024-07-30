@@ -20,6 +20,9 @@ public enum Error {
   /* 404 */
   NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, 40400, "리소스를 찾을 수 없습니다."),
 
+  /* 405 */
+  METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, 40500, "존재하지 않는 요청입니다."),
+
   /* 409 */
   NICKNAME_ALREADY_USED_ERROR(HttpStatus.CONFLICT, 40900, "이미 사용 중인 닉네임입니다."),
 
