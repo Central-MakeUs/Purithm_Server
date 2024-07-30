@@ -8,8 +8,9 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.IOException;
 import java.text.ParseException;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import reactor.core.publisher.Mono;
 
 public interface AuthControllerDocs {
@@ -28,6 +29,6 @@ public interface AuthControllerDocs {
       }
   )
   public SuccessResponse<String> appleLogin(
-      @RequestHeader("Authorization") String token, @RequestBody String email)
+      @RequestHeader("Authorization") String token, @RequestParam(value = "username", required = false) String username)
       throws IOException, ParseException, JOSEException;
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class SocialUserInfoDto {
-  private String nickname;
   private String username;
+  private String providerId;
   private String profile;
 }

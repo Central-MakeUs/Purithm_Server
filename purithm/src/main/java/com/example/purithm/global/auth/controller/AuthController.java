@@ -17,8 +17,11 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -42,36 +45,41 @@ public class AuthController implements AuthControllerDocs {
 
           SocialUserInfoDto userInfoDto = SocialUserInfoDto.builder()
               .profile(res.getProperties().getProfile_image())
-              .nickname(res.getProperties().getNickname())
-              .username("KAKAO " + res.getId())
+              .username(res.getProperties().getNickname())
+              .providerId("KAKAO " + res.getId())
               .build();
-          String username = userService.signUp(userInfoDto);
-          String jwtToken = jwtUtil.createJwt(username, 60 * 60 * 60 * 1000L);
+          Long id = userService.signUp(userInfoDto);
+          String jwtToken = jwtUtil.createJwt(id, 60 * 60 * 60 * 1000L);
 
           SuccessResponse<String> body = SuccessResponse.of(jwtToken);
           return Mono.just(body);
         })
         .onErrorResume(err -> {
+            log.error(err.getMessage());
           throw CustomException.of(Error.INVALID_TOKEN_ERROR);
         });
   }
 
   @GetMapping("/apple")
-  public SuccessResponse<String> appleLogin(String token, String email)
+  public SuccessResponse<String> appleLogin(String token, String username)
       throws IOException, ParseException, JOSEException {
 
-    token = token.substring(7);
-    Claims claims = jwtUtil.getClaims(token);
+    try {
+        token = token.substring(7);
+        Claims claims = jwtUtil.getAppleTokenClaims(token);
+        SocialUserInfoDto userInfoDto = SocialUserInfoDto.builder()
+            .profile(null)
+            .username((String) claims.get("nickname"))
+            .providerId("APPLE " + (String) claims.get("sub"))
+            .build();
 
-    SocialUserInfoDto userInfoDto = SocialUserInfoDto.builder()
-        .nickname((String) claims.get("nickname"))
-        .username("APPLE " + (String) claims.get("sub"))
-        .profile(null)
-        .build();
+        Long id = userService.signUp(userInfoDto);
+        String jwtToken = jwtUtil.createJwt(id, 60 * 60 * 60 * 1000L);
 
-    String username = userService.signUp(userInfoDto);
-    String jwtToken = jwtUtil.createJwt(username, 60 * 60 * 60 * 1000L);
-
-    return SuccessResponse.of(jwtToken);
+        return SuccessResponse.of(jwtToken);
+    } catch (Exception e) {
+        log.error(e.getMessage());
+        throw CustomException.of(Error.INVALID_TOKEN_ERROR);
+    }
   }
 }

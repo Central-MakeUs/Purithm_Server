@@ -4,26 +4,30 @@ import com.example.purithm.global.auth.dto.response.SocialUserInfoDto;
 import com.example.purithm.domain.user.entity.User;
 import com.example.purithm.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
 
-  public String signUp(SocialUserInfoDto socialUserInfoDto) {
-    User existUser = userRepository.findByUsername(socialUserInfoDto.getUsername());
+  public Long signUp(SocialUserInfoDto socialUserInfoDto) {
+    User existUser = userRepository.findByProviderId(socialUserInfoDto.getProviderId());
 
-    if (existUser == null) {
-      User user = User.builder()
-          .profile(socialUserInfoDto.getProfile())
-          .nickname(socialUserInfoDto.getNickname())
-          .username(socialUserInfoDto.getUsername())
-          .build();
-
-      userRepository.save(user);
+    if (existUser != null) {
+      return existUser.getId();
     }
 
-    return socialUserInfoDto.getUsername();
+    User user = User.builder()
+        .profile(socialUserInfoDto.getProfile())
+        .providerId(socialUserInfoDto.getProviderId())
+        .username(socialUserInfoDto.getUsername())
+        .build();
+
+    User savedUser = userRepository.save(user);
+    return savedUser.getId();
   }
 }
