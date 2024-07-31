@@ -1,10 +1,14 @@
 package com.example.purithm.domain.filter.dto.response;
 
+import com.example.purithm.domain.filter.entity.AOSFilterDetail;
+
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class AOSFilterDetailDto extends FilterDetailDto {
+@Builder
+public class AOSFilterDetailDto {
   @Schema(description = "라이트 밸런스")
   private int lightBalance;
   @Schema(description = "밝기")
@@ -27,4 +31,20 @@ public class AOSFilterDetailDto extends FilterDetailDto {
   private int clear;
   @Schema(description = "명료도")
   private int clarity;
+
+  public static AOSFilterDetailDto of(AOSFilterDetail filterDetail) {
+    return AOSFilterDetailDto.builder()
+        .lightBalance(filterDetail.getLightBalance())
+        .brightness(filterDetail.getBrightness())
+        .exposure(filterDetail.getExposure())
+        .contrast(filterDetail.getContrast())
+        .highlight(filterDetail.getHighlight())
+        .shadow(filterDetail.getShadow())
+        .saturation(filterDetail.getSaturation())
+        .tint(filterDetail.getTint())
+        .temperature(filterDetail.getTemperature())
+        .clear(filterDetail.getClear())
+        .clarity(filterDetail.getClarity())
+        .build();
+  }
 }

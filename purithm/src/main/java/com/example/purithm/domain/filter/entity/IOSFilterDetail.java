@@ -1,15 +1,22 @@
 package com.example.purithm.domain.filter.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
+import lombok.Getter;
 
+@Getter
 @Entity
-public class iOSFilterDetail {
+public class IOSFilterDetail {
   @Id
+  @Column(name = "filter_id", nullable = false)
+  private Long id;
   @OneToOne
   @JoinColumn(name = "filter_id")
+  @MapsId
   private Filter filter;
   private int exposure; // 노출
   private int luminance; //휘도

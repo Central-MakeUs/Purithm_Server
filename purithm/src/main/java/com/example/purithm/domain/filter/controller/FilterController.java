@@ -1,12 +1,15 @@
 package com.example.purithm.domain.filter.controller;
 
+import com.example.purithm.domain.filter.dto.response.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDto;
+import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.PhotographerDescriptionDto;
 import com.example.purithm.domain.filter.dto.response.ReviewDto;
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.filter.service.FilterService;
 import com.example.purithm.global.response.SuccessResponse;
+
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 
@@ -33,8 +36,18 @@ public class FilterController implements FilterControllerDocs {
   }
 
   @GetMapping("/{filterId}")
-  public SuccessResponse<FilterDetailDto> getFilterDetail(String authorization, OS os, Long filterId) {
-    return null;
+  public SuccessResponse<FilterDetailDto> getFilterDetail(Long id, Long filterId) {
+    return SuccessResponse.of(filterService.getFilterDetail(filterId));
+  }
+
+  @GetMapping("/{filterId}/AOS")
+  public SuccessResponse<AOSFilterDetailDto> getAOSFilter(Long id, Long filterId) {
+    return SuccessResponse.of(filterService.getFilterAOSDetail(filterId));
+  }
+
+  @GetMapping("/{filterId}/iOS")
+  public SuccessResponse<IOSFilterDetailDto> getIOSFilter(Long id, Long filterId) {
+    return SuccessResponse.of(filterService.getFilterIOSDetail(filterId));
   }
 
   @GetMapping("/{filterId}/photographer")

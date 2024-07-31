@@ -1,7 +1,9 @@
 package com.example.purithm.domain.filter.controller;
 
+import com.example.purithm.domain.filter.dto.response.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDto;
+import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.PhotographerDescriptionDto;
 import com.example.purithm.domain.filter.dto.response.ReviewDto;
 import com.example.purithm.domain.filter.entity.OS;
@@ -35,11 +37,20 @@ public interface FilterControllerDocs {
 
   @Operation(summary = "필터 상세 정보를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "필터 상세 정보 조회 성공")
-  @ApiResponse(responseCode = "200", description = "Ok", useReturnTypeSchema = true)
   public SuccessResponse<FilterDetailDto> getFilterDetail(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
-      @RequestParam(value = "os", required = true) @Parameter(description = "휴대폰 os",
-          examples = {@ExampleObject(value = "AOS"), @ExampleObject(value = "iOS")}) OS os,
+      @LoginInfo Long id,
+      @PathVariable Long filterId);
+
+  @Operation(summary = "AOS 필터값를 조회합니다.")
+  @ApiResponse(responseCode = "200", description = "필터값 조회 성공")
+  public SuccessResponse<AOSFilterDetailDto> getAOSFilter(
+      @LoginInfo Long id,
+      @PathVariable Long filterId);
+
+  @Operation(summary = "iOS 필터값를 조회합니다.")
+  @ApiResponse(responseCode = "200", description = "필터값 조회 성공")
+  public SuccessResponse<IOSFilterDetailDto> getIOSFilter(
+      @LoginInfo Long id,
       @PathVariable Long filterId);
 
   @Operation(summary = "작가의 말을 조회합니다.")

@@ -1,10 +1,14 @@
 package com.example.purithm.domain.filter.dto.response;
 
+import com.example.purithm.domain.filter.entity.IOSFilterDetail;
+
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class iOSFilterDetailDto extends FilterDetailDto {
+@Builder
+public class IOSFilterDetailDto {
   @Schema(description = "노출")
   private int exposure;
   @Schema(description = "휘도")
@@ -35,4 +39,24 @@ public class iOSFilterDetailDto extends FilterDetailDto {
   private int noise;
   @Schema(description = "비네트")
   private int vignette;
+
+  public static IOSFilterDetailDto of(IOSFilterDetail filterDetail) {
+    return IOSFilterDetailDto.builder()
+        .exposure(filterDetail.getExposure())
+        .luminance(filterDetail.getLuminance())
+        .highlight(filterDetail.getHighlight())
+        .shadow(filterDetail.getShadow())
+        .contrast(filterDetail.getContrast())
+        .brightness(filterDetail.getBrightness())
+        .blackPoint(filterDetail.getBlackPoint())
+        .saturation(filterDetail.getSaturation())
+        .colorfulness(filterDetail.getColorfulness())
+        .warmth(filterDetail.getWarmth())
+        .hue(filterDetail.getHue())
+        .clear(filterDetail.getClear())
+        .clarity(filterDetail.getClarity())
+        .noise(filterDetail.getNoise())
+        .vignette(filterDetail.getVignette())
+        .build();
+  }
 }
