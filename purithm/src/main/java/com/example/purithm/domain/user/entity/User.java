@@ -19,10 +19,12 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
+  private String providerId;
   private String username;
-
-  private String nickname;
-
   private String profile;
+  private boolean terms;
+
+  public void agreeToTerms() {
+    this.terms = true;
+  }
 }

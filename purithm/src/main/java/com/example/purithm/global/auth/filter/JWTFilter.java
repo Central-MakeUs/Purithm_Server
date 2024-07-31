@@ -1,6 +1,5 @@
 package com.example.purithm.global.auth.filter;
 
-import com.example.purithm.global.auth.entity.CustomOAuth2User;
 import com.example.purithm.global.auth.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -37,10 +36,9 @@ public class JWTFilter extends OncePerRequestFilter {
         return;
       }
 
-      String username = jwtUtil.getUsername(token);
+      Long id = jwtUtil.getId(token);
 
-      CustomOAuth2User oAuth2User = new CustomOAuth2User(username);
-      Authentication authToken = new UsernamePasswordAuthenticationToken(oAuth2User, null, null);
+      Authentication authToken = new UsernamePasswordAuthenticationToken(id, null, null);
       SecurityContextHolder.getContext().setAuthentication(authToken);
     } catch (Exception e) {
       request.setAttribute("exception", e);

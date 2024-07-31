@@ -7,12 +7,9 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.SignedJWT;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.jose.jwk.JWKSet;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.interfaces.RSAPublicKey;
@@ -23,6 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class JWTUtil {
   private SecretKey secretKey;
@@ -31,25 +29,25 @@ public class JWTUtil {
     this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
   }
 
-  public String getUsername(String token) {
+  public Long getId(String token) {
 
-    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("id", Long.class);
   }
 
   public Boolean isExpired(String token) {
     return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
   }
 
-  public String createJwt(String username, Long expiredMs) {
+  public String createJwt(Long id, Long expiredMs) {
     return Jwts.builder()
-        .claim("username", username)
+        .claim("id", id)
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + expiredMs))
         .signWith(secretKey)
         .compact();
   }
 
-  public Claims getClaims(String token) throws IOException, JOSEException, ParseException {
+  public Claims getAppleTokenClaims(String token) throws IOException, JOSEException, ParseException {
     URL jwkSetURL = new URL("https://appleid.apple.com/auth/keys");
     JWKSet jwkSet = JWKSet.load(jwkSetURL);
 
