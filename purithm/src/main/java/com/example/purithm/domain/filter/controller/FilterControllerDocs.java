@@ -28,7 +28,9 @@ public interface FilterControllerDocs {
           examples =
               {@ExampleObject(name = "최신순", summary = "최신순 정렬", value = "latest"),
                   @ExampleObject(name = "오래된순", summary = "오래된순 정렬", value = "earliest"),
-                  @ExampleObject(name = "퓨어지수 높은순", summary = "퓨어지수 높은순 정렬", value = "popular")}) String sortedBy
+                  @ExampleObject(name = "퓨어지수 높은순", summary = "퓨어지수 높은순 정렬", value = "popular")}) String sortedBy,
+      @RequestParam(value = "page") int page,
+      @RequestParam(value = "size") int size
   );
 
   @Operation(summary = "필터 상세 정보를 조회합니다.")

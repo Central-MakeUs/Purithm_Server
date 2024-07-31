@@ -10,7 +10,7 @@ import lombok.Builder;
 public record FilterDto(
     @Schema(description = "필터 id")
     Long id,
-    @Schema(description = "필터 타입", example = "basic")
+    @Schema(description = "필터 멤버십 타입", example = "basic")
     Membership membership,
     @Schema(description = "필터 이름")
     String name,
