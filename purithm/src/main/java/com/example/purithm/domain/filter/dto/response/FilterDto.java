@@ -1,14 +1,17 @@
 package com.example.purithm.domain.filter.dto.response;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.example.purithm.domain.filter.entity.Filter;
+import com.example.purithm.domain.filter.entity.Membership;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
+
+@Builder
 public record FilterDto(
     @Schema(description = "필터 id")
     Long id,
     @Schema(description = "필터 타입", example = "basic")
-    String type,
-    @Schema(description = "필터 태그", example = "뉴진스")
-    String tag,
+    Membership membership,
     @Schema(description = "필터 이름")
     String name,
     @Schema(description = "필터 썸네일")
@@ -21,5 +24,15 @@ public record FilterDto(
     int likes
 
 ) {
-
+    public static FilterDto of(Filter filter) {
+        return FilterDto.builder()
+            .id(filter.getId())
+            .membership(filter.getMembership())
+            .name(filter.getName())
+            .thumbnail(filter.getThumbnail())
+            .photographerId(filter.getPhotographer().getId())
+            .photographerName(filter.getPhotographer().getUsername())
+            .likes(filter.getLikes())
+            .build();
+    }
 }

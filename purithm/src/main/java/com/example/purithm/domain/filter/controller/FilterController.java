@@ -4,8 +4,12 @@ import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDto;
 import com.example.purithm.domain.filter.dto.response.PhotographerDescriptionDto;
 import com.example.purithm.domain.filter.dto.response.ReviewDto;
+import com.example.purithm.domain.filter.entity.OS;
+import com.example.purithm.domain.filter.service.FilterService;
 import com.example.purithm.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Parameter;
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,16 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/filters")
+@RequiredArgsConstructor
 public class FilterController implements FilterControllerDocs {
 
+  private final FilterService filterService;
+
   @GetMapping
-  public SuccessResponse<List<FilterDto>> getFilters(String authorization, String os, String tag, String sortedBy
+  public SuccessResponse<List<FilterDto>> getFilters(Long id, OS os, String tag, String sortedBy
   ) {
-    return null;
+    return SuccessResponse.of(filterService.getFilters(os, tag, sortedBy));
   }
 
   @GetMapping("/{filterId}")
-  public SuccessResponse<FilterDetailDto> getFilterDetail(String authorization, String os, Long filterId) {
+  public SuccessResponse<FilterDetailDto> getFilterDetail(String authorization, OS os, Long filterId) {
     return null;
   }
 

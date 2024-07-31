@@ -2,6 +2,8 @@ package com.example.purithm.domain.filter.entity;
 
 import com.example.purithm.domain.photographer.entity.Photographer;
 import com.example.purithm.global.converter.StringListConverter;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,9 +14,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.Getter;
+
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.annotation.CreatedDate;
+
+@Getter
 @Entity
 public class Filter {
   @Id
@@ -27,12 +34,13 @@ public class Filter {
   private Photographer photographer;
   private int likes;
   private int price;
-  @Temporal(TemporalType.DATE)
+  @Temporal(TemporalType.TIMESTAMP)
+  @CreatedDate
+  @Column(updatable = false)
   private Date createdAt;
   int pureDegree;
   @Convert(converter = StringListConverter.class)
   private List<String> pictures;
   private Membership membership;
-
   private OS os;
 }

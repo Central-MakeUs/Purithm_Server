@@ -4,6 +4,8 @@ import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDto;
 import com.example.purithm.domain.filter.dto.response.PhotographerDescriptionDto;
 import com.example.purithm.domain.filter.dto.response.ReviewDto;
+import com.example.purithm.domain.filter.entity.OS;
+import com.example.purithm.global.auth.annotation.LoginInfo;
 import com.example.purithm.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,9 +20,9 @@ public interface FilterControllerDocs {
   @Operation(summary = "메인 홈에서 간략한 필터 정보를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "필터 조회 성공")
   public SuccessResponse<List<FilterDto>> getFilters(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
+      @LoginInfo Long id,
       @RequestParam(value = "os", required = true) @Parameter(description = "휴대폰 os",
-        examples = {@ExampleObject(value = "AOS"), @ExampleObject(value = "iOS")}) String os,
+        examples = {@ExampleObject(value = "AOS"), @ExampleObject(value = "iOS")}) OS os,
       @RequestParam(value = "tag", required = false) String tag,
       @RequestParam(value = "sortedBy", required = false) @Parameter(description = "정렬순",
           examples =
@@ -35,7 +37,7 @@ public interface FilterControllerDocs {
   public SuccessResponse<FilterDetailDto> getFilterDetail(
       @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
       @RequestParam(value = "os", required = true) @Parameter(description = "휴대폰 os",
-          examples = {@ExampleObject(value = "AOS"), @ExampleObject(value = "iOS")}) String os,
+          examples = {@ExampleObject(value = "AOS"), @ExampleObject(value = "iOS")}) OS os,
       @PathVariable Long filterId);
 
   @Operation(summary = "작가의 말을 조회합니다.")
