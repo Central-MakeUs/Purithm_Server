@@ -21,10 +21,12 @@ public record FilterDto(
     @Schema(description = "작가 이름")
     String photographerName,
     @Schema(description = "좋아요 수")
-    int likes
+    int likes,
+    @Schema(description = "필터 접근 가능 여부")
+    boolean canAccess
 
 ) {
-    public static FilterDto of(Filter filter) {
+    public static FilterDto of(Filter filter, Membership membership) {
         return FilterDto.builder()
             .id(filter.getId())
             .membership(filter.getMembership())
@@ -33,6 +35,11 @@ public record FilterDto(
             .photographerId(filter.getPhotographer().getId())
             .photographerName(filter.getPhotographer().getUsername())
             .likes(filter.getLikes())
+            .canAccess(checkAccess(membership, filter.getMembership()))
             .build();
+    }
+
+    private static boolean checkAccess(Membership membership, Membership filter) {
+        return filter.compareTo(membership) > 0 ? false : true;
     }
 }

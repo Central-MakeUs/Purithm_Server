@@ -13,11 +13,14 @@ import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
 import com.example.purithm.domain.filter.entity.AOSFilterDetail;
 import com.example.purithm.domain.filter.entity.Filter;
 import com.example.purithm.domain.filter.entity.IOSFilterDetail;
+import com.example.purithm.domain.filter.entity.Membership;
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.filter.repository.AOSFilterDetailRepository;
 import com.example.purithm.domain.filter.repository.IOSFilterDetailRepository;
 import com.example.purithm.domain.filter.repository.FilterRepository;
 import com.example.purithm.domain.filter.repository.TagRepository;
+import com.example.purithm.domain.user.entity.User;
+import com.example.purithm.domain.user.repository.UserRepository;
 import com.example.purithm.global.exception.CustomException;
 import com.example.purithm.global.exception.Error;
 
@@ -31,9 +34,10 @@ public class FilterService {
 	private final TagRepository tagRepository;
 	private final IOSFilterDetailRepository iOSFilterDetailRepository;
 	private final AOSFilterDetailRepository aOSFilterDetailRepository;
+	private final UserRepository userRepository;
 
 
-	public List<FilterDto> getFilters(int page, int size, OS os, String tag, String sortedBy) {
+	public List<FilterDto> getFilters(Long id, int page, int size, OS os, String tag, String sortedBy) {
 		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
 		switch (sortedBy) {
 			case "earliest" -> { // 오래된 순 정렬
@@ -43,11 +47,15 @@ public class FilterService {
 			}
 		}
 
+		Membership membership = userRepository.findById(id)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR)).getMembership();
+
 		if (tag == null) {
 			return filterRepository.findAllByOs(os, pageRequest)
-				.stream().map(FilterDto::of).toList();
+				.stream().map(filter -> FilterDto.of(filter, membership)).toList();
 		}
-		return tagRepository.findFilterByTagAndOs(tag, os, pageRequest).stream().map(FilterDto::of).toList();
+		return tagRepository.findFilterByTagAndOs(tag, os, pageRequest)
+			.stream().map(filter -> FilterDto.of(filter, membership)).toList();
 	}
 
 	public FilterDetailDto getFilterDetail(Long filterId) {

@@ -32,7 +32,7 @@ public class FilterController implements FilterControllerDocs {
   @GetMapping
   public SuccessResponse<List<FilterDto>> getFilters(Long id, OS os, String tag, String sortedBy, int page, int size
   ) {
-    return SuccessResponse.of(filterService.getFilters(page, size, os, tag, sortedBy));
+    return SuccessResponse.of(filterService.getFilters(id, page, size, os, tag, sortedBy));
   }
 
   @GetMapping("/{filterId}")
