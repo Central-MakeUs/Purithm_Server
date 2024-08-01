@@ -1,5 +1,7 @@
 package com.example.purithm.domain.user.entity;
 
+import com.example.purithm.domain.filter.entity.Membership;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +25,7 @@ public class User {
   private String username;
   private String profile;
   private boolean terms;
+  private Membership membership;
 
   public void agreeToTerms() {
     this.terms = true;

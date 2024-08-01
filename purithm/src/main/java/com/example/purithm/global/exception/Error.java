@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum Error {
   /* 400 */
   BAD_REQUEST_ERROR(HttpStatus.BAD_REQUEST, 40000, "적절하지 않은 요청입니다."),
+  NOT_ACCEPTABLE_OS(HttpStatus.BAD_REQUEST, 40001, "지원하지 않는 OS 기종입니다."),
 
   /* 401 */
   INVALID_TOKEN_ERROR(HttpStatus.UNAUTHORIZED, 40100, "유효하지 않은 토큰입니다."),

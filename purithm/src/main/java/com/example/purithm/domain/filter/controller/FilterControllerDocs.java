@@ -1,9 +1,13 @@
 package com.example.purithm.domain.filter.controller;
 
+import com.example.purithm.domain.filter.dto.response.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDto;
+import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.PhotographerDescriptionDto;
 import com.example.purithm.domain.filter.dto.response.ReviewDto;
+import com.example.purithm.domain.filter.entity.OS;
+import com.example.purithm.global.auth.annotation.LoginInfo;
 import com.example.purithm.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,24 +22,35 @@ public interface FilterControllerDocs {
   @Operation(summary = "메인 홈에서 간략한 필터 정보를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "필터 조회 성공")
   public SuccessResponse<List<FilterDto>> getFilters(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
+      @LoginInfo Long id,
       @RequestParam(value = "os", required = true) @Parameter(description = "휴대폰 os",
-        examples = {@ExampleObject(value = "AOS"), @ExampleObject(value = "iOS")}) String os,
+        examples = {@ExampleObject(value = "AOS"), @ExampleObject(value = "iOS")}) OS os,
       @RequestParam(value = "tag", required = false) String tag,
       @RequestParam(value = "sortedBy", required = false) @Parameter(description = "정렬순",
           examples =
               {@ExampleObject(name = "최신순", summary = "최신순 정렬", value = "latest"),
                   @ExampleObject(name = "오래된순", summary = "오래된순 정렬", value = "earliest"),
-                  @ExampleObject(name = "퓨어지수 높은순", summary = "퓨어지수 높은순 정렬", value = "popular")}) String sortedBy
+                  @ExampleObject(name = "퓨어지수 높은순", summary = "퓨어지수 높은순 정렬", value = "popular")}) String sortedBy,
+      @RequestParam(value = "page") int page,
+      @RequestParam(value = "size") int size
   );
 
   @Operation(summary = "필터 상세 정보를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "필터 상세 정보 조회 성공")
-  @ApiResponse(responseCode = "200", description = "Ok", useReturnTypeSchema = true)
   public SuccessResponse<FilterDetailDto> getFilterDetail(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
-      @RequestParam(value = "os", required = true) @Parameter(description = "휴대폰 os",
-          examples = {@ExampleObject(value = "AOS"), @ExampleObject(value = "iOS")}) String os,
+      @LoginInfo Long id,
+      @PathVariable Long filterId);
+
+  @Operation(summary = "AOS 필터값를 조회합니다.")
+  @ApiResponse(responseCode = "200", description = "필터값 조회 성공")
+  public SuccessResponse<AOSFilterDetailDto> getAOSFilter(
+      @LoginInfo Long id,
+      @PathVariable Long filterId);
+
+  @Operation(summary = "iOS 필터값를 조회합니다.")
+  @ApiResponse(responseCode = "200", description = "필터값 조회 성공")
+  public SuccessResponse<IOSFilterDetailDto> getIOSFilter(
+      @LoginInfo Long id,
       @PathVariable Long filterId);
 
   @Operation(summary = "작가의 말을 조회합니다.")

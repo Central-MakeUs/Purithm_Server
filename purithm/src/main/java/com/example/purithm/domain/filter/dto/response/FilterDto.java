@@ -1,14 +1,17 @@
 package com.example.purithm.domain.filter.dto.response;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.example.purithm.domain.filter.entity.Filter;
+import com.example.purithm.domain.filter.entity.Membership;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
+
+@Builder
 public record FilterDto(
     @Schema(description = "필터 id")
     Long id,
-    @Schema(description = "필터 타입", example = "basic")
-    String type,
-    @Schema(description = "필터 태그", example = "뉴진스")
-    String tag,
+    @Schema(description = "필터 멤버십 타입", example = "basic")
+    Membership membership,
     @Schema(description = "필터 이름")
     String name,
     @Schema(description = "필터 썸네일")
@@ -18,8 +21,25 @@ public record FilterDto(
     @Schema(description = "작가 이름")
     String photographerName,
     @Schema(description = "좋아요 수")
-    int likes
+    int likes,
+    @Schema(description = "필터 접근 가능 여부")
+    boolean canAccess
 
 ) {
+    public static FilterDto of(Filter filter, Membership membership) {
+        return FilterDto.builder()
+            .id(filter.getId())
+            .membership(filter.getMembership())
+            .name(filter.getName())
+            .thumbnail(filter.getThumbnail())
+            .photographerId(filter.getPhotographer().getId())
+            .photographerName(filter.getPhotographer().getUsername())
+            .likes(filter.getLikes())
+            .canAccess(checkAccess(membership, filter.getMembership()))
+            .build();
+    }
 
+    private static boolean checkAccess(Membership membership, Membership filter) {
+        return filter.compareTo(membership) > 0 ? false : true;
+    }
 }
