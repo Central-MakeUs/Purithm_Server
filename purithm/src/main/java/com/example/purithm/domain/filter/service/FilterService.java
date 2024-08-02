@@ -13,9 +13,9 @@ import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
 import com.example.purithm.domain.filter.entity.AOSFilterDetail;
 import com.example.purithm.domain.filter.entity.Filter;
 import com.example.purithm.domain.filter.entity.IOSFilterDetail;
-import com.example.purithm.domain.filter.entity.Membership;
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.filter.repository.AOSFilterDetailRepository;
+import com.example.purithm.domain.filter.repository.FilterLikeRepository;
 import com.example.purithm.domain.filter.repository.IOSFilterDetailRepository;
 import com.example.purithm.domain.filter.repository.FilterRepository;
 import com.example.purithm.domain.filter.repository.TagRepository;
@@ -35,6 +35,7 @@ public class FilterService {
 	private final IOSFilterDetailRepository iOSFilterDetailRepository;
 	private final AOSFilterDetailRepository aOSFilterDetailRepository;
 	private final UserRepository userRepository;
+	private final FilterLikeRepository filterLikeRepository;
 
 
 	public List<FilterDto> getFilters(Long id, int page, int size, OS os, String tag, String sortedBy) {
@@ -47,26 +48,33 @@ public class FilterService {
 			}
 		}
 
-		Membership membership = userRepository.findById(id)
-			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR)).getMembership();
+		User user = userRepository.findById(id)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
 		if (tag == null) {
 			return filterRepository.findAllByOs(os, pageRequest)
-				.stream().map(filter -> FilterDto.of(filter, membership)).toList();
+				.stream().map(filter -> FilterDto.of(filter, user.getMembership(), canAccess(filter, user))).toList();
 		}
 		return tagRepository.findFilterByTagAndOs(tag, os, pageRequest)
-			.stream().map(filter -> FilterDto.of(filter, membership)).toList();
+			.stream().map(filter -> FilterDto.of(filter, user.getMembership(), canAccess(filter, user))).toList();
 	}
 
-	public FilterDetailDto getFilterDetail(Long filterId) {
+	private boolean canAccess(Filter filter, User user) {
+		return filterLikeRepository.findByFilterAndUser(filter, user).isPresent();
+	}
+
+	public FilterDetailDto getFilterDetail(Long id, Long filterId) {
 		Filter filter = filterRepository.findById(filterId)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+		User user = userRepository.findById(id)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
 		return FilterDetailDto.builder()
 			.name(filter.getName())
 			.likes(filter.getLikes())
+			.pureDegree(filter.getPureDegree())
 			.pictures(filter.getPictures())
-			.pictures(filter.getPictures())
+			.liked(canAccess(filter, user))
 			.build();
 	}
 

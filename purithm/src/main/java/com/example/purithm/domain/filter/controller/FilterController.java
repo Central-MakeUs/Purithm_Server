@@ -37,7 +37,7 @@ public class FilterController implements FilterControllerDocs {
 
   @GetMapping("/{filterId}")
   public SuccessResponse<FilterDetailDto> getFilterDetail(Long id, Long filterId) {
-    return SuccessResponse.of(filterService.getFilterDetail(filterId));
+    return SuccessResponse.of(filterService.getFilterDetail(id, filterId));
   }
 
   @GetMapping("/{filterId}/AOS")
