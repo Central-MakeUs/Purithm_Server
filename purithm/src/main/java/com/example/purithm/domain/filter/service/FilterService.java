@@ -12,6 +12,7 @@ import com.example.purithm.domain.filter.dto.response.FilterDto;
 import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
 import com.example.purithm.domain.filter.entity.AOSFilterDetail;
 import com.example.purithm.domain.filter.entity.Filter;
+import com.example.purithm.domain.filter.entity.FilterLike;
 import com.example.purithm.domain.filter.entity.IOSFilterDetail;
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.filter.repository.AOSFilterDetailRepository;
@@ -25,7 +26,9 @@ import com.example.purithm.global.exception.CustomException;
 import com.example.purithm.global.exception.Error;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FilterService {
@@ -53,20 +56,20 @@ public class FilterService {
 
 		if (tag == null) {
 			return filterRepository.findAllByOs(os, pageRequest)
-				.stream().map(filter -> FilterDto.of(filter, user.getMembership(), canAccess(filter, user))).toList();
+				.stream().map(filter ->
+					FilterDto.of(filter, user.getMembership(), isLike(filter.getId(), id))).toList();
 		}
 		return tagRepository.findFilterByTagAndOs(tag, os, pageRequest)
-			.stream().map(filter -> FilterDto.of(filter, user.getMembership(), canAccess(filter, user))).toList();
+			.stream().map(filter ->
+				FilterDto.of(filter, user.getMembership(), isLike(filter.getId(), id))).toList();
 	}
 
-	private boolean canAccess(Filter filter, User user) {
-		return filterLikeRepository.findByFilterAndUser(filter, user).isPresent();
+	private boolean isLike(Long filterId, Long userId) {
+		return filterLikeRepository.findByFilterIdAndUserId(filterId, userId).isPresent();
 	}
 
 	public FilterDetailDto getFilterDetail(Long id, Long filterId) {
 		Filter filter = filterRepository.findById(filterId)
-			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
-		User user = userRepository.findById(id)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
 		return FilterDetailDto.builder()
@@ -74,7 +77,7 @@ public class FilterService {
 			.likes(filter.getLikes())
 			.pureDegree(filter.getPureDegree())
 			.pictures(filter.getPictures())
-			.liked(canAccess(filter, user))
+			.liked(isLike(filterId, id))
 			.build();
 	}
 
@@ -88,5 +91,21 @@ public class FilterService {
 		IOSFilterDetail iosFilterDetail = iOSFilterDetailRepository.findById(filterId)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 		return IOSFilterDetailDto.of(iosFilterDetail);
+	}
+
+	public void likeFilter(Long userId, Long filterId) {
+		Filter filter = filterRepository.findById(filterId)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+
+		FilterLike like = FilterLike.builder()
+			.filter(filter).user(user).build();
+
+		filterLikeRepository.save(like);
+	}
+
+	public void dislikeFilter(Long userId, Long filterId) {
+		filterLikeRepository.deleteByFilterIdAndUserId(filterId, userId);
 	}
 }

@@ -68,12 +68,12 @@ public interface FilterControllerDocs {
   @Operation(summary = "필터 좋아요를 누릅니다.")
   @ApiResponse(responseCode = "200", description = "필터 좋아요 누르기 성공")
   public SuccessResponse<Boolean> likes(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
+      @LoginInfo Long id,
       @PathVariable Long filterId);
 
   @Operation(summary = "필터 좋아요를 취소합니다.")
   @ApiResponse(responseCode = "200", description = "필터 좋아요 취소하기 성공")
   public SuccessResponse<Boolean> deleteLikes(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
+      @LoginInfo Long id,
       @PathVariable Long filterId);
 }
