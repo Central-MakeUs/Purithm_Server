@@ -18,4 +18,6 @@ public class FilterDetailDto {
     int pureDegree;
     @Schema(description = "필터 사진")
     List<String> pictures;
+    @Schema(description = "좋아요 여부")
+    boolean liked;
 }

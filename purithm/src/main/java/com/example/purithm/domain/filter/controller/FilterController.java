@@ -10,15 +10,12 @@ import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.filter.service.FilterService;
 import com.example.purithm.global.response.SuccessResponse;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,7 +34,7 @@ public class FilterController implements FilterControllerDocs {
 
   @GetMapping("/{filterId}")
   public SuccessResponse<FilterDetailDto> getFilterDetail(Long id, Long filterId) {
-    return SuccessResponse.of(filterService.getFilterDetail(filterId));
+    return SuccessResponse.of(filterService.getFilterDetail(id, filterId));
   }
 
   @GetMapping("/{filterId}/AOS")
@@ -61,14 +58,14 @@ public class FilterController implements FilterControllerDocs {
   }
 
   @PostMapping("/{filterId}/likes")
-  public SuccessResponse<Boolean> likes(String authorization, Long filterId) {
-    return null;
+  public SuccessResponse<Boolean> likes(Long id, Long filterId) {
+    filterService.likeFilter(id, filterId);
+    return SuccessResponse.of();
   }
 
   @DeleteMapping("/{filterId}/likes")
-  public SuccessResponse<Boolean> deleteLikes(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
-      @PathVariable Long filterId) {
-    return null;
+  public SuccessResponse<Boolean> deleteLikes(Long id, Long filterId) {
+    filterService.dislikeFilter(id, filterId);
+    return SuccessResponse.of();
   }
 }
