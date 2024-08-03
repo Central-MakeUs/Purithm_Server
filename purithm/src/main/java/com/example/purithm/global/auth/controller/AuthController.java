@@ -1,6 +1,7 @@
 package com.example.purithm.global.auth.controller;
 
 import com.example.purithm.global.auth.dto.response.KakaoUserInfoDto;
+import com.example.purithm.global.auth.dto.response.LoginDto;
 import com.example.purithm.global.auth.dto.response.SocialUserInfoDto;
 import com.example.purithm.global.auth.jwt.JWTUtil;
 import com.example.purithm.global.config.WebClientConfig;
@@ -32,7 +33,7 @@ public class AuthController implements AuthControllerDocs {
   private final JWTUtil jwtUtil;
 
   @GetMapping("/kakao")
-  public Mono<SuccessResponse<String>> kakaoLogin(String token) {
+  public Mono<SuccessResponse<LoginDto>> kakaoLogin(String token) {
     return webClientConfig.webClient()
         .post()
         .uri("https://kapi.kakao.com/v2/user/me")
@@ -51,8 +52,9 @@ public class AuthController implements AuthControllerDocs {
           Long id = userService.signUp(userInfoDto);
           String jwtToken = jwtUtil.createJwt(id, 60 * 60 * 60 * 1000L);
 
-          SuccessResponse<String> body = SuccessResponse.of(jwtToken);
-          return Mono.just(body);
+            LoginDto loginDto = LoginDto.builder()
+                .accessToken(jwtToken).build();
+          return Mono.just(SuccessResponse.of(loginDto));
         })
         .onErrorResume(err -> {
             log.error(err.getMessage());
@@ -61,7 +63,7 @@ public class AuthController implements AuthControllerDocs {
   }
 
   @GetMapping("/apple")
-  public SuccessResponse<String> appleLogin(String token, String username)
+  public SuccessResponse<LoginDto> appleLogin(String token, String username)
       throws IOException, ParseException, JOSEException {
 
     try {
@@ -76,7 +78,9 @@ public class AuthController implements AuthControllerDocs {
         Long id = userService.signUp(userInfoDto);
         String jwtToken = jwtUtil.createJwt(id, 60 * 60 * 60 * 1000L);
 
-        return SuccessResponse.of(jwtToken);
+        LoginDto loginDto = LoginDto.builder()
+            .accessToken(jwtToken).build();
+        return SuccessResponse.of(loginDto);
     } catch (Exception e) {
         log.error(e.getMessage());
         throw CustomException.of(Error.INVALID_TOKEN_ERROR);

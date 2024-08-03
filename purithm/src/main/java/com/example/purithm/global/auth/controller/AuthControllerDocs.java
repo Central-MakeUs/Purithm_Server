@@ -1,5 +1,6 @@
 package com.example.purithm.global.auth.controller;
 
+import com.example.purithm.global.auth.dto.response.LoginDto;
 import com.example.purithm.global.response.SuccessResponse;
 import com.nimbusds.jose.JOSEException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +21,7 @@ public interface AuthControllerDocs {
           @Parameter(name = "Authorization", description = "kakao access token을 보냅니다. Bearer token 형식입니다.", required = true, in = ParameterIn.HEADER)
       }
   )
-  public Mono<SuccessResponse<String>> kakaoLogin(@RequestHeader("Authorization") String token);
+  public Mono<SuccessResponse<LoginDto>> kakaoLogin(@RequestHeader("Authorization") String token);
 
   @Operation(
       summary = "Apple Login",
@@ -28,7 +29,7 @@ public interface AuthControllerDocs {
           @Parameter(name = "Authorization", description = "Apple access token을 보냅니다. Bearer token 형식입니다.", required = true, in = ParameterIn.HEADER, schema = @Schema(type = "string"))
       }
   )
-  public SuccessResponse<String> appleLogin(
+  public SuccessResponse<LoginDto> appleLogin(
       @RequestHeader("Authorization") String token, @RequestParam(value = "username", required = false) String username)
       throws IOException, ParseException, JOSEException;
 }
