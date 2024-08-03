@@ -1,12 +1,11 @@
 package com.example.purithm.global.auth.dto.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
-import lombok.Getter;
 
 @Builder
-@Getter
-public class LoginDto {
-  int code;
-  String message;
-  String token;
+public record LoginDto(
+	@Schema(description = "token 값")
+    String accessToken
+) {
 }
