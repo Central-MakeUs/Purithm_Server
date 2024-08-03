@@ -3,9 +3,8 @@ package com.example.purithm.domain.filter.controller;
 import com.example.purithm.domain.filter.dto.response.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDto;
+import com.example.purithm.domain.filter.dto.response.FilterReviewDto;
 import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
-import com.example.purithm.domain.filter.dto.response.PhotographerDescriptionDto;
-import com.example.purithm.domain.filter.dto.response.ReviewDto;
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.filter.service.FilterService;
 import com.example.purithm.global.response.SuccessResponse;
@@ -47,14 +46,9 @@ public class FilterController implements FilterControllerDocs {
     return SuccessResponse.of(filterService.getFilterIOSDetail(filterId));
   }
 
-  @GetMapping("/{filterId}/photographer")
-  public SuccessResponse<PhotographerDescriptionDto> getPhotographerDescription(String authorization, Long filterId) {
-    return null;
-  }
-
   @GetMapping("/{filterId}/reviews")
-  public SuccessResponse<List<ReviewDto>> getReviews(String authorization, Long filterId) {
-    return null;
+  public SuccessResponse<FilterReviewDto> getReviews(Long id, Long filterId) {
+    return SuccessResponse.of(filterService.getReviews(filterId));
   }
 
   @PostMapping("/{filterId}/likes")
