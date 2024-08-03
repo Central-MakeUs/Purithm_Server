@@ -3,9 +3,8 @@ package com.example.purithm.domain.filter.controller;
 import com.example.purithm.domain.filter.dto.response.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDto;
+import com.example.purithm.domain.filter.dto.response.FilterReviewDto;
 import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
-import com.example.purithm.domain.filter.dto.response.PhotographerDescriptionDto;
-import com.example.purithm.domain.filter.dto.response.ReviewDto;
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.global.auth.annotation.LoginInfo;
 import com.example.purithm.global.response.SuccessResponse;
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 public interface FilterControllerDocs {
@@ -53,17 +51,9 @@ public interface FilterControllerDocs {
       @LoginInfo Long id,
       @PathVariable Long filterId);
 
-  @Operation(summary = "작가의 말을 조회합니다.")
-  @ApiResponse(responseCode = "200", description = "작가의 말 조회 성공")
-  public SuccessResponse<PhotographerDescriptionDto> getPhotographerDescription(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
-      @PathVariable Long filterId);
-
   @Operation(summary = "필터 상세에서 필터 리뷰들을 조회합니다.")
   @ApiResponse(responseCode = "200", description = "필터 리뷰 조회 성공")
-  public SuccessResponse<List<ReviewDto>> getReviews(
-      @RequestHeader(value = "Authorization") @Parameter(description = "인증 토큰") String authorization,
-      @PathVariable Long filterId);
+  public SuccessResponse<FilterReviewDto> getReviews(@LoginInfo Long id, @PathVariable Long filterId);
 
   @Operation(summary = "필터 좋아요를 누릅니다.")
   @ApiResponse(responseCode = "200", description = "필터 좋아요 누르기 성공")

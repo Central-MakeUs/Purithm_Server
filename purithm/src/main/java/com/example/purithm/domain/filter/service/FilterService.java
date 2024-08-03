@@ -5,11 +5,14 @@ import java.util.List;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.purithm.domain.filter.dto.response.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDto;
+import com.example.purithm.domain.filter.dto.response.FilterReviewDto;
 import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
+import com.example.purithm.domain.filter.dto.response.ReviewDto;
 import com.example.purithm.domain.filter.entity.AOSFilterDetail;
 import com.example.purithm.domain.filter.entity.Filter;
 import com.example.purithm.domain.filter.entity.FilterLike;
@@ -20,6 +23,7 @@ import com.example.purithm.domain.filter.repository.FilterLikeRepository;
 import com.example.purithm.domain.filter.repository.IOSFilterDetailRepository;
 import com.example.purithm.domain.filter.repository.FilterRepository;
 import com.example.purithm.domain.filter.repository.TagRepository;
+import com.example.purithm.domain.review.repository.ReviewRepository;
 import com.example.purithm.domain.user.entity.User;
 import com.example.purithm.domain.user.repository.UserRepository;
 import com.example.purithm.global.exception.CustomException;
@@ -39,6 +43,7 @@ public class FilterService {
 	private final AOSFilterDetailRepository aOSFilterDetailRepository;
 	private final UserRepository userRepository;
 	private final FilterLikeRepository filterLikeRepository;
+	private final ReviewRepository reviewRepository;
 
 
 	public List<FilterDto> getFilters(Long id, int page, int size, OS os, String tag, String sortedBy) {
@@ -107,5 +112,14 @@ public class FilterService {
 
 	public void dislikeFilter(Long userId, Long filterId) {
 		filterLikeRepository.deleteByFilterIdAndUserId(filterId, userId);
+	}
+
+	@Transactional
+	public FilterReviewDto getReviews(Long filterId) {
+		int avg = reviewRepository.getAverage(filterId);
+		List<ReviewDto> reviews = reviewRepository.findAllByFilterId(filterId)
+			.stream().map(ReviewDto::of).toList();
+
+		return FilterReviewDto.of(avg, reviews);
 	}
 }
