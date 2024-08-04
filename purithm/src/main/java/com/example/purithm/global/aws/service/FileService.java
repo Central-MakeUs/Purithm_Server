@@ -11,6 +11,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.example.purithm.global.aws.dto.PresignedUrlDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,14 +19,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class S3Service {
+public class FileService {
 
 	@Value("${spring.cloud.aws.s3.bucket}")
 	private String bucket;
 	private final AmazonS3 amazonS3;
 
-	public String createPresignedUrl(String prefix, String fileName) {
-		String path = generatePath(prefix, fileName);
+	public PresignedUrlDto createPresignedUrl(String prefix, Long id) {
+		String path = generatePath(prefix, id);
 		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, path)
 			.withMethod(HttpMethod.PUT)
 			.withExpiration(getPresignedUrlExpiration());
@@ -33,11 +34,12 @@ public class S3Service {
 		generatePresignedUrlRequest.addRequestParameter(
 			Headers.S3_CANNED_ACL, CannedAccessControlList.PublicRead.toString());
 
-		return amazonS3.generatePresignedUrl(generatePresignedUrlRequest).toString();
+		return PresignedUrlDto.builder()
+			.url(amazonS3.generatePresignedUrl(generatePresignedUrlRequest).toString()).build();
 	}
 
-	private String generatePath(String prefix, String fileName) {
-		fileName = UUID.randomUUID().toString()+"-"+fileName;
+	private String generatePath(String prefix, Long id) {
+		String fileName = UUID.randomUUID().toString()+"-"+String.valueOf(id);
 		return String.format("%s/%s", prefix, fileName);
 	}
 
