@@ -1,5 +1,7 @@
 package com.example.purithm.domain.review.controller;
 
+import com.example.purithm.domain.review.dto.request.ReviewRequestDto;
+import com.example.purithm.domain.review.dto.response.CreatedReviewDto;
 import com.example.purithm.domain.review.dto.response.ReviewResponseDto;
 import com.example.purithm.domain.review.service.ReviewService;
 import com.example.purithm.global.response.SuccessResponse;
@@ -23,7 +25,7 @@ public class ReviewController implements ReviewControllerDocs {
   }
 
   @PostMapping
-  public SuccessResponse<Void> writeReview(Long id, ReviewResponseDto request) {
-    return null;
+  public SuccessResponse<CreatedReviewDto> writeReview(Long id, ReviewRequestDto request) {
+    return SuccessResponse.of(reviewService.writeReview(id, request));
   }
 }

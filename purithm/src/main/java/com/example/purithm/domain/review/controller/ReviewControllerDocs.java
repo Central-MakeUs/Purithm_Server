@@ -1,5 +1,7 @@
 package com.example.purithm.domain.review.controller;
 
+import com.example.purithm.domain.review.dto.request.ReviewRequestDto;
+import com.example.purithm.domain.review.dto.response.CreatedReviewDto;
 import com.example.purithm.domain.review.dto.response.ReviewResponseDto;
 import com.example.purithm.global.auth.annotation.LoginInfo;
 import com.example.purithm.global.response.SuccessResponse;
@@ -15,5 +17,5 @@ public interface ReviewControllerDocs {
 
   @Operation(summary = "리뷰를 작성합니다.")
   @ApiResponse(responseCode = "200", description = "리뷰 작성 성공")
-  public SuccessResponse<Void> writeReview(@LoginInfo Long id, @RequestBody ReviewResponseDto request);
+  public SuccessResponse<CreatedReviewDto> writeReview(@LoginInfo Long id, @RequestBody ReviewRequestDto request);
 }
