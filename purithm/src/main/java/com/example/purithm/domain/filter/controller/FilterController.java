@@ -2,7 +2,7 @@ package com.example.purithm.domain.filter.controller;
 
 import com.example.purithm.domain.filter.dto.response.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
-import com.example.purithm.domain.filter.dto.response.FilterDto;
+import com.example.purithm.domain.filter.dto.response.FilterListDto;
 import com.example.purithm.domain.filter.dto.response.FilterReviewDto;
 import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
 import com.example.purithm.domain.filter.entity.OS;
@@ -11,7 +11,6 @@ import com.example.purithm.global.response.SuccessResponse;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +25,7 @@ public class FilterController implements FilterControllerDocs {
   private final FilterService filterService;
 
   @GetMapping
-  public SuccessResponse<List<FilterDto>> getFilters(Long id, OS os, String tag, String sortedBy, int page, int size
+  public SuccessResponse<FilterListDto> getFilters(Long id, OS os, String tag, String sortedBy, int page, int size
   ) {
     return SuccessResponse.of(filterService.getFilters(id, page, size, os, tag, sortedBy));
   }

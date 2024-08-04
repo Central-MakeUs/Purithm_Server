@@ -2,7 +2,7 @@ package com.example.purithm.domain.filter.controller;
 
 import com.example.purithm.domain.filter.dto.response.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
-import com.example.purithm.domain.filter.dto.response.FilterDto;
+import com.example.purithm.domain.filter.dto.response.FilterListDto;
 import com.example.purithm.domain.filter.dto.response.FilterReviewDto;
 import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
 import com.example.purithm.domain.filter.entity.OS;
@@ -12,14 +12,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import java.util.List;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 public interface FilterControllerDocs {
   @Operation(summary = "메인 홈에서 간략한 필터 정보를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "필터 조회 성공")
-  public SuccessResponse<List<FilterDto>> getFilters(
+  public SuccessResponse<FilterListDto> getFilters(
       @LoginInfo Long id,
       @RequestParam(value = "os", required = true) @Parameter(description = "휴대폰 os",
         examples = {@ExampleObject(value = "AOS"), @ExampleObject(value = "iOS")}) OS os,

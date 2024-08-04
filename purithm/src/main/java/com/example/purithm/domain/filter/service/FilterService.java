@@ -2,6 +2,7 @@ package com.example.purithm.domain.filter.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.purithm.domain.filter.dto.response.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDto;
+import com.example.purithm.domain.filter.dto.response.FilterListDto;
 import com.example.purithm.domain.filter.dto.response.FilterReviewDto;
 import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.ReviewDto;
@@ -46,7 +48,7 @@ public class FilterService {
 	private final ReviewRepository reviewRepository;
 
 
-	public List<FilterDto> getFilters(Long id, int page, int size, OS os, String tag, String sortedBy) {
+	public FilterListDto getFilters(Long id, int page, int size, OS os, String tag, String sortedBy) {
 		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
 		switch (sortedBy) {
 			case "earliest" -> { // 오래된 순 정렬
@@ -60,13 +62,22 @@ public class FilterService {
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
 		if (tag == null) {
-			return filterRepository.findAllByOs(os, pageRequest)
-				.stream().map(filter ->
-					FilterDto.of(filter, user.getMembership(), isLike(filter.getId(), id))).toList();
+			Page<Filter> filters = filterRepository.findAllByOs(os, pageRequest);
+			return FilterListDto.builder()
+				.isLast(filters.isLast())
+				.filters(
+					filters.getContent().stream().map(filter ->
+						FilterDto.of(filter, user.getMembership(), isLike(filter.getId(), id))).toList())
+				.build();
 		}
-		return tagRepository.findFilterByTagAndOs(tag, os, pageRequest)
-			.stream().map(filter ->
-				FilterDto.of(filter, user.getMembership(), isLike(filter.getId(), id))).toList();
+
+		Page<Filter> filters = tagRepository.findFilterByTagAndOs(tag, os, pageRequest);
+		return FilterListDto.builder()
+			.isLast(filters.isLast())
+			.filters(
+				filters.getContent().stream().map(filter ->
+					FilterDto.of(filter, user.getMembership(), isLike(filter.getId(), id))).toList())
+			.build();
 	}
 
 	private boolean isLike(Long filterId, Long userId) {
