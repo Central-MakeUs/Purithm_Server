@@ -1,9 +1,12 @@
 package com.example.purithm.domain.review.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
+
 import java.util.Date;
 import java.util.List;
 
+@Builder
 public record ReviewResponseDto (
     @Schema(description = "리뷰 내용")
     String content,
