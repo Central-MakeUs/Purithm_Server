@@ -1,5 +1,6 @@
 package com.example.purithm.domain.filter.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -8,12 +9,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.purithm.domain.filter.dto.response.AOSFilterDetailDto;
+import com.example.purithm.domain.filter.dto.response.FilterPictureDto;
+import com.example.purithm.domain.filter.dto.response.filterDetailValue.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDto;
 import com.example.purithm.domain.filter.dto.response.FilterListDto;
 import com.example.purithm.domain.filter.dto.response.FilterReviewDto;
-import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
+import com.example.purithm.domain.filter.dto.response.filterDetailValue.IOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.ReviewDto;
 import com.example.purithm.domain.filter.entity.AOSFilterDetail;
 import com.example.purithm.domain.filter.entity.Filter;
@@ -88,11 +90,21 @@ public class FilterService {
 		Filter filter = filterRepository.findById(filterId)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
+		List<String> pictures = filter.getPictures();
+		List<String> originalPictures = filter.getOriginalPictures();
+		List<FilterPictureDto> filters = new ArrayList<>();
+
+		for (int i=0; i< pictures.size(); i++) {
+			filters.add(FilterPictureDto.builder()
+				.picture(pictures.get(i))
+				.originalPicture(originalPictures.get(i)).build());
+		}
+
 		return FilterDetailDto.builder()
 			.name(filter.getName())
 			.likes(filter.getLikes())
 			.pureDegree(filter.getPureDegree())
-			.pictures(filter.getPictures())
+			.pictures(filters)
 			.liked(isLike(filterId, id))
 			.build();
 	}

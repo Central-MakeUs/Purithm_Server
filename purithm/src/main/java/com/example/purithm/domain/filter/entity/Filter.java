@@ -27,20 +27,33 @@ public class Filter {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
   private String name;
+
   private String thumbnail;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "photographer_id", nullable = false)
   private Photographer photographer;
+
   private int likes;
+
   private int price;
+
   @Temporal(TemporalType.TIMESTAMP)
   @CreatedDate
   @Column(updatable = false)
   private Date createdAt;
+
   int pureDegree;
+
   @Convert(converter = StringListConverter.class)
   private List<String> pictures;
+
+  @Convert(converter = StringListConverter.class)
+  private List<String> originalPictures;
+
   private Membership membership;
+
   private OS os;
 }

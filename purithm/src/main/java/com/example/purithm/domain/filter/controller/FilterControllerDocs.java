@@ -1,10 +1,10 @@
 package com.example.purithm.domain.filter.controller;
 
-import com.example.purithm.domain.filter.dto.response.AOSFilterDetailDto;
+import com.example.purithm.domain.filter.dto.response.filterDetailValue.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterListDto;
 import com.example.purithm.domain.filter.dto.response.FilterReviewDto;
-import com.example.purithm.domain.filter.dto.response.IOSFilterDetailDto;
+import com.example.purithm.domain.filter.dto.response.filterDetailValue.IOSFilterDetailDto;
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.global.auth.annotation.LoginInfo;
 import com.example.purithm.global.response.SuccessResponse;
