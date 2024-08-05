@@ -1,4 +1,4 @@
-package com.example.purithm.domain.filter.dto.response;
+package com.example.purithm.domain.filter.dto.response.filterDetailValue;
 
 import com.example.purithm.domain.filter.entity.IOSFilterDetail;
 
