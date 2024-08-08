@@ -66,11 +66,16 @@ public class FilterService {
 
 		if (tag == null) {
 			Page<Filter> filters = filterRepository.findAllByOs(os, pageRequest);
+
 			return FilterListDto.builder()
 				.isLast(filters.isLast())
 				.filters(
 					filters.getContent().stream().map(filter ->
-						FilterDto.of(filter, user.getMembership(), isLike(filter.getId(), id))).toList())
+						FilterDto.of(
+							filter,
+							user.getMembership(),
+							isLike(filter.getId(), id),
+							filterLikeRepository.getLikes(filter))).toList())
 				.build();
 		}
 
@@ -79,7 +84,11 @@ public class FilterService {
 			.isLast(filters.isLast())
 			.filters(
 				filters.getContent().stream().map(filter ->
-					FilterDto.of(filter, user.getMembership(), isLike(filter.getId(), id))).toList())
+					FilterDto.of(
+						filter,
+						user.getMembership(),
+						isLike(filter.getId(), id),
+						filterLikeRepository.getLikes(filter))).toList())
 			.build();
 	}
 
@@ -103,7 +112,7 @@ public class FilterService {
 
 		return FilterDetailDto.builder()
 			.name(filter.getName())
-			.likes(filter.getLikes())
+			.likes(filterLikeRepository.getLikes(filter))
 			.pureDegree(filter.getPureDegree())
 			.pictures(filters)
 			.liked(isLike(filterId, id))
@@ -134,6 +143,7 @@ public class FilterService {
 		filterLikeRepository.save(like);
 	}
 
+	@Transactional
 	public void dislikeFilter(Long userId, Long filterId) {
 		filterLikeRepository.deleteByFilterIdAndUserId(filterId, userId);
 	}

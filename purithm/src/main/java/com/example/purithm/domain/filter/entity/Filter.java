@@ -36,8 +36,6 @@ public class Filter {
   @JoinColumn(name = "photographer_id", nullable = false)
   private Photographer photographer;
 
-  private int likes;
-
   private int price;
 
   @Temporal(TemporalType.TIMESTAMP)
