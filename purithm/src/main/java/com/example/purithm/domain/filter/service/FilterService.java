@@ -2,6 +2,7 @@ package com.example.purithm.domain.filter.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -139,10 +140,10 @@ public class FilterService {
 
 	@Transactional
 	public FilterReviewDto getReviews(Long filterId) {
-		int avg = reviewRepository.getAverage(filterId);
+		Integer avg = reviewRepository.getAverage(filterId);
 		List<ReviewDto> reviews = reviewRepository.findAllByFilterId(filterId)
 			.stream().map(ReviewDto::of).toList();
 
-		return FilterReviewDto.of(avg, reviews);
+		return FilterReviewDto.of(Optional.ofNullable(avg).orElse(0), reviews);
 	}
 }
