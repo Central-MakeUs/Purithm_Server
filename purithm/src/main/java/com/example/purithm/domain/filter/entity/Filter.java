@@ -43,8 +43,6 @@ public class Filter {
   @Column(updatable = false)
   private Date createdAt;
 
-  int pureDegree;
-
   @Convert(converter = StringListConverter.class)
   private List<String> pictures;
 

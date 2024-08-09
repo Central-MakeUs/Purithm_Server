@@ -54,9 +54,9 @@ public class FilterService {
 	public FilterListDto getFilters(Long id, int page, int size, OS os, String tag, String sortedBy) {
 		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
 		switch (sortedBy) {
-			case "earliest" -> { // 오래된 순 정렬
+			case "popular" -> { // 오래된 순 정렬
 				pageRequest = PageRequest.of(page, size, Sort.by("createdAt").ascending());
-			} case "popular" -> { // 퓨어지수 높은 순
+			} case "pure" -> { // 퓨어지수 높은 순
 				pageRequest = PageRequest.of(page, size, Sort.by("likes").descending());
 			}
 		}
@@ -113,7 +113,7 @@ public class FilterService {
 		return FilterDetailDto.builder()
 			.name(filter.getName())
 			.likes(filterLikeRepository.getLikes(filter))
-			.pureDegree(filter.getPureDegree())
+			.pureDegree(Optional.ofNullable(reviewRepository.getAverage(filterId)).orElse(0))
 			.pictures(filters)
 			.liked(isLike(filterId, id))
 			.build();
