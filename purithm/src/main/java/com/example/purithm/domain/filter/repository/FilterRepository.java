@@ -11,14 +11,14 @@ import com.example.purithm.domain.filter.entity.OS;
 
 @Repository
 public interface FilterRepository extends JpaRepository<Filter, Long> {
-	Page<Object[]> findAllByOs(OS os, Pageable pageable);
+	@Query("SELECT f FROM Filter f WHERE f.os=:os ORDER BY f.createdAt DESC")
+	Page<Filter> findAllByOs(OS os, Pageable pageable);
 	@Query("SELECT f, COUNT(fl.id) AS like_count " +
 		"FROM Filter f " +
-		"LEFT JOIN FilterLike fl " +
-		"ON f.id=fl.filter.id " +
-		"WHERE f.os=:os " +
+		"LEFT JOIN FilterLike fl ON f.id = fl.filter.id " +
+		"WHERE f.os = :os " +
 		"GROUP BY f.id " +
-		"ORDER BY like_count DESC")
+		"ORDER BY like_count DESC, f.id ASC")
 	Page<Object[]> findAllWithLikeSorting(OS os, Pageable pageable);
 
 	@Query("SELECT f, AVG(r.pureDegree) AS avg " +
@@ -26,7 +26,7 @@ public interface FilterRepository extends JpaRepository<Filter, Long> {
 		"LEFT JOIN Review r ON f.id = r.filter.id " +
 		"WHERE f.os=:os " +
 		"GROUP BY f.id " +
-		"ORDER BY avg DESC")
+		"ORDER BY avg DESC, f.id ASC")
 	Page<Object[]> findAllWithReviewSorting(OS os, Pageable pageable);
 
 }
