@@ -57,24 +57,42 @@ public class FilterService {
 
 		PageRequest pageRequest = PageRequest.of(page, size);
 		Page<Object[]> filters;
+		boolean isLast;
+		List<FilterDto> filterDtos;
 		if (tag == null) {
 			if (sortedBy.equals("popular")) {
 				filters = filterRepository.findAllWithLikeSorting(os, pageRequest);
+				isLast = filters.isLast();
+				filterDtos = filters.getContent().stream().map(filter ->
+					FilterDto.of(
+						(Filter) filter[0],
+						user.getMembership(),
+						isLike(((Filter) filter[0]).getId(), id),
+						filterLikeRepository.getLikes((Filter) filter[0]))).toList();
 			} else if (sortedBy.equals("pure")) {
 				filters = filterRepository.findAllWithReviewSorting(os, pageRequest);
-
+				isLast = filters.isLast();
+				filterDtos = filters.getContent().stream().map(filter ->
+					FilterDto.of(
+						(Filter) filter[0],
+						user.getMembership(),
+						isLike(((Filter) filter[0]).getId(), id),
+						filterLikeRepository.getLikes((Filter) filter[0]))).toList();
 			} else {
 				pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
-				filters = filterRepository.findAllByOs(os, pageRequest);
+				Page<Filter> filterByLatest = filterRepository.findAllByOs(os, pageRequest);
+				isLast = filterByLatest.isLast();
+				filterDtos = filterByLatest.getContent().stream().map(filter ->
+					FilterDto.of(
+						filter,
+						user.getMembership(),
+						isLike((filter).getId(), id),
+						filterLikeRepository.getLikes(filter))).toList();
 			}
 
 			return FilterListDto.builder()
-				.isLast(filters.isLast())
-				.filters(filters.getContent().stream().map(filter ->
-					FilterDto.of((Filter) filter[0],
-						user.getMembership(),
-						isLike(((Filter) filter[0]).getId(), id),
-						filterLikeRepository.getLikes((Filter) filter[0]))).toList()).build();
+				.isLast(isLast)
+				.filters(filterDtos).build();
 		}
 
 		filters = tagRepository.findFilterByTagAndOs(tag, os, pageRequest);
