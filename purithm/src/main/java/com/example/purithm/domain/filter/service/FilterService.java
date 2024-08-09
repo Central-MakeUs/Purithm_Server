@@ -52,44 +52,41 @@ public class FilterService {
 
 
 	public FilterListDto getFilters(Long id, int page, int size, OS os, String tag, String sortedBy) {
-		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
-		switch (sortedBy) {
-			case "popular" -> { // 오래된 순 정렬
-				pageRequest = PageRequest.of(page, size, Sort.by("createdAt").ascending());
-			} case "pure" -> { // 퓨어지수 높은 순
-				pageRequest = PageRequest.of(page, size, Sort.by("likes").descending());
-			}
-		}
-
 		User user = userRepository.findById(id)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
+		PageRequest pageRequest = PageRequest.of(page, size);
+		Page<Object[]> filters;
 		if (tag == null) {
-			Page<Filter> filters = filterRepository.findAllByOs(os, pageRequest);
+			if (sortedBy.equals("popular")) {
+				filters = filterRepository.findAllWithLikeSorting(os, pageRequest);
+			} else if (sortedBy.equals("pure")) {
+				filters = filterRepository.findAllWithReviewSorting(os, pageRequest);
+
+			} else {
+				pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
+				filters = filterRepository.findAllByOs(os, pageRequest);
+			}
 
 			return FilterListDto.builder()
 				.isLast(filters.isLast())
-				.filters(
-					filters.getContent().stream().map(filter ->
-						FilterDto.of(
-							filter,
-							user.getMembership(),
-							isLike(filter.getId(), id),
-							filterLikeRepository.getLikes(filter))).toList())
-				.build();
+				.filters(filters.getContent().stream().map(filter ->
+					FilterDto.of((Filter) filter[0],
+						user.getMembership(),
+						isLike(((Filter) filter[0]).getId(), id),
+						filterLikeRepository.getLikes((Filter) filter[0]))).toList()).build();
 		}
 
-		Page<Filter> filters = tagRepository.findFilterByTagAndOs(tag, os, pageRequest);
+		filters = tagRepository.findFilterByTagAndOs(tag, os, pageRequest);
 		return FilterListDto.builder()
 			.isLast(filters.isLast())
 			.filters(
 				filters.getContent().stream().map(filter ->
 					FilterDto.of(
-						filter,
+						(Filter) filter[0],
 						user.getMembership(),
-						isLike(filter.getId(), id),
-						filterLikeRepository.getLikes(filter))).toList())
-			.build();
+						isLike(((Filter) filter[0]).getId(), id),
+						filterLikeRepository.getLikes((Filter) filter[0]))).toList()).build();
 	}
 
 	private boolean isLike(Long filterId, Long userId) {
