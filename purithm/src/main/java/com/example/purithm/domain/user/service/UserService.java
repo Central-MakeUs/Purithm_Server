@@ -1,5 +1,6 @@
 package com.example.purithm.domain.user.service;
 
+import com.example.purithm.domain.filter.entity.Membership;
 import com.example.purithm.global.auth.dto.response.SocialUserInfoDto;
 import com.example.purithm.domain.user.entity.User;
 import com.example.purithm.domain.user.repository.UserRepository;
@@ -29,6 +30,7 @@ public class UserService {
         .providerId(socialUserInfoDto.getProviderId())
         .username(socialUserInfoDto.getUsername())
         .terms(false)
+        .membership(Membership.BASIC)
         .build();
 
     User savedUser = userRepository.save(user);

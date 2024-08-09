@@ -28,7 +28,7 @@ public record FilterDto(
     boolean liked
 
 ) {
-    public static FilterDto of(Filter filter, Membership membership, boolean liked) {
+    public static FilterDto of(Filter filter, Membership membership, boolean liked, int numOfLikes) {
         return FilterDto.builder()
             .id(filter.getId())
             .membership(filter.getMembership())
@@ -36,7 +36,7 @@ public record FilterDto(
             .thumbnail(filter.getThumbnail())
             .photographerId(filter.getPhotographer().getId())
             .photographerName(filter.getPhotographer().getUsername())
-            .likes(filter.getLikes())
+            .likes(numOfLikes)
             .canAccess(checkAccess(membership, filter.getMembership()))
             .liked(liked)
             .build();

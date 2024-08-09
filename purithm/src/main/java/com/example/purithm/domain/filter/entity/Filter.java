@@ -36,16 +36,12 @@ public class Filter {
   @JoinColumn(name = "photographer_id", nullable = false)
   private Photographer photographer;
 
-  private int likes;
-
   private int price;
 
   @Temporal(TemporalType.TIMESTAMP)
   @CreatedDate
   @Column(updatable = false)
   private Date createdAt;
-
-  int pureDegree;
 
   @Convert(converter = StringListConverter.class)
   private List<String> pictures;

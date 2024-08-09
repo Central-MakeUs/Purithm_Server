@@ -2,6 +2,7 @@ package com.example.purithm.domain.filter.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,35 +52,41 @@ public class FilterService {
 
 
 	public FilterListDto getFilters(Long id, int page, int size, OS os, String tag, String sortedBy) {
-		PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
-		switch (sortedBy) {
-			case "earliest" -> { // 오래된 순 정렬
-				pageRequest = PageRequest.of(page, size, Sort.by("createdAt").ascending());
-			} case "popular" -> { // 퓨어지수 높은 순
-				pageRequest = PageRequest.of(page, size, Sort.by("likes").descending());
-			}
-		}
-
 		User user = userRepository.findById(id)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
+		PageRequest pageRequest = PageRequest.of(page, size);
+		Page<Object[]> filters;
 		if (tag == null) {
-			Page<Filter> filters = filterRepository.findAllByOs(os, pageRequest);
+			if (sortedBy.equals("popular")) {
+				filters = filterRepository.findAllWithLikeSorting(os, pageRequest);
+			} else if (sortedBy.equals("pure")) {
+				filters = filterRepository.findAllWithReviewSorting(os, pageRequest);
+
+			} else {
+				pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
+				filters = filterRepository.findAllByOs(os, pageRequest);
+			}
+
 			return FilterListDto.builder()
 				.isLast(filters.isLast())
-				.filters(
-					filters.getContent().stream().map(filter ->
-						FilterDto.of(filter, user.getMembership(), isLike(filter.getId(), id))).toList())
-				.build();
+				.filters(filters.getContent().stream().map(filter ->
+					FilterDto.of((Filter) filter[0],
+						user.getMembership(),
+						isLike(((Filter) filter[0]).getId(), id),
+						filterLikeRepository.getLikes((Filter) filter[0]))).toList()).build();
 		}
 
-		Page<Filter> filters = tagRepository.findFilterByTagAndOs(tag, os, pageRequest);
+		filters = tagRepository.findFilterByTagAndOs(tag, os, pageRequest);
 		return FilterListDto.builder()
 			.isLast(filters.isLast())
 			.filters(
 				filters.getContent().stream().map(filter ->
-					FilterDto.of(filter, user.getMembership(), isLike(filter.getId(), id))).toList())
-			.build();
+					FilterDto.of(
+						(Filter) filter[0],
+						user.getMembership(),
+						isLike(((Filter) filter[0]).getId(), id),
+						filterLikeRepository.getLikes((Filter) filter[0]))).toList()).build();
 	}
 
 	private boolean isLike(Long filterId, Long userId) {
@@ -102,8 +109,8 @@ public class FilterService {
 
 		return FilterDetailDto.builder()
 			.name(filter.getName())
-			.likes(filter.getLikes())
-			.pureDegree(filter.getPureDegree())
+			.likes(filterLikeRepository.getLikes(filter))
+			.pureDegree(Optional.ofNullable(reviewRepository.getAverage(filterId)).orElse(0))
 			.pictures(filters)
 			.liked(isLike(filterId, id))
 			.build();
@@ -133,16 +140,17 @@ public class FilterService {
 		filterLikeRepository.save(like);
 	}
 
+	@Transactional
 	public void dislikeFilter(Long userId, Long filterId) {
 		filterLikeRepository.deleteByFilterIdAndUserId(filterId, userId);
 	}
 
 	@Transactional
 	public FilterReviewDto getReviews(Long filterId) {
-		int avg = reviewRepository.getAverage(filterId);
+		Integer avg = reviewRepository.getAverage(filterId);
 		List<ReviewDto> reviews = reviewRepository.findAllByFilterId(filterId)
 			.stream().map(ReviewDto::of).toList();
 
-		return FilterReviewDto.of(avg, reviews);
+		return FilterReviewDto.of(Optional.ofNullable(avg).orElse(0), reviews);
 	}
 }

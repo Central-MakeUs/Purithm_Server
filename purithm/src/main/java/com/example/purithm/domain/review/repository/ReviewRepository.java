@@ -13,5 +13,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 	@Query("select avg(r.pureDegree) as avg\n"
 		+ "from Review r\n"
 		+ "where r.filter.id = :id")
-	int getAverage(@Param("id") Long filterId);
+	Integer getAverage(@Param("id") Long filterId);
 }
