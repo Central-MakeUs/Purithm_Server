@@ -17,4 +17,6 @@ public interface FilterLikeRepository extends JpaRepository<FilterLike, Long> {
 		+ "from FilterLike fl\n"
 		+ "where fl.filter = :filter")
 	int getLikes(@Param("filter") Filter filter);
+
+	boolean existsByFilterIdAndUserId(Long filterId, Long userId);
 }
