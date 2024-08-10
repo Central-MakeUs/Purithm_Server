@@ -130,10 +130,13 @@ public class FilterService {
 		return AOSFilterDetailDto.of(filter, isLike(filterId, userId), aosFilterDetail);
 	}
 
-	public IOSFilterDetailDto getFilterIOSDetail(Long filterId) {
+	public IOSFilterDetailDto getFilterIOSDetail(Long filterId, Long userId) {
+		Filter filter = filterRepository.findById(filterId)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 		IOSFilterDetail iosFilterDetail = iOSFilterDetailRepository.findById(filterId)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
-		return IOSFilterDetailDto.of(iosFilterDetail);
+
+		return IOSFilterDetailDto.of(filter, isLike(filterId, userId), iosFilterDetail);
 	}
 
 	public void likeFilter(Long userId, Long filterId) {

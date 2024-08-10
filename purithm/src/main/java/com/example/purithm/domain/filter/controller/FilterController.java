@@ -43,7 +43,7 @@ public class FilterController implements FilterControllerDocs {
 
   @GetMapping("/{filterId}/iOS")
   public SuccessResponse<IOSFilterDetailDto> getIOSFilter(Long id, Long filterId) {
-    return SuccessResponse.of(filterService.getFilterIOSDetail(filterId));
+    return SuccessResponse.of(filterService.getFilterIOSDetail(filterId, id));
   }
 
   @GetMapping("/{filterId}/reviews")
