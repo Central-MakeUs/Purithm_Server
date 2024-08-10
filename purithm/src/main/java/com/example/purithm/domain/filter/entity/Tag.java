@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum Tag {
-	SPRING("봄"),
-	SUMMER("여름"),
-	FALL("가을"),
-	WINTER("겨울"),
-	BACKLIGHT("역광에서"),
+	SPRING("spring"),
+	SUMMER("summer"),
+	FALL("fall"),
+	WINTER("winter"),
+	BACKLIGHT("backlight"),
 	NIGHT("night"),
-	DAILY("daily");
+	DAILY("daily"),
+	CAT("cat");
 
 	private final String value;
 
