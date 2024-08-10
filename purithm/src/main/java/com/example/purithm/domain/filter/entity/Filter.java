@@ -52,4 +52,6 @@ public class Filter {
   private Membership membership;
 
   private OS os;
+
+  private Tag tag;
 }

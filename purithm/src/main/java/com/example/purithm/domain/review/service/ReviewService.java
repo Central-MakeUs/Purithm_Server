@@ -29,7 +29,7 @@ public class ReviewService {
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
 		return ReviewResponseDto.builder()
-			.content(review.getReview())
+			.content(review.getContent())
 			.username(review.getUser().getUsername())
 			.userProfile(review.getUser().getProfile())
 			.createdAt(review.getCreatedAt())
@@ -47,7 +47,7 @@ public class ReviewService {
 		Review review = Review.builder()
 			.user(user)
 			.filter(filter)
-			.review(request.content())
+			.content(request.content())
 			.pictures(request.picture())
 			.pureDegree(request.pureDegree())
 			.build();

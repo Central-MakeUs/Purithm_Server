@@ -47,7 +47,7 @@ public class Review {
   @JoinColumn(name = "filter_id", nullable = false)
   private Filter filter;
 
-  private String review;
+  private String content;
 
   @Convert(converter = StringListConverter.class)
   private List<String> pictures;
