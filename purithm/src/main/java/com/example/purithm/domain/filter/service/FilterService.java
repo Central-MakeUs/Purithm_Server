@@ -23,11 +23,11 @@ import com.example.purithm.domain.filter.entity.Filter;
 import com.example.purithm.domain.filter.entity.FilterLike;
 import com.example.purithm.domain.filter.entity.IOSFilterDetail;
 import com.example.purithm.domain.filter.entity.OS;
+import com.example.purithm.domain.filter.entity.Tag;
 import com.example.purithm.domain.filter.repository.AOSFilterDetailRepository;
 import com.example.purithm.domain.filter.repository.FilterLikeRepository;
 import com.example.purithm.domain.filter.repository.IOSFilterDetailRepository;
 import com.example.purithm.domain.filter.repository.FilterRepository;
-import com.example.purithm.domain.filter.repository.TagRepository;
 import com.example.purithm.domain.review.repository.ReviewRepository;
 import com.example.purithm.domain.user.entity.User;
 import com.example.purithm.domain.user.repository.UserRepository;
@@ -43,7 +43,6 @@ import lombok.extern.slf4j.Slf4j;
 public class FilterService {
 
 	private final FilterRepository filterRepository;
-	private final TagRepository tagRepository;
 	private final IOSFilterDetailRepository iOSFilterDetailRepository;
 	private final AOSFilterDetailRepository aOSFilterDetailRepository;
 	private final UserRepository userRepository;
@@ -51,7 +50,7 @@ public class FilterService {
 	private final ReviewRepository reviewRepository;
 
 
-	public FilterListDto getFilters(Long id, int page, int size, OS os, String tag, String sortedBy) {
+	public FilterListDto getFilters(Long id, int page, int size, OS os, Tag tag, String sortedBy) {
 		User user = userRepository.findById(id)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
@@ -59,52 +58,40 @@ public class FilterService {
 		Page<Object[]> filters;
 		boolean isLast;
 		List<FilterDto> filterDtos;
-		if (tag == null) {
-			if (sortedBy.equals("popular")) {
-				filters = filterRepository.findAllWithLikeSorting(os, pageRequest);
-				isLast = filters.isLast();
-				filterDtos = filters.getContent().stream().map(filter ->
-					FilterDto.of(
-						(Filter) filter[0],
-						user.getMembership(),
-						isLike(((Filter) filter[0]).getId(), id),
-						filterLikeRepository.getLikes((Filter) filter[0]))).toList();
-			} else if (sortedBy.equals("pure")) {
-				filters = filterRepository.findAllWithReviewSorting(os, pageRequest);
-				isLast = filters.isLast();
-				filterDtos = filters.getContent().stream().map(filter ->
-					FilterDto.of(
-						(Filter) filter[0],
-						user.getMembership(),
-						isLike(((Filter) filter[0]).getId(), id),
-						filterLikeRepository.getLikes((Filter) filter[0]))).toList();
-			} else {
-				pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
-				Page<Filter> filterByLatest = filterRepository.findAllByOs(os, pageRequest);
-				isLast = filterByLatest.isLast();
-				filterDtos = filterByLatest.getContent().stream().map(filter ->
-					FilterDto.of(
-						filter,
-						user.getMembership(),
-						isLike((filter).getId(), id),
-						filterLikeRepository.getLikes(filter))).toList();
-			}
 
-			return FilterListDto.builder()
-				.isLast(isLast)
-				.filters(filterDtos).build();
+		if (sortedBy.equals("popular")) {
+			filters = filterRepository.findAllWithLikeSorting(os, tag, pageRequest);
+			isLast = filters.isLast();
+			filterDtos = filters.getContent().stream().map(filter ->
+				FilterDto.of(
+					(Filter) filter[0],
+					user.getMembership(),
+					isLike(((Filter) filter[0]).getId(), id),
+					filterLikeRepository.getLikes((Filter) filter[0]))).toList();
+		} else if (sortedBy.equals("pure")) {
+			filters = filterRepository.findAllWithReviewSorting(os, tag, pageRequest);
+			isLast = filters.isLast();
+			filterDtos = filters.getContent().stream().map(filter ->
+				FilterDto.of(
+					(Filter) filter[0],
+					user.getMembership(),
+					isLike(((Filter) filter[0]).getId(), id),
+					filterLikeRepository.getLikes((Filter) filter[0]))).toList();
+		} else {
+			pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
+			Page<Filter> filterByLatest = filterRepository.findAllByOs(os, tag, pageRequest);
+			isLast = filterByLatest.isLast();
+			filterDtos = filterByLatest.getContent().stream().map(filter ->
+				FilterDto.of(
+					filter,
+					user.getMembership(),
+					isLike((filter).getId(), id),
+					filterLikeRepository.getLikes(filter))).toList();
 		}
 
-		filters = tagRepository.findFilterByTagAndOs(tag, os, pageRequest);
 		return FilterListDto.builder()
-			.isLast(filters.isLast())
-			.filters(
-				filters.getContent().stream().map(filter ->
-					FilterDto.of(
-						(Filter) filter[0],
-						user.getMembership(),
-						isLike(((Filter) filter[0]).getId(), id),
-						filterLikeRepository.getLikes((Filter) filter[0]))).toList()).build();
+			.isLast(isLast)
+			.filters(filterDtos).build();
 	}
 
 	private boolean isLike(Long filterId, Long userId) {

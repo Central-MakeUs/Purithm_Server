@@ -6,6 +6,7 @@ import com.example.purithm.domain.filter.dto.response.FilterListDto;
 import com.example.purithm.domain.filter.dto.response.FilterReviewDto;
 import com.example.purithm.domain.filter.dto.response.filterDetailValue.IOSFilterDetailDto;
 import com.example.purithm.domain.filter.entity.OS;
+import com.example.purithm.domain.filter.entity.Tag;
 import com.example.purithm.domain.filter.service.FilterService;
 import com.example.purithm.global.response.SuccessResponse;
 
@@ -25,7 +26,7 @@ public class FilterController implements FilterControllerDocs {
   private final FilterService filterService;
 
   @GetMapping
-  public SuccessResponse<FilterListDto> getFilters(Long id, OS os, String tag, String sortedBy, int page, int size
+  public SuccessResponse<FilterListDto> getFilters(Long id, OS os, Tag tag, String sortedBy, int page, int size
   ) {
     return SuccessResponse.of(filterService.getFilters(id, page, size, os, tag, sortedBy));
   }

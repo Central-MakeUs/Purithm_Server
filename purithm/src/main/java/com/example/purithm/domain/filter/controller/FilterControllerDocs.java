@@ -6,6 +6,7 @@ import com.example.purithm.domain.filter.dto.response.FilterListDto;
 import com.example.purithm.domain.filter.dto.response.FilterReviewDto;
 import com.example.purithm.domain.filter.dto.response.filterDetailValue.IOSFilterDetailDto;
 import com.example.purithm.domain.filter.entity.OS;
+import com.example.purithm.domain.filter.entity.Tag;
 import com.example.purithm.global.auth.annotation.LoginInfo;
 import com.example.purithm.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +23,7 @@ public interface FilterControllerDocs {
       @LoginInfo Long id,
       @RequestParam(value = "os", required = true) @Parameter(description = "휴대폰 os",
         examples = {@ExampleObject(value = "AOS"), @ExampleObject(value = "iOS")}) OS os,
-      @RequestParam(value = "tag", required = false) String tag,
+      @RequestParam(value = "tag", required = false) Tag tag,
       @RequestParam(value = "sortedBy", required = false) @Parameter(description = "정렬순",
           examples =
               {@ExampleObject(name = "최신순", summary = "최신순 정렬", value = "latest"),
