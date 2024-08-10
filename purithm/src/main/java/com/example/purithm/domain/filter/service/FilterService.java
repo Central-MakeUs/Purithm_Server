@@ -121,10 +121,13 @@ public class FilterService {
 			.build();
 	}
 
-	public AOSFilterDetailDto getFilterAOSDetail(Long filterId) {
+	public AOSFilterDetailDto getFilterAOSDetail(Long filterId, Long userId) {
+		Filter filter = filterRepository.findById(filterId)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 		AOSFilterDetail aosFilterDetail = aOSFilterDetailRepository.findById(filterId)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
-		return AOSFilterDetailDto.of(aosFilterDetail);
+
+		return AOSFilterDetailDto.of(filter, isLike(filterId, userId), aosFilterDetail);
 	}
 
 	public IOSFilterDetailDto getFilterIOSDetail(Long filterId) {
