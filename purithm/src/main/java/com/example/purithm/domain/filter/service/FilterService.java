@@ -134,15 +134,17 @@ public class FilterService {
 	}
 
 	public void likeFilter(Long userId, Long filterId) {
-		Filter filter = filterRepository.findById(filterId)
-			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+		if (!filterLikeRepository.existsByFilterIdAndUserId(filterId, userId)) {
+			Filter filter = filterRepository.findById(filterId)
+				.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+			User user = userRepository.findById(userId)
+				.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
-		FilterLike like = FilterLike.builder()
-			.filter(filter).user(user).build();
+			FilterLike like = FilterLike.builder()
+				.filter(filter).user(user).build();
 
-		filterLikeRepository.save(like);
+			filterLikeRepository.save(like);
+		}
 	}
 
 	@Transactional
