@@ -1,5 +1,6 @@
 package com.example.purithm.domain.filter.controller;
 
+import com.example.purithm.domain.filter.dto.response.FilterDescriptionDto;
 import com.example.purithm.domain.filter.dto.response.filterDetailValue.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterListDto;
@@ -64,6 +65,12 @@ public interface FilterControllerDocs {
   @Operation(summary = "필터 좋아요를 취소합니다.")
   @ApiResponse(responseCode = "200", description = "필터 좋아요 취소하기 성공")
   public SuccessResponse<Boolean> deleteLikes(
+      @LoginInfo Long id,
+      @PathVariable Long filterId);
+
+  @Operation(summary = "필터 상세에서 필터 소개를 조회합니다.")
+  @ApiResponse(responseCode = "200", description = "필터 소개 조회 성공")
+  public SuccessResponse<FilterDescriptionDto> getDescriptions(
       @LoginInfo Long id,
       @PathVariable Long filterId);
 }

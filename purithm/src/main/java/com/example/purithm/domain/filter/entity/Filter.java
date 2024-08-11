@@ -1,6 +1,7 @@
 package com.example.purithm.domain.filter.entity;
 
 import com.example.purithm.domain.photographer.entity.Photographer;
+import com.example.purithm.global.converter.FilterDescriptionListConverter;
 import com.example.purithm.global.converter.StringListConverter;
 
 import jakarta.persistence.Column;
@@ -43,15 +44,18 @@ public class Filter {
   @Column(updatable = false)
   private Date createdAt;
 
-  @Convert(converter = StringListConverter.class)
-  private List<String> pictures;
+  @Column(columnDefinition = "TEXT")
+  @Convert(converter = FilterDescriptionListConverter.class)
+  private List<FilterDetail> filterDetails;
 
-  @Convert(converter = StringListConverter.class)
-  private List<String> originalPictures;
+  private String description;
 
   private Membership membership;
 
   private OS os;
 
   private Tag tag;
+
+  @Convert(converter = StringListConverter.class)
+  private List<String> hashTag;
 }

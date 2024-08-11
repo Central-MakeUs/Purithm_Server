@@ -1,5 +1,6 @@
 package com.example.purithm.domain.filter.controller;
 
+import com.example.purithm.domain.filter.dto.response.FilterDescriptionDto;
 import com.example.purithm.domain.filter.dto.response.filterDetailValue.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterListDto;
@@ -61,5 +62,10 @@ public class FilterController implements FilterControllerDocs {
   public SuccessResponse<Boolean> deleteLikes(Long id, Long filterId) {
     filterService.dislikeFilter(id, filterId);
     return SuccessResponse.of();
+  }
+
+  @GetMapping("/{filterId}/descriptions")
+  public SuccessResponse<FilterDescriptionDto> getDescriptions(Long id, Long filterId) {
+    return SuccessResponse.of(filterService.getFilterDescriptions(filterId));
   }
 }
