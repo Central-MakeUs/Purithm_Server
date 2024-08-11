@@ -21,6 +21,9 @@ public class FilterDescriptionDto {
     @Schema(description = "작가 이름")
     String name;
 
+    @Schema(description = "작가 프로필")
+    String profile;
+
     @Schema(description = "필터 소개")
     String description;
 
@@ -35,6 +38,7 @@ public class FilterDescriptionDto {
 
         return FilterDescriptionDto.builder()
             .photographerId(photographer.getId())
+            .profile(photographer.getProfile())
             .name(photographer.getUsername())
             .description(filter.getDescription())
             .photoDescriptions(PhotoDescription.of(filter.getFilterDetails()))
