@@ -1,6 +1,5 @@
 package com.example.purithm.domain.filter.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.purithm.domain.filter.dto.response.FilterDescriptionDto;
 import com.example.purithm.domain.filter.dto.response.FilterPictureDto;
 import com.example.purithm.domain.filter.dto.response.filterDetailValue.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
@@ -102,15 +102,11 @@ public class FilterService {
 		Filter filter = filterRepository.findById(filterId)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
-		List<String> pictures = filter.getPictures();
-		List<String> originalPictures = filter.getOriginalPictures();
-		List<FilterPictureDto> filters = new ArrayList<>();
-
-		for (int i=0; i< pictures.size(); i++) {
-			filters.add(FilterPictureDto.builder()
-				.picture(pictures.get(i))
-				.originalPicture(originalPictures.get(i)).build());
-		}
+		List<FilterPictureDto> filters = filter.getFilterDetails().stream().map(filterDetail ->
+			FilterPictureDto.builder()
+				.picture(filterDetail.getPicture())
+				.originalPicture(filterDetail.getOriginalPicture())
+				.build()).toList();
 
 		return FilterDetailDto.builder()
 			.name(filter.getName())
@@ -165,5 +161,12 @@ public class FilterService {
 			.stream().map(ReviewDto::of).toList();
 
 		return FilterReviewDto.of(Optional.ofNullable(avg).orElse(0), reviews);
+	}
+
+	public FilterDescriptionDto getFilterDescriptions(Long filterId) {
+		Filter filter = filterRepository.findById(filterId)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+
+		return FilterDescriptionDto.of(filter);
 	}
 }
