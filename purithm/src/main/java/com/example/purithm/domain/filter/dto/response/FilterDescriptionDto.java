@@ -3,6 +3,7 @@ package com.example.purithm.domain.filter.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -10,6 +11,8 @@ import com.example.purithm.domain.filter.entity.Filter;
 import com.example.purithm.domain.filter.entity.FilterDetail;
 import com.example.purithm.domain.photographer.entity.Photographer;
 
+@Getter
+@Setter
 @Builder
 public class FilterDescriptionDto {
     @Schema(description = "작가 id")
