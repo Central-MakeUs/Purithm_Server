@@ -49,7 +49,7 @@ public class FilterController implements FilterControllerDocs {
 
   @GetMapping("/{filterId}/reviews")
   public SuccessResponse<FilterReviewDto> getReviews(Long id, Long filterId) {
-    return SuccessResponse.of(filterService.getReviews(filterId));
+    return SuccessResponse.of(filterService.getReviews(id, filterId));
   }
 
   @PostMapping("/{filterId}/likes")

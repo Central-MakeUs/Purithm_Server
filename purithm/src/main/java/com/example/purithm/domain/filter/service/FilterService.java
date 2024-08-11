@@ -24,10 +24,12 @@ import com.example.purithm.domain.filter.entity.FilterLike;
 import com.example.purithm.domain.filter.entity.IOSFilterDetail;
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.filter.entity.Tag;
+import com.example.purithm.domain.filter.entity.UserFilterLog;
 import com.example.purithm.domain.filter.repository.AOSFilterDetailRepository;
 import com.example.purithm.domain.filter.repository.FilterLikeRepository;
 import com.example.purithm.domain.filter.repository.IOSFilterDetailRepository;
 import com.example.purithm.domain.filter.repository.FilterRepository;
+import com.example.purithm.domain.filter.repository.UserFilterLogRepository;
 import com.example.purithm.domain.review.repository.ReviewRepository;
 import com.example.purithm.domain.user.entity.User;
 import com.example.purithm.domain.user.repository.UserRepository;
@@ -48,6 +50,7 @@ public class FilterService {
 	private final UserRepository userRepository;
 	private final FilterLikeRepository filterLikeRepository;
 	private final ReviewRepository reviewRepository;
+	private final UserFilterLogRepository userFilterLogRepository;
 
 
 	public FilterListDto getFilters(Long id, int page, int size, OS os, Tag tag, String sortedBy) {
@@ -117,22 +120,36 @@ public class FilterService {
 			.build();
 	}
 
+	@Transactional
 	public AOSFilterDetailDto getFilterAOSDetail(Long filterId, Long userId) {
 		Filter filter = filterRepository.findById(filterId)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 		AOSFilterDetail aosFilterDetail = aOSFilterDetailRepository.findById(filterId)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
+		saveUserFilterLog(filterId, userId);
+
 		return AOSFilterDetailDto.of(filter, isLike(filterId, userId), aosFilterDetail);
 	}
 
+	@Transactional
 	public IOSFilterDetailDto getFilterIOSDetail(Long filterId, Long userId) {
 		Filter filter = filterRepository.findById(filterId)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 		IOSFilterDetail iosFilterDetail = iOSFilterDetailRepository.findById(filterId)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
+		saveUserFilterLog(filterId, userId);
+
 		return IOSFilterDetailDto.of(filter, isLike(filterId, userId), iosFilterDetail);
+	}
+
+	private void saveUserFilterLog(Long filterId, Long userId) {
+		if (!userFilterLogRepository.existsByFilterIdAndUserId(filterId, userId)) {
+			UserFilterLog log = UserFilterLog.builder()
+				.userId(userId).filterId(filterId).build();
+			userFilterLogRepository.save(log);
+		}
 	}
 
 	public void likeFilter(Long userId, Long filterId) {
@@ -155,12 +172,13 @@ public class FilterService {
 	}
 
 	@Transactional
-	public FilterReviewDto getReviews(Long filterId) {
+	public FilterReviewDto getReviews(Long userId, Long filterId) {
 		Integer avg = reviewRepository.getAverage(filterId);
 		List<ReviewDto> reviews = reviewRepository.findAllByFilterId(filterId)
 			.stream().map(ReviewDto::of).toList();
+		boolean hasViewed = userFilterLogRepository.existsByFilterIdAndUserId(filterId, userId);
 
-		return FilterReviewDto.of(Optional.ofNullable(avg).orElse(0), reviews);
+		return FilterReviewDto.of(Optional.ofNullable(avg).orElse(0), hasViewed, reviews);
 	}
 
 	public FilterDescriptionDto getFilterDescriptions(Long filterId) {
