@@ -2,11 +2,11 @@ package com.example.purithm.domain.user.controller;
 
 import com.example.purithm.domain.feed.dto.response.FeedDto;
 import com.example.purithm.domain.filter.dto.response.FilterViewHistoryDto;
+import com.example.purithm.domain.filter.dto.response.LikedFilterDto;
 import com.example.purithm.domain.filter.service.FilterService;
 import com.example.purithm.domain.review.service.ReviewService;
 import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
 import com.example.purithm.domain.user.dto.response.AccountInfoDto;
-import com.example.purithm.domain.user.dto.response.MyPickDto;
 import com.example.purithm.domain.user.dto.response.StampDto;
 import com.example.purithm.domain.user.dto.response.UserInfoDto;
 import com.example.purithm.domain.user.service.UserService;
@@ -66,8 +66,8 @@ public class UserController implements UserControllerDocs {
   }
 
   @GetMapping("/picks")
-  public SuccessResponse<List<MyPickDto>> getMyPick(Long id) {
-    return null;
+  public SuccessResponse<List<LikedFilterDto>> getMyPick(Long id) {
+    return SuccessResponse.of(filterService.getLikedFilters(id));
   }
 
   @GetMapping("/history")
