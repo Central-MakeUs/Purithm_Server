@@ -33,4 +33,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 	List<Object[]> findAllOrderByPureDegree(OS os);
 
 	int countAllByUser(User user);
+
+	List<Review> findAllByUserId(Long userId);
 }

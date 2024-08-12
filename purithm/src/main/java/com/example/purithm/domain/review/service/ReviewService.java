@@ -101,4 +101,18 @@ public class ReviewService {
 				.createdAt(review.getCreatedAt())
 				.pictures(review.getPictures()).build()).toList();
 	}
+
+	public List<FeedDto> getMyReviews(Long userId) {
+		List<Review> reviews = reviewRepository.findAllByUserId(userId);
+		return reviews.stream().map(review ->
+			FeedDto.builder()
+				.filterId(review.getFilter().getId())
+				.filterName(review.getFilter().getName())
+				.writer(review.getUser().getUsername())
+				.profile(review.getUser().getProfile())
+				.pureDegree(review.getPureDegree())
+				.content(review.getContent())
+				.createdAt(review.getCreatedAt())
+				.pictures(review.getPictures()).build()).toList();
+	}
 }
