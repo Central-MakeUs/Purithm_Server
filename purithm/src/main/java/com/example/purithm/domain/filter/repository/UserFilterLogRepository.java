@@ -15,7 +15,7 @@ public interface UserFilterLogRepository extends JpaRepository<UserFilterLog, Lo
 	@Query("SELECT f.id, f.name, p.username, f.membership, ufl.createdAt, r.id " +
 		"FROM UserFilterLog ufl "
 		+ "LEFT JOIN Filter f ON ufl.filterId = f.id "
-		+ "LEFT JOIN Review r ON r.filter.id = f.id "
+		+ "LEFT JOIN Review r ON r.filter.id = f.id AND r.user.id=:userId"
 		+ "LEFT JOIN Photographer  p ON p.id = f.photographer.id "
 		+ "WHERE ufl.userId=:userId")
 	List<Object[]> getFilterViewHistory(Long userId);
