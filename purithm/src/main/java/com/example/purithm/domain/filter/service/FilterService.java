@@ -53,7 +53,7 @@ public class FilterService {
 	private final UserFilterLogRepository userFilterLogRepository;
 
 
-	public FilterListDto getFilters(Long id, int page, int size, OS os, Tag tag, String sortedBy) {
+	public FilterListDto getFilters(Long id, int page, int size, OS os, Tag tag, String sortedBy, Long photographerId) {
 		User user = userRepository.findById(id)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
@@ -63,7 +63,7 @@ public class FilterService {
 		List<FilterDto> filterDtos;
 
 		if (sortedBy.equals("popular")) {
-			filters = filterRepository.findAllWithLikeSorting(os, tag, pageRequest);
+			filters = filterRepository.findAllWithLikeSorting(os, tag, photographerId, pageRequest);
 			isLast = filters.isLast();
 			filterDtos = filters.getContent().stream().map(filter ->
 				FilterDto.of(
@@ -72,7 +72,26 @@ public class FilterService {
 					isLike(((Filter) filter[0]).getId(), id),
 					filterLikeRepository.getLikes((Filter) filter[0]))).toList();
 		} else if (sortedBy.equals("pure")) {
-			filters = filterRepository.findAllWithReviewSorting(os, tag, pageRequest);
+			filters = filterRepository.findAllWithReviewSorting(os, tag, photographerId, pageRequest);
+			isLast = filters.isLast();
+			filterDtos = filters.getContent().stream().map(filter ->
+				FilterDto.of(
+					(Filter) filter[0],
+					user.getMembership(),
+					isLike(((Filter) filter[0]).getId(), id),
+					filterLikeRepository.getLikes((Filter) filter[0]))).toList();
+		} else if (sortedBy.equals("earliest")) {
+			pageRequest = PageRequest.of(page, size, Sort.by("createdAt").ascending()); // 정렬 없을 때는 최신 순
+			Page<Filter> filterByEarliest = filterRepository.findAllByOs(os, tag, photographerId, pageRequest);
+			isLast = filterByEarliest.isLast();
+			filterDtos = filterByEarliest.getContent().stream().map(filter ->
+				FilterDto.of(
+					filter,
+					user.getMembership(),
+					isLike((filter).getId(), id),
+					filterLikeRepository.getLikes(filter))).toList();
+		} else if (sortedBy.equals("views")) {
+			filters = filterRepository.findAllWithViewsSorting(os, photographerId, pageRequest);
 			isLast = filters.isLast();
 			filterDtos = filters.getContent().stream().map(filter ->
 				FilterDto.of(
@@ -82,7 +101,7 @@ public class FilterService {
 					filterLikeRepository.getLikes((Filter) filter[0]))).toList();
 		} else {
 			pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
-			Page<Filter> filterByLatest = filterRepository.findAllByOs(os, tag, pageRequest);
+			Page<Filter> filterByLatest = filterRepository.findAllByOs(os, tag, photographerId, pageRequest);
 			isLast = filterByLatest.isLast();
 			filterDtos = filterByLatest.getContent().stream().map(filter ->
 				FilterDto.of(

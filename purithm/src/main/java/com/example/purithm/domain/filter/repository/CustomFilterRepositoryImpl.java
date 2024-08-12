@@ -2,6 +2,7 @@ package com.example.purithm.domain.filter.repository;
 
 import static com.example.purithm.domain.filter.entity.QFilter.*;
 import static com.example.purithm.domain.filter.entity.QFilterLike.*;
+import static com.example.purithm.domain.filter.entity.QUserFilterLog.*;
 import static com.example.purithm.domain.review.entity.QReview.*;
 
 import java.util.List;
@@ -28,11 +29,14 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public Page<Filter> findAllByOs(OS os, Tag tag, Pageable pageable) {
+	public Page<Filter> findAllByOs(OS os, Tag tag, Long photographerId, Pageable pageable) {
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.and(filter.os.eq(os));
 		if (tag != null) {
 			builder.and(filter.tag.eq(tag));
+		}
+		if (photographerId != null) {
+			builder.and(filter.photographer.id.eq(photographerId));
 		}
 
 		List<Filter> results = jpaQueryFactory
@@ -43,20 +47,23 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 			.limit(pageable.getPageSize())
 			.fetch();
 
-		Long total = jpaQueryFactory
+		long total = jpaQueryFactory
 			.select(filter.count())
 			.from(filter)
-			.where(filter.os.eq(os)).fetchOne();
+			.where(builder).fetchOne();
 
 		return new PageImpl<>(results, pageable, total);
 	}
 
 	@Override
-	public Page<Object[]> findAllWithLikeSorting(OS os, Tag tag, Pageable pageable) {
+	public Page<Object[]> findAllWithLikeSorting(OS os, Tag tag, Long photographerId, Pageable pageable) {
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.and(filter.os.eq(os));
 		if (tag != null) {
 			builder.and(filter.tag.eq(tag));
+		}
+		if (photographerId != null) {
+			builder.and(filter.photographer.id.eq(photographerId));
 		}
 
 		List<Tuple> tuples = jpaQueryFactory
@@ -85,11 +92,14 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 	}
 
 	@Override
-	public Page<Object[]> findAllWithReviewSorting(OS os, Tag tag, Pageable pageable) {
+	public Page<Object[]> findAllWithReviewSorting(OS os, Tag tag, Long photographerId, Pageable pageable) {
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.and(filter.os.eq(os));
 		if (tag != null) {
 			builder.and(filter.tag.eq(tag));
+		}
+		if (photographerId != null) {
+			builder.and(filter.photographer.id.eq(photographerId));
 		}
 
 		List<Tuple> tuples = jpaQueryFactory
@@ -112,6 +122,39 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 
 		List<Object[]> results = tuples.stream()
 			.map(tuple -> new Object[]{tuple.get(filter), tuple.get(Expressions.stringPath("avg"))})
+			.collect(Collectors.toList());
+
+		return new PageImpl<>(results, pageable, total);
+	}
+
+	@Override
+	public Page<Object[]> findAllWithViewsSorting(OS os, Long photographerId, Pageable pageable) {
+		BooleanBuilder builder = new BooleanBuilder();
+		builder.and(filter.os.eq(os));
+		if (photographerId != null) {
+			builder.and(filter.photographer.id.eq(photographerId));
+		}
+
+		List<Tuple> tuples = jpaQueryFactory
+			.select(filter, userFilterLog.filterId.count().as("count"))
+			.from(filter)
+			.leftJoin(userFilterLog).on(filter.id.eq(userFilterLog.filterId))
+			.where(builder)
+			.groupBy(filter.id)
+			.orderBy(userFilterLog.filterId.count().desc(), filter.createdAt.desc())
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+
+		long total = jpaQueryFactory
+			.select(filter.count())
+			.from(filter)
+			.leftJoin(review).on(filter.id.eq(review.filter.id))
+			.where(builder)
+			.fetchOne();
+
+		List<Object[]> results = tuples.stream()
+			.map(tuple -> new Object[]{tuple.get(filter), tuple.get(Expressions.stringPath("count"))})
 			.collect(Collectors.toList());
 
 		return new PageImpl<>(results, pageable, total);

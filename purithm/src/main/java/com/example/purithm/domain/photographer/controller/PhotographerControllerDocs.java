@@ -1,7 +1,8 @@
 package com.example.purithm.domain.photographer.controller;
 
+import com.example.purithm.domain.filter.dto.response.FilterListDto;
+import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.photographer.dto.response.PhotographerDto;
-import com.example.purithm.domain.photographer.dto.response.PhotographerFilterDto;
 import com.example.purithm.global.auth.annotation.LoginInfo;
 import com.example.purithm.global.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,12 +27,16 @@ public interface PhotographerControllerDocs {
 
   @Operation(summary = "특정 작가의 필터를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "작가의 필터 조회 성공")
-  public SuccessResponse<List<PhotographerFilterDto>> getFiltersByPhotographer(
+  public SuccessResponse<FilterListDto> getFiltersByPhotographer(
       @LoginInfo Long id,
       @PathVariable Long photographerId,
       @RequestParam(value = "sortedBy", required = false) @Parameter(description = "정렬순",
           examples =
               {@ExampleObject(name = "최신순", summary = "최신순 정렬", value = "latest"),
                   @ExampleObject(name = "오래된순", summary = "오래된순 정렬", value = "earliest"),
-                  @ExampleObject(name = "퓨어지수 높은순", summary = "퓨어지수 높은순 정렬", value = "popular")}) String sortedBy);
+                  @ExampleObject(name = "조회순", summary = "조회순 정렬", value = "views")}) String sortedBy,
+      @RequestParam(value = "os", required = true) @Parameter(description = "휴대폰 os",
+          examples = {@ExampleObject(value = "AOS"), @ExampleObject(value = "iOS")}) OS os,
+      @RequestParam(value = "page") int page,
+      @RequestParam(value = "size") int size);
 }
