@@ -29,7 +29,7 @@ public class FilterController implements FilterControllerDocs {
   @GetMapping
   public SuccessResponse<FilterListDto> getFilters(Long id, OS os, Tag tag, String sortedBy, int page, int size
   ) {
-    return SuccessResponse.of(filterService.getFilters(id, page, size, os, tag, sortedBy));
+    return SuccessResponse.of(filterService.getFilters(id, page, size, os, tag, sortedBy, null));
   }
 
   @GetMapping("/{filterId}")

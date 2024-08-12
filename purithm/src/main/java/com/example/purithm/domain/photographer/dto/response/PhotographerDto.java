@@ -1,9 +1,12 @@
 package com.example.purithm.domain.photographer.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
+
 import java.util.Date;
 import java.util.List;
 
+@Builder
 public record PhotographerDto(
     @Schema(description = "작가 id")
     Long id,
