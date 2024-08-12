@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.review.entity.Review;
+import com.example.purithm.domain.user.entity.User;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
@@ -30,4 +31,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 		"GROUP BY r.id " +
 		"ORDER BY avg DESC")
 	List<Object[]> findAllOrderByPureDegree(OS os);
+
+	int countAllByUser(User user);
 }
