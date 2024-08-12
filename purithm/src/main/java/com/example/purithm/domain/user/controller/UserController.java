@@ -1,13 +1,15 @@
 package com.example.purithm.domain.user.controller;
 
+import com.example.purithm.domain.feed.dto.response.FeedDto;
+import com.example.purithm.domain.filter.dto.response.FilterViewHistoryDto;
+import com.example.purithm.domain.filter.dto.response.LikedFilterDto;
+import com.example.purithm.domain.filter.service.FilterService;
+import com.example.purithm.domain.review.service.ReviewService;
 import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
 import com.example.purithm.domain.user.dto.response.AccountInfoDto;
-import com.example.purithm.domain.user.dto.response.MyPickDto;
-import com.example.purithm.domain.user.dto.response.MyReviewDto;
 import com.example.purithm.domain.user.dto.response.StampDto;
 import com.example.purithm.domain.user.dto.response.UserInfoDto;
 import com.example.purithm.domain.user.service.UserService;
-import com.example.purithm.global.auth.annotation.LoginInfo;
 import com.example.purithm.global.response.SuccessResponse;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,45 +26,52 @@ import lombok.RequiredArgsConstructor;
 public class UserController implements UserControllerDocs {
 
   private final UserService userService;
+  private final FilterService filterService;
+  private final ReviewService reviewService;
 
   @PostMapping("/terms")
-  public SuccessResponse agreeTerm(@LoginInfo Long id) {
+  public SuccessResponse agreeTerm(Long id) {
     userService.agreeToTermsOfUse(id);
     return SuccessResponse.of();
   }
 
   @GetMapping("/me")
-  public SuccessResponse<UserInfoDto> getMyInfo(String authorization) {
+  public SuccessResponse<UserInfoDto> getMyInfo(Long id) {
     return null;
   }
 
   @PostMapping("/me")
-  public SuccessResponse<Void> changeProfile(String authorization, UserInfoRequestDto userInfoRequestDto) {
+  public SuccessResponse<Void> changeProfile(Long id, UserInfoRequestDto userInfoRequestDto) {
     return null;
   }
 
   @GetMapping("/account")
-  public SuccessResponse<AccountInfoDto> getAccountInfo(String authorization) {
+  public SuccessResponse<AccountInfoDto> getAccountInfo(Long id) {
     return null;
   }
 
   @GetMapping("/stamps")
-  public SuccessResponse<List<StampDto>> getStamp(String authorization) {
+  public SuccessResponse<List<StampDto>> getStamp(Long id) {
     return null;
   }
 
   @GetMapping("/reviews")
-  public SuccessResponse<List<MyReviewDto>> getMyReview(String authorization) {
-    return null;
+  public SuccessResponse<List<FeedDto>> getMyReview(Long id) {
+    return SuccessResponse.of(reviewService.getMyReviews(id));
   }
 
   @DeleteMapping("/reviews/{reviewId}")
-  public SuccessResponse<Void> deleteReview(String authorization, Long reviewId) {
+  public SuccessResponse<Void> deleteReview(Long id, Long reviewId) {
     return null;
   }
 
   @GetMapping("/picks")
-  public SuccessResponse<List<MyPickDto>> getMyPick(String authorization) {
-    return null;
+  public SuccessResponse<List<LikedFilterDto>> getMyPick(Long id) {
+    return SuccessResponse.of(filterService.getLikedFilters(id));
+  }
+
+  @GetMapping("/history")
+  public SuccessResponse<List<FilterViewHistoryDto>> getFilterViewHistory(Long id) {
+    return SuccessResponse.of(filterService.getFilterViewHistory(id));
   }
 }

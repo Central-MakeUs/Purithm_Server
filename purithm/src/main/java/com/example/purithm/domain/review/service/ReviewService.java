@@ -3,6 +3,7 @@ package com.example.purithm.domain.review.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.purithm.domain.feed.dto.response.FeedDto;
 import com.example.purithm.domain.filter.entity.Filter;
@@ -44,6 +45,7 @@ public class ReviewService {
 			.build();
 	}
 
+	@Transactional
 	public CreatedReviewDto writeReview(Long id, ReviewRequestDto request) {
 		User user = userRepository.findById(id)
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
@@ -59,8 +61,21 @@ public class ReviewService {
 			.build();
 		Review savedReview = reviewRepository.save(review);
 
+		upgradeMembership(user);
+
 		return CreatedReviewDto.builder()
 			.id(savedReview.getId()).build();
+	}
+
+	private void upgradeMembership(User user) {
+		int numOfReviews = reviewRepository.countAllByUser(user);
+		if (numOfReviews == 16) {
+			user.upgradeToPremiumPlus();
+			userRepository.save(user);
+		} else if (numOfReviews == 8) {
+			user.upgradeToPremium();
+			userRepository.save(user);
+		}
 	}
 
 	public List<FeedDto> getFeeds(OS os, String sortedBy) {
@@ -75,6 +90,20 @@ public class ReviewService {
 			reviews = reviewRepository.findAllOrderByCreatedAtDesc(os);
 		}
 
+		return reviews.stream().map(review ->
+			FeedDto.builder()
+				.filterId(review.getFilter().getId())
+				.filterName(review.getFilter().getName())
+				.writer(review.getUser().getUsername())
+				.profile(review.getUser().getProfile())
+				.pureDegree(review.getPureDegree())
+				.content(review.getContent())
+				.createdAt(review.getCreatedAt())
+				.pictures(review.getPictures()).build()).toList();
+	}
+
+	public List<FeedDto> getMyReviews(Long userId) {
+		List<Review> reviews = reviewRepository.findAllByUserId(userId);
 		return reviews.stream().map(review ->
 			FeedDto.builder()
 				.filterId(review.getFilter().getId())

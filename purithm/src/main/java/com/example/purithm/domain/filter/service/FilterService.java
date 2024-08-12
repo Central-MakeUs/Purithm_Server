@@ -1,5 +1,6 @@
 package com.example.purithm.domain.filter.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.purithm.domain.filter.dto.response.FilterDescriptionDto;
+import com.example.purithm.domain.filter.dto.response.FilterViewHistoryDto;
 import com.example.purithm.domain.filter.dto.response.FilterPictureDto;
+import com.example.purithm.domain.filter.dto.response.LikedFilterDto;
 import com.example.purithm.domain.filter.dto.response.filterDetailValue.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDto;
@@ -22,6 +25,7 @@ import com.example.purithm.domain.filter.entity.AOSFilterDetail;
 import com.example.purithm.domain.filter.entity.Filter;
 import com.example.purithm.domain.filter.entity.FilterLike;
 import com.example.purithm.domain.filter.entity.IOSFilterDetail;
+import com.example.purithm.domain.filter.entity.Membership;
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.filter.entity.Tag;
 import com.example.purithm.domain.filter.entity.UserFilterLog;
@@ -68,18 +72,18 @@ public class FilterService {
 			filterDtos = filters.getContent().stream().map(filter ->
 				FilterDto.of(
 					(Filter) filter[0],
-					user.getMembership(),
 					isLike(((Filter) filter[0]).getId(), id),
-					filterLikeRepository.getLikes((Filter) filter[0]))).toList();
+					filterLikeRepository.getLikes((Filter) filter[0]),
+					checkAccess(user.getMembership(), ((Filter)filter[0]).getMembership()))).toList();
 		} else if (sortedBy.equals("pure")) {
 			filters = filterRepository.findAllWithReviewSorting(os, tag, photographerId, pageRequest);
 			isLast = filters.isLast();
 			filterDtos = filters.getContent().stream().map(filter ->
 				FilterDto.of(
 					(Filter) filter[0],
-					user.getMembership(),
 					isLike(((Filter) filter[0]).getId(), id),
-					filterLikeRepository.getLikes((Filter) filter[0]))).toList();
+					filterLikeRepository.getLikes((Filter) filter[0]),
+					checkAccess(user.getMembership(), ((Filter)filter[0]).getMembership()))).toList();
 		} else if (sortedBy.equals("earliest")) {
 			pageRequest = PageRequest.of(page, size, Sort.by("createdAt").ascending()); // 정렬 없을 때는 최신 순
 			Page<Filter> filterByEarliest = filterRepository.findAllByOs(os, tag, photographerId, pageRequest);
@@ -87,18 +91,18 @@ public class FilterService {
 			filterDtos = filterByEarliest.getContent().stream().map(filter ->
 				FilterDto.of(
 					filter,
-					user.getMembership(),
 					isLike((filter).getId(), id),
-					filterLikeRepository.getLikes(filter))).toList();
+					filterLikeRepository.getLikes(filter),
+					checkAccess(user.getMembership(), (filter).getMembership()))).toList();
 		} else if (sortedBy.equals("views")) {
 			filters = filterRepository.findAllWithViewsSorting(os, photographerId, pageRequest);
 			isLast = filters.isLast();
 			filterDtos = filters.getContent().stream().map(filter ->
 				FilterDto.of(
 					(Filter) filter[0],
-					user.getMembership(),
 					isLike(((Filter) filter[0]).getId(), id),
-					filterLikeRepository.getLikes((Filter) filter[0]))).toList();
+					filterLikeRepository.getLikes((Filter) filter[0]),
+					checkAccess(user.getMembership(), ((Filter)filter[0]).getMembership()))).toList();
 		} else {
 			pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
 			Page<Filter> filterByLatest = filterRepository.findAllByOs(os, tag, photographerId, pageRequest);
@@ -106,9 +110,9 @@ public class FilterService {
 			filterDtos = filterByLatest.getContent().stream().map(filter ->
 				FilterDto.of(
 					filter,
-					user.getMembership(),
 					isLike((filter).getId(), id),
-					filterLikeRepository.getLikes(filter))).toList();
+					filterLikeRepository.getLikes(filter),
+					checkAccess(user.getMembership(), filter.getMembership()))).toList();
 		}
 
 		return FilterListDto.builder()
@@ -205,5 +209,40 @@ public class FilterService {
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
 		return FilterDescriptionDto.of(filter);
+	}
+
+	public List<FilterViewHistoryDto> getFilterViewHistory(Long userId) {
+		return userFilterLogRepository.getFilterViewHistory(userId)
+			.stream().map(result ->
+				FilterViewHistoryDto.builder()
+					.filterId((Long)result[0])
+					.filterName((String)result[1])
+					.photographer((String)result[2])
+					.membership((Membership)result[3])
+					.createdAt((Date)result[4])
+					.hasReview(result[5] != null ? true : false)
+					.reviewId((Long)result[5])
+					.build()).toList();
+	}
+
+	public List<LikedFilterDto> getLikedFilters(Long userId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+
+		return filterRepository.getLikedFilter(userId)
+			.stream().map(result ->
+				LikedFilterDto.builder()
+					.id((Long)result[0])
+					.name((String)result[1])
+					.membership((Membership)result[2])
+					.photographerName((String)result[3])
+					.thumbnail((String)result[4])
+					.likes((Long)result[5])
+					.canAccess(checkAccess(user.getMembership(), (Membership)result[2])).build()
+			).toList();
+	}
+
+	private static boolean checkAccess(Membership membership, Membership filter) {
+		return filter.compareTo(membership) > 0 ? false : true;
 	}
 }

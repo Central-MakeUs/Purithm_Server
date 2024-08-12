@@ -30,4 +30,10 @@ public class User {
   public void agreeToTerms() {
     this.terms = true;
   }
+  public void upgradeToPremium() {
+    this.membership = Membership.PREMIUM;
+  }
+  public void upgradeToPremiumPlus() {
+    this.membership = Membership.PREMIUM_PLUS;
+  }
 }
