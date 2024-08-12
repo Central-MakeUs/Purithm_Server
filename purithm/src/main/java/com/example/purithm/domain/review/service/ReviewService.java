@@ -1,8 +1,12 @@
 package com.example.purithm.domain.review.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.example.purithm.domain.feed.dto.response.FeedDto;
 import com.example.purithm.domain.filter.entity.Filter;
+import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.filter.repository.FilterRepository;
 import com.example.purithm.domain.review.dto.request.ReviewRequestDto;
 import com.example.purithm.domain.review.dto.response.CreatedReviewDto;
@@ -15,7 +19,9 @@ import com.example.purithm.global.exception.CustomException;
 import com.example.purithm.global.exception.Error;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
@@ -55,5 +61,29 @@ public class ReviewService {
 
 		return CreatedReviewDto.builder()
 			.id(savedReview.getId()).build();
+	}
+
+	public List<FeedDto> getFeeds(OS os, String sortedBy) {
+		List<Review> reviews;
+		if (sortedBy.equals("earliest")) {
+			reviews = reviewRepository.findAllOrderByCreatedAtAsc(os);
+		} else if (sortedBy.equals("pure")) {
+			reviews = reviewRepository.findAllOrderByPureDegree(os)
+				.stream().map(result -> (Review) result[0])
+				.toList();
+		} else {
+			reviews = reviewRepository.findAllOrderByCreatedAtDesc(os);
+		}
+
+		return reviews.stream().map(review ->
+			FeedDto.builder()
+				.filterId(review.getFilter().getId())
+				.filterName(review.getFilter().getName())
+				.writer(review.getUser().getUsername())
+				.profile(review.getUser().getProfile())
+				.pureDegree(review.getPureDegree())
+				.content(review.getContent())
+				.createdAt(review.getCreatedAt())
+				.pictures(review.getPictures()).build()).toList();
 	}
 }
