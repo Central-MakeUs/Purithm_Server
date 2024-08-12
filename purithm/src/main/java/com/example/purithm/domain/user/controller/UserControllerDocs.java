@@ -1,6 +1,7 @@
 package com.example.purithm.domain.user.controller;
 
 import com.example.purithm.domain.feed.dto.response.FeedDto;
+import com.example.purithm.domain.filter.dto.response.FilterViewHistoryDto;
 import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
 import com.example.purithm.domain.user.dto.response.AccountInfoDto;
 import com.example.purithm.domain.user.dto.response.MyPickDto;
@@ -45,4 +46,8 @@ public interface UserControllerDocs {
   @Operation(summary = "내 찜 목록을 조회합니다.")
   @ApiResponse(responseCode = "200", description = "내 찜 목록 조회 성공")
   public SuccessResponse<List<MyPickDto>> getMyPick(@LoginInfo Long id);
+
+  @Operation(summary = "필터 열람 내역을 조회합니다.")
+  @ApiResponse(responseCode = "200", description = "필터 열람 내역 조회 성공")
+  public SuccessResponse<List<FilterViewHistoryDto>> getFilterViewHistory(@LoginInfo Long id);
 }

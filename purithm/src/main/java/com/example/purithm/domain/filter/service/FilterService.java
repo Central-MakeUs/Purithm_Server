@@ -1,5 +1,6 @@
 package com.example.purithm.domain.filter.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.purithm.domain.filter.dto.response.FilterDescriptionDto;
+import com.example.purithm.domain.filter.dto.response.FilterViewHistoryDto;
 import com.example.purithm.domain.filter.dto.response.FilterPictureDto;
 import com.example.purithm.domain.filter.dto.response.filterDetailValue.AOSFilterDetailDto;
 import com.example.purithm.domain.filter.dto.response.FilterDetailDto;
@@ -22,6 +24,7 @@ import com.example.purithm.domain.filter.entity.AOSFilterDetail;
 import com.example.purithm.domain.filter.entity.Filter;
 import com.example.purithm.domain.filter.entity.FilterLike;
 import com.example.purithm.domain.filter.entity.IOSFilterDetail;
+import com.example.purithm.domain.filter.entity.Membership;
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.filter.entity.Tag;
 import com.example.purithm.domain.filter.entity.UserFilterLog;
@@ -205,5 +208,19 @@ public class FilterService {
 			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 
 		return FilterDescriptionDto.of(filter);
+	}
+
+	public List<FilterViewHistoryDto> getFilterViewHistory(Long userId) {
+		return userFilterLogRepository.getFilterViewHistory(userId)
+			.stream().map(result ->
+				FilterViewHistoryDto.builder()
+					.filterId((Long)result[0])
+					.filterName((String)result[1])
+					.photographer((String)result[2])
+					.membership((Membership)result[3])
+					.createdAt((Date)result[4])
+					.hasReview(result[5] != null ? true : false)
+					.reviewId((Long)result[5])
+					.build()).toList();
 	}
 }

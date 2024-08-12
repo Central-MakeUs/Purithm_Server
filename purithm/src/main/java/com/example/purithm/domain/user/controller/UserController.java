@@ -1,6 +1,8 @@
 package com.example.purithm.domain.user.controller;
 
 import com.example.purithm.domain.feed.dto.response.FeedDto;
+import com.example.purithm.domain.filter.dto.response.FilterViewHistoryDto;
+import com.example.purithm.domain.filter.service.FilterService;
 import com.example.purithm.domain.review.service.ReviewService;
 import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
 import com.example.purithm.domain.user.dto.response.AccountInfoDto;
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController implements UserControllerDocs {
 
   private final UserService userService;
+  private final FilterService filterService;
   private final ReviewService reviewService;
 
   @PostMapping("/terms")
@@ -65,5 +68,10 @@ public class UserController implements UserControllerDocs {
   @GetMapping("/picks")
   public SuccessResponse<List<MyPickDto>> getMyPick(Long id) {
     return null;
+  }
+
+  @GetMapping("/history")
+  public SuccessResponse<List<FilterViewHistoryDto>> getFilterViewHistory(Long id) {
+    return SuccessResponse.of(filterService.getFilterViewHistory(id));
   }
 }
