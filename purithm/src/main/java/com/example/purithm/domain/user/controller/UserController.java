@@ -41,8 +41,9 @@ public class UserController implements UserControllerDocs {
   }
 
   @PostMapping("/me")
-  public SuccessResponse<Void> changeProfile(Long id, UserInfoRequestDto userInfoRequestDto) {
-    return null;
+  public SuccessResponse changeProfile(Long id, UserInfoRequestDto userInfoRequestDto) {
+    userService.updateProfile(userInfoRequestDto, id);
+    return SuccessResponse.of();
   }
 
   @GetMapping("/account")

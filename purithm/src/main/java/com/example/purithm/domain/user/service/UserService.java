@@ -1,6 +1,7 @@
 package com.example.purithm.domain.user.service;
 
 import com.example.purithm.domain.filter.entity.Membership;
+import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
 import com.example.purithm.domain.user.dto.response.AccountInfoDto;
 import com.example.purithm.domain.user.dto.response.UserInfoDto;
 import com.example.purithm.global.auth.dto.response.SocialUserInfoDto;
@@ -79,5 +80,13 @@ public class UserService {
         .filterViewCount(filterViewCount)
         .reviews(reviews)
         .build();
+  }
+
+  public void updateProfile(UserInfoRequestDto userInfo, Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+
+    user.updateProfile(userInfo);
+    userRepository.save(user);
   }
 }

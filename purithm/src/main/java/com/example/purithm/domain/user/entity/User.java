@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.example.purithm.domain.filter.entity.Membership;
+import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -58,4 +59,9 @@ public class User {
   public void upgradeToPremiumPlus() {
     this.membership = Membership.PREMIUM_PLUS;
   }
+  public void updateProfile(UserInfoRequestDto userInfo) {
+    this.profile = userInfo.profile();
+    this.username = userInfo.name();
+  }
+
 }
