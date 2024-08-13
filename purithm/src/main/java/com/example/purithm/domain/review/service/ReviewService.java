@@ -14,6 +14,7 @@ import com.example.purithm.domain.review.dto.response.CreatedReviewDto;
 import com.example.purithm.domain.review.dto.response.ReviewResponseDto;
 import com.example.purithm.domain.review.entity.Review;
 import com.example.purithm.domain.review.repository.ReviewRepository;
+import com.example.purithm.domain.user.dto.response.StampDto;
 import com.example.purithm.domain.user.entity.User;
 import com.example.purithm.domain.user.repository.UserRepository;
 import com.example.purithm.global.exception.CustomException;
@@ -119,5 +120,22 @@ public class ReviewService {
 	@Transactional
 	public void deleteReview(Long userId, Long reviewId) {
 		reviewRepository.deleteByIdAndUserId(reviewId, userId);
+	}
+
+	public List<StampDto> getStamps(Long userId) {
+		List<Review> reviews = reviewRepository.findAllByUserId(userId);
+		return reviews.stream().map(review ->
+		{
+			Filter filter = review.getFilter();
+			return StampDto.builder()
+				.filterId(filter.getId())
+				.filterName(filter.getName())
+				.photographer(filter.getPhotographer().getUsername())
+				.thumbnail(filter.getThumbnail())
+				.createdAt(review.getCreatedAt())
+				.membership(filter.getMembership())
+				.reviewId(review.getId())
+				.build();
+		}).toList();
 	}
 }

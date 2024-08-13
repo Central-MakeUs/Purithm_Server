@@ -52,7 +52,7 @@ public class UserController implements UserControllerDocs {
 
   @GetMapping("/stamps")
   public SuccessResponse<List<StampDto>> getStamp(Long id) {
-    return null;
+    return SuccessResponse.of(reviewService.getStamps(id));
   }
 
   @GetMapping("/reviews")
