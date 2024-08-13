@@ -37,22 +37,23 @@ public class UserController implements UserControllerDocs {
 
   @GetMapping("/me")
   public SuccessResponse<UserInfoDto> getMyInfo(Long id) {
-    return null;
+    return SuccessResponse.of(userService.getUserInfo(id));
   }
 
   @PostMapping("/me")
-  public SuccessResponse<Void> changeProfile(Long id, UserInfoRequestDto userInfoRequestDto) {
-    return null;
+  public SuccessResponse changeProfile(Long id, UserInfoRequestDto userInfoRequestDto) {
+    userService.updateProfile(userInfoRequestDto, id);
+    return SuccessResponse.of();
   }
 
   @GetMapping("/account")
   public SuccessResponse<AccountInfoDto> getAccountInfo(Long id) {
-    return null;
+    return SuccessResponse.of(userService.getUserAccountInfo(id));
   }
 
   @GetMapping("/stamps")
   public SuccessResponse<List<StampDto>> getStamp(Long id) {
-    return null;
+    return SuccessResponse.of(reviewService.getStamps(id));
   }
 
   @GetMapping("/reviews")

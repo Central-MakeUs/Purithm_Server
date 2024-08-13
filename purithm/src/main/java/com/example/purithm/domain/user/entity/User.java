@@ -1,11 +1,21 @@
 package com.example.purithm.domain.user.entity;
 
-import com.example.purithm.domain.filter.entity.Membership;
+import java.util.Date;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.example.purithm.domain.filter.entity.Membership;
+import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,15 +27,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  private Provider provider;
+
   private String providerId;
+
   private String username;
+
   private String profile;
+
   private boolean terms;
+
   private Membership membership;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @CreatedDate
+  @Column(updatable = false)
+  private Date createdAt;
 
   public void agreeToTerms() {
     this.terms = true;
@@ -36,4 +59,9 @@ public class User {
   public void upgradeToPremiumPlus() {
     this.membership = Membership.PREMIUM_PLUS;
   }
+  public void updateProfile(UserInfoRequestDto userInfo) {
+    this.profile = userInfo.profile();
+    this.username = userInfo.name();
+  }
+
 }
