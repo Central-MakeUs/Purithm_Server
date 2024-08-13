@@ -16,6 +16,10 @@ public record ReviewDto(
     int pureDegree,
     @Schema(description = "후기 작성자 이름")
     String user,
+    @Schema(description = "후가 작성자 프로필")
+    String profile,
+    @Schema(description = "후기 내용")
+    String content,
     @Schema(description = "후기 생성 일자")
     Date createdAt,
     @Schema(description = "후기 사진")
@@ -26,6 +30,8 @@ public record ReviewDto(
             .id(review.getId())
             .pureDegree(review.getPureDegree())
             .user(review.getUser().getUsername())
+            .profile(review.getUser().getProfile())
+            .content(review.getContent())
             .createdAt(review.getCreatedAt())
             .pictures(review.getPictures())
             .build();
