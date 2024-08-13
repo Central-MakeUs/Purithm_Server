@@ -47,7 +47,7 @@ public class UserController implements UserControllerDocs {
 
   @GetMapping("/account")
   public SuccessResponse<AccountInfoDto> getAccountInfo(Long id) {
-    return null;
+    return SuccessResponse.of(userService.getUserAccountInfo(id));
   }
 
   @GetMapping("/stamps")

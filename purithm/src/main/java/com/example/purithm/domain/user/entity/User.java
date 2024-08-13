@@ -32,6 +32,8 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  private Provider provider;
+
   private String providerId;
 
   private String username;

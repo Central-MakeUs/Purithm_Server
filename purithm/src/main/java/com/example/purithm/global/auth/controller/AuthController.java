@@ -1,5 +1,6 @@
 package com.example.purithm.global.auth.controller;
 
+import com.example.purithm.domain.user.entity.Provider;
 import com.example.purithm.global.auth.dto.response.KakaoUserInfoDto;
 import com.example.purithm.global.auth.dto.response.LoginDto;
 import com.example.purithm.global.auth.dto.response.SocialUserInfoDto;
@@ -47,7 +48,8 @@ public class AuthController implements AuthControllerDocs {
           SocialUserInfoDto userInfoDto = SocialUserInfoDto.builder()
               .profile(res.getProperties().getProfile_image())
               .username(res.getProperties().getNickname())
-              .providerId("KAKAO " + res.getId())
+              .provider(Provider.KAKAO)
+              .providerId(String.valueOf(res.getId()))
               .build();
           Long id = userService.signUp(userInfoDto);
           String jwtToken = jwtUtil.createJwt(id, 60 * 60 * 60 * 1000L);
@@ -72,7 +74,8 @@ public class AuthController implements AuthControllerDocs {
         SocialUserInfoDto userInfoDto = SocialUserInfoDto.builder()
             .profile(null)
             .username((String) claims.get("nickname"))
-            .providerId("APPLE " + (String) claims.get("sub"))
+            .provider(Provider.APPLE)
+            .providerId((String) claims.get("sub"))
             .build();
 
         Long id = userService.signUp(userInfoDto);
