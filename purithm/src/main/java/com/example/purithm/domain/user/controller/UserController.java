@@ -37,7 +37,7 @@ public class UserController implements UserControllerDocs {
 
   @GetMapping("/me")
   public SuccessResponse<UserInfoDto> getMyInfo(Long id) {
-    return null;
+    return SuccessResponse.of(userService.getUserInfo(id));
   }
 
   @PostMapping("/me")

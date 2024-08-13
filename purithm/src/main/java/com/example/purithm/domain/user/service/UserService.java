@@ -2,6 +2,7 @@ package com.example.purithm.domain.user.service;
 
 import com.example.purithm.domain.filter.entity.Membership;
 import com.example.purithm.domain.user.dto.response.AccountInfoDto;
+import com.example.purithm.domain.user.dto.response.UserInfoDto;
 import com.example.purithm.global.auth.dto.response.SocialUserInfoDto;
 import com.example.purithm.domain.user.entity.User;
 import com.example.purithm.domain.user.repository.UserRepository;
@@ -58,6 +59,25 @@ public class UserService {
     return AccountInfoDto.builder()
         .provider(user.getProvider())
         .createdAt(user.getCreatedAt())
+        .build();
+  }
+
+  public UserInfoDto getUserInfo(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+
+    int likes = userRepository.countLikesByUserId(userId);
+    int filterViewCount = userRepository.countLogsByUserId(userId);
+    int reviews = userRepository.countReviewsByUserId(userId);
+
+    return UserInfoDto.builder()
+        .id(user.getId())
+        .name(user.getUsername())
+        .profile(user.getProfile())
+        .stamp(reviews)
+        .likes(likes)
+        .filterViewCount(filterViewCount)
+        .reviews(reviews)
         .build();
   }
 }
