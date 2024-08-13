@@ -61,8 +61,9 @@ public class UserController implements UserControllerDocs {
   }
 
   @DeleteMapping("/reviews/{reviewId}")
-  public SuccessResponse<Void> deleteReview(Long id, Long reviewId) {
-    return null;
+  public SuccessResponse deleteReview(Long id, Long reviewId) {
+    reviewService.deleteReview(id, reviewId);
+    return SuccessResponse.of();
   }
 
   @GetMapping("/picks")

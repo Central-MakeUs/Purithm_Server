@@ -115,4 +115,9 @@ public class ReviewService {
 				.createdAt(review.getCreatedAt())
 				.pictures(review.getPictures()).build()).toList();
 	}
+
+	@Transactional
+	public void deleteReview(Long userId, Long reviewId) {
+		reviewRepository.deleteByIdAndUserId(reviewId, userId);
+	}
 }
