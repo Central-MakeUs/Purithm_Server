@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 public interface UserControllerDocs {
+  @Operation(summary = "이용약관에 동의합니다.")
+  @ApiResponse(responseCode = "200", description = "이용약관 동의 성공")
+  public SuccessResponse agreeTerm(@LoginInfo Long id);
+
   @Operation(summary = "내 프로필을 조회합니다.")
   @ApiResponse(responseCode = "200", description = "내 프로필 조회 성공")
   public SuccessResponse<UserInfoDto> getMyInfo(@LoginInfo Long id);

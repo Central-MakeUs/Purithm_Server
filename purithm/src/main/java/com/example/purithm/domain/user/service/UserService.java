@@ -22,7 +22,8 @@ public class UserService {
   private final UserRepository userRepository;
 
   public Long signUp(SocialUserInfoDto socialUserInfoDto) {
-    User existUser = userRepository.findByProviderId(socialUserInfoDto.getProviderId());
+    User existUser = userRepository
+        .findByProviderAndProviderId(socialUserInfoDto.getProvider(), socialUserInfoDto.getProviderId());
 
     if (existUser != null) {
       return existUser.getId();
