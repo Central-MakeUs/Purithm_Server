@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class UserController implements UserControllerDocs {
 
   @PostMapping("/terms")
   public SuccessResponse agreeTerm(Long id) {
+    log.error(String.valueOf(id));
     userService.agreeToTermsOfUse(id);
     return SuccessResponse.of();
   }
