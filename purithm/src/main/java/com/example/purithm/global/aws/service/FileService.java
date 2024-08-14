@@ -29,7 +29,6 @@ public class FileService {
 		String path = generatePath(prefix, id);
 		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, path)
 			.withMethod(HttpMethod.PUT)
-			.withContentType("multipart/form-data")
 			.withExpiration(getPresignedUrlExpiration());
 
 		generatePresignedUrlRequest.addRequestParameter(
