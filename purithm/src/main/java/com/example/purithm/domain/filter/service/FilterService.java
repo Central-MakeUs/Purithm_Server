@@ -64,11 +64,13 @@ public class FilterService {
 		PageRequest pageRequest = PageRequest.of(page, size);
 		Page<Object[]> filters;
 		boolean isLast;
+		int totalPage;
 		List<FilterDto> filterDtos;
 
 		if (sortedBy.equals("popular")) {
 			filters = filterRepository.findAllWithLikeSorting(os, tag, photographerId, pageRequest);
 			isLast = filters.isLast();
+			totalPage = filters.getTotalPages();
 			filterDtos = filters.getContent().stream().map(filter ->
 				FilterDto.of(
 					(Filter) filter[0],
@@ -78,6 +80,7 @@ public class FilterService {
 		} else if (sortedBy.equals("pure")) {
 			filters = filterRepository.findAllWithReviewSorting(os, tag, photographerId, pageRequest);
 			isLast = filters.isLast();
+			totalPage = filters.getTotalPages();
 			filterDtos = filters.getContent().stream().map(filter ->
 				FilterDto.of(
 					(Filter) filter[0],
@@ -88,6 +91,7 @@ public class FilterService {
 			pageRequest = PageRequest.of(page, size, Sort.by("createdAt").ascending()); // 정렬 없을 때는 최신 순
 			Page<Filter> filterByEarliest = filterRepository.findAllByOs(os, tag, photographerId, pageRequest);
 			isLast = filterByEarliest.isLast();
+			totalPage = filterByEarliest.getTotalPages();
 			filterDtos = filterByEarliest.getContent().stream().map(filter ->
 				FilterDto.of(
 					filter,
@@ -97,6 +101,7 @@ public class FilterService {
 		} else if (sortedBy.equals("views")) {
 			filters = filterRepository.findAllWithViewsSorting(os, photographerId, pageRequest);
 			isLast = filters.isLast();
+			totalPage = filters.getTotalPages();
 			filterDtos = filters.getContent().stream().map(filter ->
 				FilterDto.of(
 					(Filter) filter[0],
@@ -106,7 +111,9 @@ public class FilterService {
 		} else {
 			pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
 			Page<Filter> filterByLatest = filterRepository.findAllByOs(os, tag, photographerId, pageRequest);
+
 			isLast = filterByLatest.isLast();
+			totalPage = filterByLatest.getTotalPages();
 			filterDtos = filterByLatest.getContent().stream().map(filter ->
 				FilterDto.of(
 					filter,
@@ -117,6 +124,7 @@ public class FilterService {
 
 		return FilterListDto.builder()
 			.isLast(isLast)
+			.totalPage(totalPage)
 			.filters(filterDtos).build();
 	}
 
