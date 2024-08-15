@@ -78,7 +78,7 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 			.fetch();
 
 		long total = jpaQueryFactory
-			.select(filter.count())
+			.select(filter.countDistinct())
 			.from(filter)
 			.leftJoin(filterLike).on(filter.id.eq(filterLike.filter.id))
 			.where(builder)
@@ -114,7 +114,7 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 			.fetch();
 
 		long total = jpaQueryFactory
-			.select(filter.count())
+			.select(filter.countDistinct())
 			.from(filter)
 			.leftJoin(review).on(filter.id.eq(review.filter.id))
 			.where(builder)
@@ -147,7 +147,7 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 			.fetch();
 
 		long total = jpaQueryFactory
-			.select(filter.count())
+			.select(filter.countDistinct())
 			.from(filter)
 			.leftJoin(review).on(filter.id.eq(review.filter.id))
 			.where(builder)
