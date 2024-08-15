@@ -33,7 +33,7 @@ public interface PhotographerControllerDocs {
       @RequestParam(value = "sortedBy", required = false) @Parameter(description = "정렬순",
           examples =
               {@ExampleObject(name = "최신순", summary = "최신순 정렬", value = "latest"),
-                  @ExampleObject(name = "오래된순", summary = "오래된순 정렬", value = "earliest"),
+                  @ExampleObject(name = "퓨어지수 높은순", summary = "퓨어지수 높은순 정렬", value = "pure"),
                   @ExampleObject(name = "조회순", summary = "조회순 정렬", value = "views")}) String sortedBy,
       @RequestParam(value = "os", required = true) @Parameter(description = "휴대폰 os",
           examples = {@ExampleObject(value = "AOS"), @ExampleObject(value = "iOS")}) OS os,
