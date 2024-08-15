@@ -11,7 +11,7 @@ public record ReviewRequestDto(
     @Schema(description = "리뷰 내용")
     String content,
     @Schema(description = "리뷰 사진들")
-    List<String> picture
+    List<String> pictures
 
 ) {
 

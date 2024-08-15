@@ -57,7 +57,7 @@ public class ReviewService {
 			.user(user)
 			.filter(filter)
 			.content(request.content())
-			.pictures(request.picture())
+			.pictures(request.pictures())
 			.pureDegree(request.pureDegree())
 			.build();
 		Review savedReview = reviewRepository.save(review);
