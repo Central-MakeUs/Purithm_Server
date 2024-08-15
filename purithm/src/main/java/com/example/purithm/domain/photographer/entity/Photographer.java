@@ -33,6 +33,7 @@ public class Photographer {
 
   private String description;
 
+  @Column(columnDefinition = "TEXT")
   @Convert(converter = StringListConverter.class)
   private List<String> thumbnails;
 
