@@ -119,6 +119,8 @@ public class ReviewService {
 
 	@Transactional
 	public void deleteReview(Long userId, Long reviewId) {
+		Review review = reviewRepository.findById(reviewId)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
 		reviewRepository.deleteByIdAndUserId(reviewId, userId);
 	}
 

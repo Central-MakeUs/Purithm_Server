@@ -44,7 +44,7 @@ public interface UserControllerDocs {
 
   @Operation(summary = "내 리뷰를 삭제합니다.")
   @ApiResponse(responseCode = "200", description = "내 리뷰 삭제 성공")
-  public SuccessResponse<Void> deleteReview(
+  public SuccessResponse deleteReview(
       @LoginInfo Long id, @PathVariable Long reviewId);
 
   @Operation(summary = "내 찜 목록을 조회합니다.")
