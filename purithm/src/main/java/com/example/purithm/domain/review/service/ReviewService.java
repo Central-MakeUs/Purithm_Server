@@ -100,7 +100,9 @@ public class ReviewService {
 				.pureDegree(review.getPureDegree())
 				.content(review.getContent())
 				.createdAt(review.getCreatedAt())
-				.pictures(review.getPictures()).build()).toList();
+				.pictures(review.getPictures())
+				.id(review.getId())
+				.filterThumbnail(review.getFilter().getThumbnail()).build()).toList();
 	}
 
 	public List<FeedDto> getMyReviews(Long userId) {
@@ -114,7 +116,9 @@ public class ReviewService {
 				.pureDegree(review.getPureDegree())
 				.content(review.getContent())
 				.createdAt(review.getCreatedAt())
-				.pictures(review.getPictures()).build()).toList();
+				.pictures(review.getPictures())
+				.id(review.getId())
+				.filterThumbnail(review.getFilter().getThumbnail()).build()).toList();
 	}
 
 	@Transactional

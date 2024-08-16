@@ -34,4 +34,10 @@ public class FeedDto {
 
     @Schema(description = "피드 사진들")
     List<String> pictures;
+
+    @Schema(description = "피드 id")
+    Long id;
+
+    @Schema(description = "필터 썸네일")
+    String filterThumbnail;
 }
