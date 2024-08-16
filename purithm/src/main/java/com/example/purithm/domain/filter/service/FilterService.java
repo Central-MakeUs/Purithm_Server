@@ -65,12 +65,14 @@ public class FilterService {
 		Page<Object[]> filters;
 		boolean isLast;
 		int totalPage;
+		long totalElement;
 		List<FilterDto> filterDtos;
 
 		if (sortedBy.equals("popular")) {
 			filters = filterRepository.findAllWithLikeSorting(os, tag, photographerId, pageRequest);
 			isLast = filters.isLast();
 			totalPage = filters.getTotalPages();
+			totalElement = filters.getTotalElements();
 			filterDtos = filters.getContent().stream().map(filter ->
 				FilterDto.of(
 					(Filter) filter[0],
@@ -81,6 +83,7 @@ public class FilterService {
 			filters = filterRepository.findAllWithReviewSorting(os, tag, photographerId, pageRequest);
 			isLast = filters.isLast();
 			totalPage = filters.getTotalPages();
+			totalElement = filters.getTotalElements();
 			filterDtos = filters.getContent().stream().map(filter ->
 				FilterDto.of(
 					(Filter) filter[0],
@@ -92,6 +95,7 @@ public class FilterService {
 			Page<Filter> filterByEarliest = filterRepository.findAllByOs(os, tag, photographerId, pageRequest);
 			isLast = filterByEarliest.isLast();
 			totalPage = filterByEarliest.getTotalPages();
+			totalElement = filterByEarliest.getTotalElements();
 			filterDtos = filterByEarliest.getContent().stream().map(filter ->
 				FilterDto.of(
 					filter,
@@ -102,6 +106,7 @@ public class FilterService {
 			filters = filterRepository.findAllWithViewsSorting(os, photographerId, pageRequest);
 			isLast = filters.isLast();
 			totalPage = filters.getTotalPages();
+			totalElement = filters.getTotalElements();
 			filterDtos = filters.getContent().stream().map(filter ->
 				FilterDto.of(
 					(Filter) filter[0],
@@ -114,6 +119,7 @@ public class FilterService {
 
 			isLast = filterByLatest.isLast();
 			totalPage = filterByLatest.getTotalPages();
+			totalElement = filterByLatest.getTotalElements();
 			filterDtos = filterByLatest.getContent().stream().map(filter ->
 				FilterDto.of(
 					filter,
@@ -125,6 +131,7 @@ public class FilterService {
 		return FilterListDto.builder()
 			.isLast(isLast)
 			.totalPage(totalPage)
+			.totalElement(totalElement)
 			.filters(filterDtos).build();
 	}
 

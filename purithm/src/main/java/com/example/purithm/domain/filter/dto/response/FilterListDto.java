@@ -8,6 +8,7 @@ import lombok.Builder;
 public record FilterListDto(
 	boolean isLast,
 	int totalPage,
+	long totalElement,
 	List<FilterDto> filters
 ) {
 }
