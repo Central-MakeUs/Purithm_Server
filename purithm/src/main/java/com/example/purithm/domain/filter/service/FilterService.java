@@ -215,7 +215,7 @@ public class FilterService {
 	public FilterReviewDto getReviews(Long userId, Long filterId) {
 		Integer avg = reviewRepository.getAverage(filterId);
 		AtomicBoolean hasReview = new AtomicBoolean(false);
-		AtomicReference<Long> id = null;
+		AtomicReference<Long> id = new AtomicReference<>(null);
 
 		List<ReviewDto> reviews = reviewRepository.findAllByFilterId(filterId)
 			.stream().map(review -> {
