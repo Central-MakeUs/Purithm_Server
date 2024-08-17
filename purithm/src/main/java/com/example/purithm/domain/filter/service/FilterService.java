@@ -3,6 +3,8 @@ package com.example.purithm.domain.filter.service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -212,11 +214,27 @@ public class FilterService {
 	@Transactional
 	public FilterReviewDto getReviews(Long userId, Long filterId) {
 		Integer avg = reviewRepository.getAverage(filterId);
+		AtomicBoolean hasReview = new AtomicBoolean(false);
+		AtomicReference<Long> id = null;
+
 		List<ReviewDto> reviews = reviewRepository.findAllByFilterId(filterId)
-			.stream().map(ReviewDto::of).toList();
+			.stream().map(review -> {
+				if (review.getUser().getId() == userId) {
+					hasReview.set(true);
+					id.set(review.getId());;
+				}
+				return ReviewDto.of(review);
+			}).toList();
+
 		boolean hasViewed = userFilterLogRepository.existsByFilterIdAndUserId(filterId, userId);
 
-		return FilterReviewDto.of(Optional.ofNullable(avg).orElse(0), hasViewed, reviews);
+		return FilterReviewDto.builder()
+			.avg(Optional.ofNullable(avg).orElse(0))
+			.hasReview(hasReview.get())
+			.reviewId(id.get())
+			.hasViewed(hasViewed)
+			.reviews(reviews)
+			.build();
 	}
 
 	public FilterDescriptionDto getFilterDescriptions(Long filterId) {

@@ -9,6 +9,10 @@ import lombok.Builder;
 public record FilterReviewDto(
 	@Schema(description = "평균 퓨어지수")
 	int avg,
+	@Schema(description = "사용자가 해당 필터에 리뷰를 작성했는지")
+	boolean hasReview,
+	@Schema(description = "작성한 리뷰 id", nullable = true)
+	Long reviewId,
 	@Schema(description = "사용자가 필터를 열람한 적 있는지 여부")
 	boolean hasViewed,
 	@Schema(description = "리뷰")
