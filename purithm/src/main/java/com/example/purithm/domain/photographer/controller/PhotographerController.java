@@ -26,6 +26,11 @@ public class PhotographerController implements PhotographerControllerDocs {
     return SuccessResponse.of(photographerService.getPhotographerList(sortedBy));
   }
 
+  @GetMapping("/{photographerId}")
+  public SuccessResponse<PhotographerDto> getPhotographerInfo(Long id, Long photographerId) {
+    return SuccessResponse.of(photographerService.getPhotographer(photographerId));
+  }
+
   @GetMapping("/{photographerId}/filters")
   public SuccessResponse<FilterListDto> getFiltersByPhotographer(
       Long id, Long photographerId, String sortedBy, OS os, int page, int size) {
