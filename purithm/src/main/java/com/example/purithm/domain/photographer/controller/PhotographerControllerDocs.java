@@ -25,6 +25,10 @@ public interface PhotographerControllerDocs {
                   @ExampleObject(name = "필터 많은순", summary = "필터 많은순", value = "filter")}) String sortedBy
   );
 
+  @Operation(summary = "특정 작가 상세 정보를 조회합니다.")
+  @ApiResponse(responseCode = "200", description = "작가 조회 성공")
+  public SuccessResponse<PhotographerDto> getPhotographerInfo(@LoginInfo Long id, @PathVariable Long photographerId);
+
   @Operation(summary = "특정 작가의 필터를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "작가의 필터 조회 성공")
   public SuccessResponse<FilterListDto> getFiltersByPhotographer(

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.example.purithm.domain.photographer.dto.response.PhotographerDto;
 import com.example.purithm.domain.photographer.entity.Photographer;
 import com.example.purithm.domain.photographer.repository.PhotographerRepository;
+import com.example.purithm.global.exception.CustomException;
+import com.example.purithm.global.exception.Error;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,5 +37,19 @@ public class PhotographerService {
 				.picture(photographer.getThumbnails())
 				.createdAt(photographer.getCreatedAt()).build())
 			.toList();
+	}
+
+	public PhotographerDto getPhotographer(Long id) {
+		Photographer photographer = photographerRepository.findById(id)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+
+		return PhotographerDto.builder()
+			.id(photographer.getId())
+			.name(photographer.getUsername())
+			.profile(photographer.getProfile())
+			.description(photographer.getDescription())
+			.picture(photographer.getThumbnails())
+			.createdAt(photographer.getCreatedAt())
+			.build();
 	}
 }
