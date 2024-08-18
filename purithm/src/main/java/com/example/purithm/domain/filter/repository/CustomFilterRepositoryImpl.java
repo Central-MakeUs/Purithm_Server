@@ -72,7 +72,7 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 			.leftJoin(filterLike).on(filter.id.eq(filterLike.filter.id))
 			.where(builder)
 			.groupBy(filter.id)
-			.orderBy(filterLike.count().desc(), filter.id.asc())
+			.orderBy(filterLike.count().desc(), filter.createdAt.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -108,7 +108,7 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 			.leftJoin(review).on(filter.id.eq(review.filter.id))
 			.where(builder)
 			.groupBy(filter.id)
-			.orderBy(review.pureDegree.avg().desc(), filter.id.asc())
+			.orderBy(review.pureDegree.avg().desc(), filter.createdAt.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
