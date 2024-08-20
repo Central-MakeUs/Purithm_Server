@@ -40,7 +40,7 @@ public class AuthController implements AuthControllerDocs {
         .uri("https://kapi.kakao.com/v2/user/me")
         .header("Authorization", token)
         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-        .bodyValue("property_keys=[\"properties.nickname\", \"properties.profile_image\"]")
+        .bodyValue("property_keys=[\"properties.nickname\", \"properties.profile_image\", \"kakao_account.email\"]")
         .retrieve()
         .bodyToMono(KakaoUserInfoDto.class)
         .flatMap(res -> {
@@ -50,7 +50,7 @@ public class AuthController implements AuthControllerDocs {
               .username(res.getProperties().getNickname())
               .provider(Provider.KAKAO)
               .providerId(String.valueOf(res.getId()))
-              .email(res.getProperties().getEmail())
+              .email(res.getKakao_account().getEmail())
               .build();
           Long id = userService.signUp(userInfoDto);
           String jwtToken = jwtUtil.createJwt(id, 60 * 60 * 60 * 1000L);
