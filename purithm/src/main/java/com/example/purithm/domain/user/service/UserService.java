@@ -34,6 +34,7 @@ public class UserService {
         .provider(socialUserInfoDto.getProvider())
         .providerId(socialUserInfoDto.getProviderId())
         .username(socialUserInfoDto.getUsername())
+        .email(socialUserInfoDto.getEmail())
         .terms(false)
         .membership(Membership.BASIC)
         .build();
@@ -61,6 +62,7 @@ public class UserService {
     return AccountInfoDto.builder()
         .provider(user.getProvider())
         .createdAt(user.getCreatedAt())
+        .email(user.getEmail())
         .build();
   }
 

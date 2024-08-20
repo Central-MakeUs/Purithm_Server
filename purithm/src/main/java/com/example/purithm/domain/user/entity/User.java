@@ -45,6 +45,8 @@ public class User {
 
   private Membership membership;
 
+  private String email;
+
   @Temporal(TemporalType.TIMESTAMP)
   @CreatedDate
   @Column(updatable = false)
