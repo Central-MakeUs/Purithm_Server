@@ -34,6 +34,7 @@ public class UserService {
         .provider(socialUserInfoDto.getProvider())
         .providerId(socialUserInfoDto.getProviderId())
         .username(socialUserInfoDto.getUsername())
+        .email(socialUserInfoDto.getEmail())
         .terms(false)
         .membership(Membership.BASIC)
         .build();

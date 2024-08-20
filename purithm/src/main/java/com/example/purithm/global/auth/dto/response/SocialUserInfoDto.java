@@ -12,4 +12,5 @@ public class SocialUserInfoDto {
   private Provider provider;
   private String providerId;
   private String profile;
+  private String email;
 }

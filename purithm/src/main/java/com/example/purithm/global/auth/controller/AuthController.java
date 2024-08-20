@@ -50,6 +50,7 @@ public class AuthController implements AuthControllerDocs {
               .username(res.getProperties().getNickname())
               .provider(Provider.KAKAO)
               .providerId(String.valueOf(res.getId()))
+              .email(res.getProperties().getEmail())
               .build();
           Long id = userService.signUp(userInfoDto);
           String jwtToken = jwtUtil.createJwt(id, 60 * 60 * 60 * 1000L);
@@ -73,9 +74,10 @@ public class AuthController implements AuthControllerDocs {
         Claims claims = jwtUtil.getAppleTokenClaims(token);
         SocialUserInfoDto userInfoDto = SocialUserInfoDto.builder()
             .profile(null)
-            .username((String) claims.get("nickname"))
+            .username(username)
             .provider(Provider.APPLE)
             .providerId((String) claims.get("sub"))
+            .email((String) claims.get("email"))
             .build();
 
         Long id = userService.signUp(userInfoDto);
