@@ -62,6 +62,7 @@ public class UserService {
     return AccountInfoDto.builder()
         .provider(user.getProvider())
         .createdAt(user.getCreatedAt())
+        .email(user.getEmail())
         .build();
   }
 
