@@ -53,5 +53,5 @@ public interface UserControllerDocs {
 
   @Operation(summary = "필터 열람 내역을 조회합니다.")
   @ApiResponse(responseCode = "200", description = "필터 열람 내역 조회 성공")
-  public SuccessResponse<List<FilterViewHistoryDto>> getFilterViewHistory(@LoginInfo Long id);
+  public SuccessResponse<FilterViewHistoryDto> getFilterViewHistory(@LoginInfo Long id);
 }

@@ -76,7 +76,7 @@ public class UserController implements UserControllerDocs {
   }
 
   @GetMapping("/history")
-  public SuccessResponse<List<FilterViewHistoryDto>> getFilterViewHistory(Long id) {
+  public SuccessResponse<FilterViewHistoryDto> getFilterViewHistory(Long id) {
     return SuccessResponse.of(filterService.getFilterViewHistory(id));
   }
 }

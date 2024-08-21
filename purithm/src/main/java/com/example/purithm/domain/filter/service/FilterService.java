@@ -1,6 +1,5 @@
 package com.example.purithm.domain.filter.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -244,18 +243,8 @@ public class FilterService {
 		return FilterDescriptionDto.of(filter);
 	}
 
-	public List<FilterViewHistoryDto> getFilterViewHistory(Long userId) {
-		return userFilterLogRepository.getFilterViewHistory(userId)
-			.stream().map(result ->
-				FilterViewHistoryDto.builder()
-					.filterId((Long)result[0])
-					.filterName((String)result[1])
-					.photographer((String)result[2])
-					.membership((Membership)result[3])
-					.createdAt((Date)result[4])
-					.hasReview(result[5] != null ? true : false)
-					.reviewId((Long)result[5])
-					.build()).toList();
+	public FilterViewHistoryDto getFilterViewHistory(Long userId) {
+		return FilterViewHistoryDto.of(userFilterLogRepository.getFilterViewHistory(userId));
 	}
 
 	public List<LikedFilterDto> getLikedFilters(Long userId) {
