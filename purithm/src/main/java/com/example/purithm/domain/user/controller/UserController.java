@@ -1,7 +1,7 @@
 package com.example.purithm.domain.user.controller;
 
 import com.example.purithm.domain.feed.dto.response.FeedDto;
-import com.example.purithm.domain.filter.dto.response.FilterViewHistoryDto;
+import com.example.purithm.domain.filter.dto.response.DatedFilterDto;
 import com.example.purithm.domain.filter.dto.response.LikedFilterDto;
 import com.example.purithm.domain.filter.service.FilterService;
 import com.example.purithm.domain.review.service.ReviewService;
@@ -76,7 +76,7 @@ public class UserController implements UserControllerDocs {
   }
 
   @GetMapping("/history")
-  public SuccessResponse<FilterViewHistoryDto> getFilterViewHistory(Long id) {
+  public SuccessResponse<DatedFilterDto> getFilterViewHistory(Long id) {
     return SuccessResponse.of(filterService.getFilterViewHistory(id));
   }
 }

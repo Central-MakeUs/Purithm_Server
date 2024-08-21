@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.purithm.domain.filter.entity.Membership;
+import com.example.purithm.domain.filter.repository.projection.ViewHistoryProjection;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -15,18 +16,18 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class FilterViewHistoryDto {
+public class DatedFilterDto {
 	@Schema(description = "총 개수")
 	int totalCount;
 
 	@Schema(description = "필터 리스트")
 	List<GroupedFilter> list;
 
-	public static FilterViewHistoryDto of(List<Object[]> result) {
+	public static DatedFilterDto of(List<ViewHistoryProjection> result) {
 		List<FilterLogDto> filterLogs = FilterLogDto.of(result);
 		List<GroupedFilter> groupedFilters = GroupedFilter.groupByDate(filterLogs);
 
-		return FilterViewHistoryDto.builder()
+		return DatedFilterDto.builder()
 			.totalCount(filterLogs.size())
 			.list(groupedFilters)
 			.build();
@@ -79,16 +80,16 @@ class FilterLogDto {
 	@Schema(description = "리뷰 id", nullable = true)
 	Long reviewId;
 
-	public static List<FilterLogDto> of(List<Object[]> result) {
+	public static List<FilterLogDto> of(List<ViewHistoryProjection> result) {
 		return result.stream().map(res ->
 			FilterLogDto.builder()
-				.filterId((Long)res[0])
-				.filterName((String)res[1])
-				.photographer((String)res[2])
-				.membership((Membership)res[3])
-				.createdAt((Date)res[4])
-				.hasReview(res[5] != null ? true : false)
-				.reviewId((Long)res[5])
+				.filterId(res.getFilterId())
+				.filterName(res.getFilterName())
+				.photographer(res.getPhotographer())
+				.membership(res.getMembership())
+				.createdAt(res.getCreatedAt())
+				.hasReview(res.getReviewId() != null ? true : false)
+				.reviewId(res.getReviewId())
 				.build()
 		).toList();
 	}

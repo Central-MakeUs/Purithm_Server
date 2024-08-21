@@ -11,8 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.purithm.domain.filter.dto.response.DatedFilterDto;
 import com.example.purithm.domain.filter.dto.response.FilterDescriptionDto;
-import com.example.purithm.domain.filter.dto.response.FilterViewHistoryDto;
 import com.example.purithm.domain.filter.dto.response.FilterPictureDto;
 import com.example.purithm.domain.filter.dto.response.LikedFilterDto;
 import com.example.purithm.domain.filter.dto.response.filterDetailValue.AOSFilterDetailDto;
@@ -243,8 +243,8 @@ public class FilterService {
 		return FilterDescriptionDto.of(filter);
 	}
 
-	public FilterViewHistoryDto getFilterViewHistory(Long userId) {
-		return FilterViewHistoryDto.of(userFilterLogRepository.getFilterViewHistory(userId));
+	public DatedFilterDto getFilterViewHistory(Long userId) {
+		return DatedFilterDto.of(userFilterLogRepository.getFilterViewHistory(userId));
 	}
 
 	public List<LikedFilterDto> getLikedFilters(Long userId) {
