@@ -2,10 +2,10 @@ package com.example.purithm.domain.user.controller;
 
 import com.example.purithm.domain.feed.dto.response.FeedDto;
 import com.example.purithm.domain.filter.dto.response.DatedFilterDto;
+import com.example.purithm.domain.filter.dto.response.DatedStampDto;
 import com.example.purithm.domain.filter.dto.response.LikedFilterDto;
 import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
 import com.example.purithm.domain.user.dto.response.AccountInfoDto;
-import com.example.purithm.domain.user.dto.response.StampDto;
 import com.example.purithm.domain.user.dto.response.UserInfoDto;
 import com.example.purithm.global.auth.annotation.LoginInfo;
 import com.example.purithm.global.response.SuccessResponse;
@@ -36,7 +36,7 @@ public interface UserControllerDocs {
 
   @Operation(summary = "내 스탬프를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "내 스탬프 조회 성공")
-  public SuccessResponse<List<StampDto>> getStamp(@LoginInfo Long id);
+  public SuccessResponse<DatedStampDto> getStamp(@LoginInfo Long id);
 
   @Operation(summary = "내 리뷰를 조회합니다.")
   @ApiResponse(responseCode = "200", description = "내 리뷰 조회 성공")

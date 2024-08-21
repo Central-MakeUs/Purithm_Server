@@ -21,11 +21,11 @@ public class DatedFilterDto {
 	int totalCount;
 
 	@Schema(description = "필터 리스트")
-	List<GroupedFilter> list;
+	List<GroupedFilterLogDto> list;
 
 	public static DatedFilterDto of(List<ViewHistoryProjection> result) {
 		List<FilterLogDto> filterLogs = FilterLogDto.of(result);
-		List<GroupedFilter> groupedFilters = GroupedFilter.groupByDate(filterLogs);
+		List<GroupedFilterLogDto> groupedFilters = GroupedFilterLogDto.groupByDate(filterLogs);
 
 		return DatedFilterDto.builder()
 			.totalCount(filterLogs.size())
@@ -34,13 +34,14 @@ public class DatedFilterDto {
 	}
 }
 
+
 @Getter
 @Builder
-class GroupedFilter {
+class GroupedFilterLogDto {
 	String date;
-	List<FilterLogDto> filterLogs;
+	List<FilterLogDto> filters;
 
-	public static List<GroupedFilter> groupByDate(List<FilterLogDto> filterLogs) {
+	public static List<GroupedFilterLogDto> groupByDate(List<FilterLogDto> filterLogs) {
 		Map<String, List<FilterLogDto>> groupedMap = new HashMap<>();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -49,11 +50,11 @@ class GroupedFilter {
 			groupedMap.computeIfAbsent(date, k -> new ArrayList<>()).add(filterLog);
 		}
 
-		List<GroupedFilter> groupedFilters = new ArrayList<>();
+		List<GroupedFilterLogDto> groupedFilters = new ArrayList<>();
 		for (Map.Entry<String, List<FilterLogDto>> entry : groupedMap.entrySet()) {
-			GroupedFilter groupedFilter = GroupedFilter.builder()
+			GroupedFilterLogDto groupedFilter = GroupedFilterLogDto.builder()
 				.date(entry.getKey())
-				.filterLogs(entry.getValue())
+				.filters(entry.getValue())
 				.build();
 			groupedFilters.add(groupedFilter);
 		}

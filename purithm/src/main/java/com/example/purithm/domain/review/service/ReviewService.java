@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.purithm.domain.feed.dto.response.FeedDto;
+import com.example.purithm.domain.filter.dto.response.DatedStampDto;
 import com.example.purithm.domain.filter.entity.Filter;
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.filter.repository.FilterRepository;
@@ -14,7 +15,6 @@ import com.example.purithm.domain.review.dto.response.CreatedReviewDto;
 import com.example.purithm.domain.review.dto.response.ReviewResponseDto;
 import com.example.purithm.domain.review.entity.Review;
 import com.example.purithm.domain.review.repository.ReviewRepository;
-import com.example.purithm.domain.user.dto.response.StampDto;
 import com.example.purithm.domain.user.entity.User;
 import com.example.purithm.domain.user.repository.UserRepository;
 import com.example.purithm.global.exception.CustomException;
@@ -128,20 +128,8 @@ public class ReviewService {
 		reviewRepository.deleteByIdAndUserId(reviewId, userId);
 	}
 
-	public List<StampDto> getStamps(Long userId) {
+	public DatedStampDto getStamps(Long userId) {
 		List<Review> reviews = reviewRepository.findAllByUserId(userId);
-		return reviews.stream().map(review ->
-		{
-			Filter filter = review.getFilter();
-			return StampDto.builder()
-				.filterId(filter.getId())
-				.filterName(filter.getName())
-				.photographer(filter.getPhotographer().getUsername())
-				.thumbnail(filter.getThumbnail())
-				.createdAt(review.getCreatedAt())
-				.membership(filter.getMembership())
-				.reviewId(review.getId())
-				.build();
-		}).toList();
+		return DatedStampDto.of(reviews);
 	}
 }

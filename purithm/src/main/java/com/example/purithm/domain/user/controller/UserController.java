@@ -2,12 +2,12 @@ package com.example.purithm.domain.user.controller;
 
 import com.example.purithm.domain.feed.dto.response.FeedDto;
 import com.example.purithm.domain.filter.dto.response.DatedFilterDto;
+import com.example.purithm.domain.filter.dto.response.DatedStampDto;
 import com.example.purithm.domain.filter.dto.response.LikedFilterDto;
 import com.example.purithm.domain.filter.service.FilterService;
 import com.example.purithm.domain.review.service.ReviewService;
 import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
 import com.example.purithm.domain.user.dto.response.AccountInfoDto;
-import com.example.purithm.domain.user.dto.response.StampDto;
 import com.example.purithm.domain.user.dto.response.UserInfoDto;
 import com.example.purithm.domain.user.service.UserService;
 import com.example.purithm.global.response.SuccessResponse;
@@ -55,7 +55,7 @@ public class UserController implements UserControllerDocs {
   }
 
   @GetMapping("/stamps")
-  public SuccessResponse<List<StampDto>> getStamp(Long id) {
+  public SuccessResponse<DatedStampDto> getStamp(Long id) {
     return SuccessResponse.of(reviewService.getStamps(id));
   }
 
