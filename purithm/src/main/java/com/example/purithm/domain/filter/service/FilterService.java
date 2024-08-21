@@ -1,6 +1,5 @@
 package com.example.purithm.domain.filter.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -12,8 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.purithm.domain.filter.dto.response.DatedFilterDto;
 import com.example.purithm.domain.filter.dto.response.FilterDescriptionDto;
-import com.example.purithm.domain.filter.dto.response.FilterViewHistoryDto;
 import com.example.purithm.domain.filter.dto.response.FilterPictureDto;
 import com.example.purithm.domain.filter.dto.response.LikedFilterDto;
 import com.example.purithm.domain.filter.dto.response.filterDetailValue.AOSFilterDetailDto;
@@ -244,18 +243,8 @@ public class FilterService {
 		return FilterDescriptionDto.of(filter);
 	}
 
-	public List<FilterViewHistoryDto> getFilterViewHistory(Long userId) {
-		return userFilterLogRepository.getFilterViewHistory(userId)
-			.stream().map(result ->
-				FilterViewHistoryDto.builder()
-					.filterId((Long)result[0])
-					.filterName((String)result[1])
-					.photographer((String)result[2])
-					.membership((Membership)result[3])
-					.createdAt((Date)result[4])
-					.hasReview(result[5] != null ? true : false)
-					.reviewId((Long)result[5])
-					.build()).toList();
+	public DatedFilterDto getFilterViewHistory(Long userId) {
+		return DatedFilterDto.of(userFilterLogRepository.getFilterViewHistory(userId));
 	}
 
 	public List<LikedFilterDto> getLikedFilters(Long userId) {
