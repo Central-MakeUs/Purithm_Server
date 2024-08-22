@@ -21,7 +21,7 @@ public class FeedController implements FeedControllerDocs {
 
   @GetMapping
   public SuccessResponse<List<FeedDto>> getFeeds(Long id, OS os, String sortedBy) {
-    return SuccessResponse.of(reviewService.getFeeds(os, sortedBy));
+    return SuccessResponse.of(reviewService.getFeeds(os, sortedBy, id));
   }
 
   @PostMapping("/blocked-feed")

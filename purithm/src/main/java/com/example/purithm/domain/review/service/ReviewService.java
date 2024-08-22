@@ -82,16 +82,16 @@ public class ReviewService {
 		}
 	}
 
-	public List<FeedDto> getFeeds(OS os, String sortedBy) {
+	public List<FeedDto> getFeeds(OS os, String sortedBy, Long userId) {
 		List<Review> reviews;
 		if (sortedBy.equals("earliest")) {
-			reviews = reviewRepository.findAllOrderByCreatedAtAsc(os);
+			reviews = reviewRepository.findAllOrderByCreatedAtAsc(os, userId);
 		} else if (sortedBy.equals("pure")) {
-			reviews = reviewRepository.findAllOrderByPureDegree(os)
+			reviews = reviewRepository.findAllOrderByPureDegree(os, userId)
 				.stream().map(result -> (Review) result[0])
 				.toList();
 		} else {
-			reviews = reviewRepository.findAllOrderByCreatedAtDesc(os);
+			reviews = reviewRepository.findAllOrderByCreatedAtDesc(os, userId);
 		}
 
 		return reviews.stream().map(review ->
