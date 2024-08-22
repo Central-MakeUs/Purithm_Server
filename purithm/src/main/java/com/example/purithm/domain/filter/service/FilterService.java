@@ -216,7 +216,7 @@ public class FilterService {
 		AtomicBoolean hasReview = new AtomicBoolean(false);
 		AtomicReference<Long> id = new AtomicReference<>(null);
 
-		List<ReviewDto> reviews = reviewRepository.findAllByFilterId(filterId)
+		List<ReviewDto> reviews = reviewRepository.findAllByFilterId(filterId, userId)
 			.stream().map(review -> {
 				if (review.getUser().getId() == userId) {
 					hasReview.set(true);
