@@ -15,7 +15,9 @@ import com.example.purithm.domain.review.dto.response.CreatedReviewDto;
 import com.example.purithm.domain.review.dto.response.ReviewResponseDto;
 import com.example.purithm.domain.review.entity.Review;
 import com.example.purithm.domain.review.repository.ReviewRepository;
+import com.example.purithm.domain.user.entity.BlockedUser;
 import com.example.purithm.domain.user.entity.User;
+import com.example.purithm.domain.user.repository.BlockedUserRepository;
 import com.example.purithm.domain.user.repository.UserRepository;
 import com.example.purithm.global.exception.CustomException;
 import com.example.purithm.global.exception.Error;
@@ -31,6 +33,7 @@ public class ReviewService {
 	private final ReviewRepository reviewRepository;
 	private final UserRepository userRepository;
 	private final FilterRepository filterRepository;
+	private final BlockedUserRepository blockedUserRepository;
 
 	public ReviewResponseDto getReview(Long id) {
 		Review review = reviewRepository.findById(id)
@@ -131,5 +134,19 @@ public class ReviewService {
 	public DatedStampDto getStamps(Long userId) {
 		List<Review> reviews = reviewRepository.findAllByUserId(userId);
 		return DatedStampDto.of(reviews);
+	}
+
+	public void blockUser(Long userId, Long feedId) {
+		Review review = reviewRepository.findById(feedId)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+
+		User user = review.getUser();
+
+		BlockedUser blockedUser = BlockedUser.builder()
+			.blockedUserId(user.getId())
+			.userId(userId)
+			.build();
+
+		blockedUserRepository.save(blockedUser);
 	}
 }
