@@ -13,7 +13,10 @@ import com.example.purithm.domain.user.entity.User;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-	List<Review> findAllByFilterId(Long filterId);
+	@Query("SELECT r FROM Review r WHERE r.filter.id=:filterId "
+		+ "AND r.user.id NOT IN (SELECT bu.blockedUserId FROM BlockedUser bu WHERE bu.userId = :userId) "
+		+ "ORDER BY r.createdAt DESC")
+	List<Review> findAllByFilterId(Long filterId, Long userId);
 	@Query("SELECT avg(r.pureDegree) as avg\n"
 		+ " FROM Review r\n"
 		+ " WHERE r.filter.id = :id")

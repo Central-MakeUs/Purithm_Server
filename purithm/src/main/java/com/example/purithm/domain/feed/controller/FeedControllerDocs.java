@@ -24,7 +24,7 @@ public interface FeedControllerDocs {
   );
 
   @ApiResponse(responseCode = "200", description = "OK")
-  public SuccessResponse blockFeed(
+  public SuccessResponse<Object> blockFeed(
       @LoginInfo Long id,
       @RequestParam(value = "id", required = true) @Parameter(description = "피드 id") Long feedId);
 }
