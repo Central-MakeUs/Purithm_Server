@@ -22,4 +22,9 @@ public interface FeedControllerDocs {
               @ExampleObject(name = "오래된순", summary = "오래된순 정렬", value = "earliest"),
               @ExampleObject(name = "퓨어지수 높은순", summary = "퓨어지수 높은순 정렬", value = "popular")}) String sortedBy
   );
+
+  @ApiResponse(responseCode = "200", description = "OK")
+  public SuccessResponse blockFeed(
+      @LoginInfo Long id,
+      @RequestParam(value = "id", required = true) @Parameter(description = "피드 id") Long feedId);
 }

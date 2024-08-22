@@ -19,18 +19,23 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 		+ " WHERE r.filter.id = :id")
 	Integer getAverage(@Param("id") Long filterId);
 
-	@Query("SELECT r FROM Review r WHERE r.filter.os=:os ORDER BY r.createdAt DESC ")
-	List<Review> findAllOrderByCreatedAtDesc(OS os);
+	@Query("SELECT r FROM Review r WHERE r.filter.os=:os "
+		+ "AND r.user.id NOT IN (SELECT bu.blockedUserId FROM BlockedUser bu WHERE bu.userId = :userId) "
+		+ "ORDER BY r.createdAt DESC")
+	List<Review> findAllOrderByCreatedAtDesc(OS os, Long userId);
 
-	@Query("SELECT r FROM Review r WHERE r.filter.os=:os ORDER BY r.createdAt ASC ")
-	List<Review> findAllOrderByCreatedAtAsc(OS os);
+	@Query("SELECT r FROM Review r WHERE r.filter.os=:os "
+		+ "AND r.user.id NOT IN (SELECT bu.blockedUserId FROM BlockedUser bu WHERE bu.userId = :userId) "
+		+ "ORDER BY r.createdAt ASC ")
+	List<Review> findAllOrderByCreatedAtAsc(OS os, Long userId);
 
 	@Query("SELECT r, AVG(r.pureDegree) AS avg " +
 		"FROM Review r LEFT JOIN Filter f ON r.filter.id = f.id " +
-		"WHERE f.os=:os "+
+		"WHERE f.os=:os " +
+		"AND r.user.id NOT IN (SELECT bu.blockedUserId FROM BlockedUser bu WHERE bu.userId = :userId) "+
 		"GROUP BY r.id " +
 		"ORDER BY avg DESC")
-	List<Object[]> findAllOrderByPureDegree(OS os);
+	List<Object[]> findAllOrderByPureDegree(OS os, Long userId);
 
 	int countAllByUser(User user);
 
