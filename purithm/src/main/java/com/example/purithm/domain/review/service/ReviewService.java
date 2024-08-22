@@ -142,11 +142,13 @@ public class ReviewService {
 
 		User user = review.getUser();
 
-		BlockedUser blockedUser = BlockedUser.builder()
-			.blockedUserId(user.getId())
-			.userId(userId)
-			.build();
+		if (!blockedUserRepository.existsByUserIdAndBlockedUserId(userId, user.getId())) {
+			BlockedUser blockedUser = BlockedUser.builder()
+				.blockedUserId(user.getId())
+				.userId(userId)
+				.build();
 
-		blockedUserRepository.save(blockedUser);
+			blockedUserRepository.save(blockedUser);
+		}
 	}
 }
