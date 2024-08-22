@@ -4,6 +4,8 @@ import com.example.purithm.domain.feed.dto.response.FeedDto;
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.review.service.ReviewService;
 import com.example.purithm.global.response.SuccessResponse;
+
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,8 +27,8 @@ public class FeedController implements FeedControllerDocs {
   }
 
   @PostMapping("/blocked-feed")
-  public SuccessResponse blockFeed(Long id, Long feedId) {
+  public SuccessResponse<Object> blockFeed(Long id, Long feedId) {
     reviewService.blockUser(id, feedId);
-    return SuccessResponse.of();
+    return SuccessResponse.of(new HashMap<>());
   }
 }
