@@ -70,6 +70,8 @@ class FilterLogDto {
 	Long filterId;
 	@Schema(description = "필터 이름")
 	String filterName;
+	@Schema(description = "필터 썸네일")
+	String thumbnail;
 	@Schema(description = "작가 이름")
 	String photographer;
 	@Schema(description = "필터 멤버십")
@@ -86,6 +88,7 @@ class FilterLogDto {
 			FilterLogDto.builder()
 				.filterId(res.getFilterId())
 				.filterName(res.getFilterName())
+				.thumbnail(res.getThumbnail())
 				.photographer(res.getPhotographer())
 				.membership(res.getMembership())
 				.createdAt(res.getCreatedAt())

@@ -14,7 +14,7 @@ import com.example.purithm.domain.filter.repository.projection.ViewHistoryProjec
 public interface UserFilterLogRepository extends JpaRepository<UserFilterLog, Long> {
 	boolean existsByFilterIdAndUserId(Long filterId, Long userId);
 
-	@Query("SELECT f.id AS filterId, f.name AS filterName, p.username AS photographer, f.membership AS membership, ufl.createdAt AS createdAt, r.id AS reviewId " +
+	@Query("SELECT f.id AS filterId, f.name AS filterName, f.thumbnail AS thumbnail, p.username AS photographer, f.membership AS membership, ufl.createdAt AS createdAt, r.id AS reviewId " +
 		"FROM UserFilterLog ufl "
 		+ "LEFT JOIN Filter f ON ufl.filterId = f.id "
 		+ "LEFT JOIN Review r ON r.filter.id = f.id AND r.user.id=:userId "
