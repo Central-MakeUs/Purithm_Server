@@ -1,8 +1,8 @@
-name: CD
+name: CD for dev
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "dev" ]
 
 jobs:
   deploy:
@@ -22,10 +22,10 @@ jobs:
 
       - name: Pull Docker
         run: |
-            if sudo docker ps | grep ":8080->8080"; then
-            sudo docker stop $(sudo docker ps -qf "expose=8080")
-            fi
-            sudo docker login -u ${{secrets.DOCKERHUB_USERNAME}} -p ${{secrets.DOCKERHUB_TOKEN}}
-            sudo docker pull ${{secrets.DOCKERHUB_USERNAME}}/${{secrets.DOCKER_REPO}}
-            sudo docker run -d -p 8080:8080 ${{secrets.DOCKERHUB_USERNAME}}/${{secrets.DOCKER_REPO}}
-            sudo docker image prune -f
+          if sudo docker ps | grep ":8081->8081"; then
+          sudo docker stop $(sudo docker ps -qf "expose=8081")
+          fi
+          sudo docker login -u ${{secrets.DOCKERHUB_USERNAME}} -p ${{secrets.DOCKERHUB_TOKEN}}
+          sudo docker pull ${{secrets.DOCKERHUB_USERNAME}}/${{secrets.DOCKER_REPO}}
+          sudo docker run -d -p 8081:8081 ${{secrets.DOCKERHUB_USERNAME}}/${{secrets.DOCKER_REPO}}
+          sudo docker image prune -f
