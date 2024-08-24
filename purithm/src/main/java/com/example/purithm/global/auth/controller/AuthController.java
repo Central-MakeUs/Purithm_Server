@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,11 +35,10 @@ public class AuthController implements AuthControllerDocs {
   private final WebClientConfig webClientConfig;
   private final UserService userService;
   private final JWTUtil jwtUtil;
-  private final PasswordEncoder passwordEncoder;
 
   @PostMapping("/login")
   public SuccessResponse<LoginDto> login(LoginRequestDto loginRequestDto) {
-      Long id = userService.getUserId(loginRequestDto.id(), passwordEncoder.encode(loginRequestDto.password()));
+      Long id = userService.getUserId(loginRequestDto);
       String jwtToken = jwtUtil.createJwt(id, 60 * 60 * 60 * 1000L);
 
       LoginDto loginDto = LoginDto.builder()
@@ -56,7 +54,7 @@ public class AuthController implements AuthControllerDocs {
           .provider(Provider.PURITHM)
           .providerId(signUpRequestDto.id())
           .email(signUpRequestDto.email())
-          .password(passwordEncoder.encode(signUpRequestDto.password()))
+          .password(signUpRequestDto.password())
           .build();
 
       Long id = userService.signUp(userInfoDto);
@@ -77,12 +75,13 @@ public class AuthController implements AuthControllerDocs {
         .flatMap(res -> {
 
             SignUpUserInfoDto userInfoDto = SignUpUserInfoDto.builder()
-              .profile(res.getProperties().getProfile_image())
-              .username(res.getProperties().getNickname())
-              .provider(Provider.KAKAO)
-              .providerId(String.valueOf(res.getId()))
-              .email(res.getKakao_account().getEmail())
-              .build();
+                .profile(res.getProperties().getProfile_image())
+                .username(res.getProperties().getNickname())
+                .provider(Provider.KAKAO)
+                .providerId(String.valueOf(res.getId()))
+                .email(res.getKakao_account().getEmail())
+                .password(null)
+                .build();
           Long id = userService.signUp(userInfoDto);
           String jwtToken = jwtUtil.createJwt(id, 60 * 60 * 60 * 1000L);
 
@@ -109,6 +108,7 @@ public class AuthController implements AuthControllerDocs {
             .provider(Provider.APPLE)
             .providerId((String) claims.get("sub"))
             .email((String) claims.get("email"))
+            .password(null)
             .build();
 
         Long id = userService.signUp(userInfoDto);
