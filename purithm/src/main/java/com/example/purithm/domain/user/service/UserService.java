@@ -98,4 +98,14 @@ public class UserService {
     user.updateProfile(userInfo);
     userRepository.save(user);
   }
+
+  public Long getUserId(String id, String password) {
+    User user = userRepository.findByProviderId(id)
+        .orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+
+    if (!user.getPassword().equals(password)) {
+      throw CustomException.of(Error.INVALID_ID_PASSWORD);
+    }
+    return user.getId();
+  }
 }

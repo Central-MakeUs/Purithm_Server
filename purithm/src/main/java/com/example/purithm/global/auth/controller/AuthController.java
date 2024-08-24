@@ -40,7 +40,12 @@ public class AuthController implements AuthControllerDocs {
 
   @PostMapping("/login")
   public SuccessResponse<LoginDto> login(LoginRequestDto loginRequestDto) {
+      Long id = userService.getUserId(loginRequestDto.id(), passwordEncoder.encode(loginRequestDto.password()));
+      String jwtToken = jwtUtil.createJwt(id, 60 * 60 * 60 * 1000L);
 
+      LoginDto loginDto = LoginDto.builder()
+          .accessToken(jwtToken).build();
+      return SuccessResponse.of(loginDto);
   }
 
   @PostMapping("/signup")

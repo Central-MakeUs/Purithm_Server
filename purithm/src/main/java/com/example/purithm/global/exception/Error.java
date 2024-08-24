@@ -16,6 +16,7 @@ public enum Error {
   /* 401 */
   INVALID_TOKEN_ERROR(HttpStatus.UNAUTHORIZED, 40100, "유효하지 않은 토큰입니다."),
   EXPIRED_TOKEN_ERROR(HttpStatus.UNAUTHORIZED, 40101, "만료된 토큰입니다."),
+  INVALID_ID_PASSWORD(HttpStatus.UNAUTHORIZED, 40102, "이메일/비밀번호가 적절하지 않습니다."),
 
   /* 403 */
   NOT_AGREED_TERM(HttpStatus.FORBIDDEN, 40300, "이용약관 동의가 필요합니다"),

@@ -1,5 +1,7 @@
 package com.example.purithm.domain.user.repository;
 
+import java.util.Optional;
+
 import com.example.purithm.domain.user.entity.Provider;
 import com.example.purithm.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +21,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
   int countLogsByUserId(@Param("userId") Long userId);
 
   boolean existsByProviderId(String id);
+
+  Optional<User> findByProviderId(String id);
 }
