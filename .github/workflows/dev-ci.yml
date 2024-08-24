@@ -28,7 +28,7 @@ jobs:
         working-directory: ${{ env.working-directory }}
         run: |
           cd ./src/main/resources
-          echo "${{ secrets.DEV_ENV_FILE }}" > ./application-dev.yml
+          echo "${{ secrets.DEV_ENV_FILE }}" > ./application.yml
 
       - name: Build with Gradle Wrapper
         working-directory: ${{ env.working-directory }}
