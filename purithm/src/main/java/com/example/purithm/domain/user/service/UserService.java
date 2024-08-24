@@ -4,6 +4,7 @@ import com.example.purithm.domain.filter.entity.Membership;
 import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
 import com.example.purithm.domain.user.dto.response.AccountInfoDto;
 import com.example.purithm.domain.user.dto.response.UserInfoDto;
+import com.example.purithm.domain.user.entity.Provider;
 import com.example.purithm.global.auth.dto.response.SignUpUserInfoDto;
 import com.example.purithm.domain.user.entity.User;
 import com.example.purithm.domain.user.repository.UserRepository;
@@ -22,6 +23,11 @@ public class UserService {
   private final UserRepository userRepository;
 
   public Long signUp(SignUpUserInfoDto socialUserInfoDto) {
+    if (socialUserInfoDto.getProvider().equals(Provider.PURITHM)
+        && userRepository.existsByProviderId(socialUserInfoDto.getProviderId())) {
+      throw CustomException.of(Error.NICKNAME_ALREADY_USED_ERROR);
+    }
+
     User existUser = userRepository
         .findByProviderAndProviderId(socialUserInfoDto.getProvider(), socialUserInfoDto.getProviderId());
 

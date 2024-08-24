@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   @Query("SELECT COUNT(ufl) FROM UserFilterLog ufl WHERE ufl.userId = :userId")
   int countLogsByUserId(@Param("userId") Long userId);
+
+  boolean existsByProviderId(String id);
 }
