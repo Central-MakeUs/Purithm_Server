@@ -7,10 +7,11 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class SocialUserInfoDto {
+public class SignUpUserInfoDto {
   private String username;
   private Provider provider;
   private String providerId;
   private String profile;
   private String email;
+  private String password;
 }
