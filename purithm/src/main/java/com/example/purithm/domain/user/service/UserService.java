@@ -4,7 +4,9 @@ import com.example.purithm.domain.filter.entity.Membership;
 import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
 import com.example.purithm.domain.user.dto.response.AccountInfoDto;
 import com.example.purithm.domain.user.dto.response.UserInfoDto;
-import com.example.purithm.global.auth.dto.response.SocialUserInfoDto;
+import com.example.purithm.domain.user.entity.Provider;
+import com.example.purithm.global.auth.dto.request.LoginRequestDto;
+import com.example.purithm.global.auth.dto.response.SignUpUserInfoDto;
 import com.example.purithm.domain.user.entity.User;
 import com.example.purithm.domain.user.repository.UserRepository;
 import com.example.purithm.global.exception.CustomException;
@@ -13,6 +15,7 @@ import com.example.purithm.global.exception.Error;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -20,8 +23,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
-  public Long signUp(SocialUserInfoDto socialUserInfoDto) {
+  public Long signUp(SignUpUserInfoDto socialUserInfoDto) {
+    if (socialUserInfoDto.getProvider().equals(Provider.PURITHM)
+        && userRepository.existsByProviderId(socialUserInfoDto.getProviderId())) {
+      throw CustomException.of(Error.NICKNAME_ALREADY_USED_ERROR);
+    }
+
     User existUser = userRepository
         .findByProviderAndProviderId(socialUserInfoDto.getProvider(), socialUserInfoDto.getProviderId());
 
@@ -37,6 +46,7 @@ public class UserService {
         .email(socialUserInfoDto.getEmail())
         .terms(false)
         .membership(Membership.BASIC)
+        .password(passwordEncoder.encode(socialUserInfoDto.getPassword()))
         .build();
 
     User savedUser = userRepository.save(user);
@@ -91,5 +101,15 @@ public class UserService {
 
     user.updateProfile(userInfo);
     userRepository.save(user);
+  }
+
+  public Long getUserId(LoginRequestDto loginRequestDto) {
+    User user = userRepository.findByProviderId(loginRequestDto.id())
+        .orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+
+    if (!passwordEncoder.matches(loginRequestDto.password(), user.getPassword())) {
+      throw CustomException.of(Error.INVALID_ID_PASSWORD);
+    }
+    return user.getId();
   }
 }
