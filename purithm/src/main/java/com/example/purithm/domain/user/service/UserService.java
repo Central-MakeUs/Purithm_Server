@@ -4,7 +4,7 @@ import com.example.purithm.domain.filter.entity.Membership;
 import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
 import com.example.purithm.domain.user.dto.response.AccountInfoDto;
 import com.example.purithm.domain.user.dto.response.UserInfoDto;
-import com.example.purithm.global.auth.dto.response.SocialUserInfoDto;
+import com.example.purithm.global.auth.dto.response.SignUpUserInfoDto;
 import com.example.purithm.domain.user.entity.User;
 import com.example.purithm.domain.user.repository.UserRepository;
 import com.example.purithm.global.exception.CustomException;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
   private final UserRepository userRepository;
 
-  public Long signUp(SocialUserInfoDto socialUserInfoDto) {
+  public Long signUp(SignUpUserInfoDto socialUserInfoDto) {
     User existUser = userRepository
         .findByProviderAndProviderId(socialUserInfoDto.getProvider(), socialUserInfoDto.getProviderId());
 

@@ -1,9 +1,11 @@
 package com.example.purithm.global.auth.controller;
 
 import com.example.purithm.domain.user.entity.Provider;
+import com.example.purithm.global.auth.dto.request.LoginRequestDto;
+import com.example.purithm.global.auth.dto.request.SignUpRequestDto;
 import com.example.purithm.global.auth.dto.response.KakaoUserInfoDto;
 import com.example.purithm.global.auth.dto.response.LoginDto;
-import com.example.purithm.global.auth.dto.response.SocialUserInfoDto;
+import com.example.purithm.global.auth.dto.response.SignUpUserInfoDto;
 import com.example.purithm.global.auth.jwt.JWTUtil;
 import com.example.purithm.global.config.WebClientConfig;
 import com.example.purithm.domain.user.service.UserService;
@@ -16,7 +18,9 @@ import java.io.IOException;
 import java.text.ParseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +36,28 @@ public class AuthController implements AuthControllerDocs {
   private final WebClientConfig webClientConfig;
   private final UserService userService;
   private final JWTUtil jwtUtil;
+  private final PasswordEncoder passwordEncoder;
+
+  @PostMapping("/login")
+  public SuccessResponse<LoginDto> login(LoginRequestDto loginRequestDto) {
+
+  }
+
+  @PostMapping("/signup")
+  public SuccessResponse signup(SignUpRequestDto signUpRequestDto) {
+      SignUpUserInfoDto userInfoDto = SignUpUserInfoDto.builder()
+          .profile(signUpRequestDto.profile())
+          .username(signUpRequestDto.username())
+          .provider(Provider.PURITHM)
+          .providerId(signUpRequestDto.id())
+          .email(signUpRequestDto.email())
+          .password(passwordEncoder.encode(signUpRequestDto.password()))
+          .build();
+
+      Long id = userService.signUp(userInfoDto);
+
+      return SuccessResponse.of();
+  }
 
   @GetMapping("/kakao")
   public Mono<SuccessResponse<LoginDto>> kakaoLogin(String token) {
@@ -45,7 +71,7 @@ public class AuthController implements AuthControllerDocs {
         .bodyToMono(KakaoUserInfoDto.class)
         .flatMap(res -> {
 
-          SocialUserInfoDto userInfoDto = SocialUserInfoDto.builder()
+            SignUpUserInfoDto userInfoDto = SignUpUserInfoDto.builder()
               .profile(res.getProperties().getProfile_image())
               .username(res.getProperties().getNickname())
               .provider(Provider.KAKAO)
@@ -72,7 +98,7 @@ public class AuthController implements AuthControllerDocs {
     try {
         token = token.substring(7);
         Claims claims = jwtUtil.getAppleTokenClaims(token);
-        SocialUserInfoDto userInfoDto = SocialUserInfoDto.builder()
+        SignUpUserInfoDto userInfoDto = SignUpUserInfoDto.builder()
             .profile(null)
             .username(username)
             .provider(Provider.APPLE)

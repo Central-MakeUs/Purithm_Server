@@ -47,6 +47,8 @@ public class User {
 
   private String email;
 
+  private String password;
+
   @Temporal(TemporalType.TIMESTAMP)
   @CreatedDate
   @Column(updatable = false)
