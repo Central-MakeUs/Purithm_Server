@@ -94,34 +94,12 @@ public class ReviewService {
 			reviews = reviewRepository.findAllOrderByCreatedAtDesc(os, userId);
 		}
 
-		return reviews.stream().map(review ->
-			FeedDto.builder()
-				.filterId(review.getFilter().getId())
-				.filterName(review.getFilter().getName())
-				.writer(review.getUser().getUsername())
-				.profile(review.getUser().getProfile())
-				.pureDegree(review.getPureDegree())
-				.content(review.getContent())
-				.createdAt(review.getCreatedAt())
-				.pictures(review.getPictures())
-				.id(review.getId())
-				.filterThumbnail(review.getFilter().getThumbnail()).build()).toList();
+		return changeReviewToFeedDto(reviews);
 	}
 
 	public List<FeedDto> getMyReviews(Long userId) {
 		List<Review> reviews = reviewRepository.findAllByUserId(userId);
-		return reviews.stream().map(review ->
-			FeedDto.builder()
-				.filterId(review.getFilter().getId())
-				.filterName(review.getFilter().getName())
-				.writer(review.getUser().getUsername())
-				.profile(review.getUser().getProfile())
-				.pureDegree(review.getPureDegree())
-				.content(review.getContent())
-				.createdAt(review.getCreatedAt())
-				.pictures(review.getPictures())
-				.id(review.getId())
-				.filterThumbnail(review.getFilter().getThumbnail()).build()).toList();
+		return changeReviewToFeedDto(reviews);
 	}
 
 	@Transactional
@@ -150,5 +128,21 @@ public class ReviewService {
 
 			blockedUserRepository.save(blockedUser);
 		}
+	}
+
+	private List<FeedDto> changeReviewToFeedDto(List<Review> reviews) {
+		return reviews.stream().map(review ->
+			FeedDto.builder()
+				.filterId(review.getFilter().getId())
+				.filterName(review.getFilter().getName())
+				.writer(review.getUser().getUsername())
+				.profile(review.getUser().getProfile())
+				.pureDegree(review.getPureDegree())
+				.content(review.getContent())
+				.createdAt(review.getCreatedAt())
+				.pictures(review.getPictures())
+				.id(review.getId())
+				.os(review.getFilter().getOs())
+				.filterThumbnail(review.getFilter().getThumbnail()).build()).toList();
 	}
 }

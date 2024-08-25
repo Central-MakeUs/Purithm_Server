@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Date;
 import java.util.List;
 
+import com.example.purithm.domain.filter.entity.OS;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -40,4 +42,7 @@ public class FeedDto {
 
     @Schema(description = "필터 썸네일")
     String filterThumbnail;
+
+    @Schema(description = "필터 OS 정보")
+    OS os;
 }

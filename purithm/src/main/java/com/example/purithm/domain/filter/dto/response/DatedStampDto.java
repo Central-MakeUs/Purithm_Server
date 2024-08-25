@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.example.purithm.domain.filter.entity.Filter;
 import com.example.purithm.domain.filter.entity.Membership;
+import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.photographer.entity.Photographer;
 import com.example.purithm.domain.review.entity.Review;
 
@@ -81,6 +82,8 @@ class StampDto {
 	Membership membership;
 	@Schema(description = "리뷰 id")
 	Long reviewId;
+	@Schema(description = "스탬프 관련 필터 OS 정보")
+	OS os;
 
 	public static List<StampDto> of(List<Review> result) {
 		return result.stream().map(res -> {
@@ -94,6 +97,7 @@ class StampDto {
 					.membership(filter.getMembership())
 					.createdAt(res.getCreatedAt())
 					.reviewId(res.getId())
+					.os(filter.getOs())
 					.build();
 			}
 		).toList();
