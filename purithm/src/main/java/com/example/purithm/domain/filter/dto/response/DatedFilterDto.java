@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.purithm.domain.filter.entity.Membership;
+import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.filter.repository.projection.ViewHistoryProjection;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -82,6 +83,8 @@ class FilterLogDto {
 	boolean hasReview;
 	@Schema(description = "리뷰 id", nullable = true)
 	Long reviewId;
+	@Schema(description = "열람 정보 관련 필터 OS 정보")
+	OS os;
 
 	public static List<FilterLogDto> of(List<ViewHistoryProjection> result) {
 		return result.stream().map(res ->
@@ -94,6 +97,7 @@ class FilterLogDto {
 				.createdAt(res.getCreatedAt())
 				.hasReview(res.getReviewId() != null ? true : false)
 				.reviewId(res.getReviewId())
+				.os(res.getOs())
 				.build()
 		).toList();
 	}
