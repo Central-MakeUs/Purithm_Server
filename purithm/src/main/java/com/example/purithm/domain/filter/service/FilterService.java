@@ -254,14 +254,14 @@ public class FilterService {
 		return filterRepository.getLikedFilter(userId)
 			.stream().map(result ->
 				LikedFilterDto.builder()
-					.id((Long)result[0])
-					.name((String)result[1])
-					.membership((Membership)result[2])
-					.photographerName((String)result[3])
-					.thumbnail((String)result[4])
-					.likes((Long)result[5])
-					.canAccess(checkAccess(user.getMembership(), (Membership)result[2])).build()
-			).toList();
+					.id(result.getFilterId())
+					.name(result.getFilterName())
+					.membership(result.getMembership())
+					.photographerName(result.getPhotographer())
+					.thumbnail(result.getThumbnail())
+					.likes(result.getCount())
+					.canAccess(checkAccess(user.getMembership(), result.getMembership()))
+					.os(result.getOs()).build()).toList();
 	}
 
 	private static boolean checkAccess(Membership membership, Membership filter) {

@@ -1,6 +1,7 @@
 package com.example.purithm.domain.filter.dto.response;
 
 import com.example.purithm.domain.filter.entity.Membership;
+import com.example.purithm.domain.filter.entity.OS;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -20,6 +21,9 @@ public record LikedFilterDto(
 	@Schema(description = "좋아요 수")
 	long likes,
 	@Schema(description = "필터 접근 가능 여부")
-	boolean canAccess
+	boolean canAccess,
+
+	@Schema(description = "필터 OS 정보")
+	OS os
 ) {
 }
