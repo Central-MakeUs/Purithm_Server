@@ -156,6 +156,7 @@ public class FilterService {
 			.pureDegree(Optional.ofNullable(reviewRepository.getAverage(filterId)).orElse(0))
 			.pictures(filters)
 			.liked(isLike(filterId, id))
+			.thumbnail(filter.getThumbnail())
 			.build();
 	}
 

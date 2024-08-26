@@ -20,4 +20,6 @@ public class FilterDetailDto {
     List<FilterPictureDto> pictures;
     @Schema(description = "좋아요 여부")
     boolean liked;
+    @Schema(description = "필터 썸네일")
+    String thumbnail;
 }
