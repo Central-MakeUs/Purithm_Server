@@ -79,4 +79,10 @@ public class UserController implements UserControllerDocs {
   public SuccessResponse<DatedFilterDto> getFilterViewHistory(Long id) {
     return SuccessResponse.of(filterService.getFilterViewHistory(id));
   }
+
+  @DeleteMapping
+  public SuccessResponse deleteUser(Long id) {
+    userService.deleteUser(id);
+    return SuccessResponse.of();
+  }
 }

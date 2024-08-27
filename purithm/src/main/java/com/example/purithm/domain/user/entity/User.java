@@ -69,4 +69,8 @@ public class User {
     this.username = userInfo.name();
   }
 
+  public void withdraw() {
+    this.provider = Provider.WITHDRAW;
+  }
+
 }

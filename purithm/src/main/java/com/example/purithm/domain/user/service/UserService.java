@@ -112,4 +112,11 @@ public class UserService {
     }
     return user.getId();
   }
+
+  public void deleteUser(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+    user.withdraw();
+    userRepository.save(user);
+  }
 }

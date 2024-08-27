@@ -54,4 +54,8 @@ public interface UserControllerDocs {
   @Operation(summary = "필터 열람 내역을 조회합니다.")
   @ApiResponse(responseCode = "200", description = "필터 열람 내역 조회 성공")
   public SuccessResponse<DatedFilterDto> getFilterViewHistory(@LoginInfo Long id);
+
+  @Operation(summary = "회원 탈퇴를 할 수 있다.")
+  @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공")
+  public SuccessResponse deleteUser(@LoginInfo Long id);
 }
