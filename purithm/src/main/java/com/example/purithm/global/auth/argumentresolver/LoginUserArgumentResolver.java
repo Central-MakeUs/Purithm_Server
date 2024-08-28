@@ -1,5 +1,6 @@
 package com.example.purithm.global.auth.argumentresolver;
 
+import com.example.purithm.domain.user.repository.UserRepository;
 import com.example.purithm.global.auth.annotation.LoginInfo;
 import com.example.purithm.global.exception.CustomException;
 import com.example.purithm.global.exception.Error;
@@ -18,6 +19,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 @Slf4j
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
+  private final UserRepository userRepository;
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
@@ -29,14 +31,14 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
       NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    if (authentication == null) {
+    if (authentication == null || authentication.getPrincipal().equals("anonymousUser")) {
       throw CustomException.of(Error.INVALID_TOKEN_ERROR);
     }
 
-    if (authentication.getPrincipal().equals("anonymousUser")) {
-      throw CustomException.of(Error.INVALID_TOKEN_ERROR);
+    boolean existsWithdrawnUser = userRepository.existsWithdrawnUserById((Long)authentication.getPrincipal());
+    if (existsWithdrawnUser) {
+      throw CustomException.of(Error.NOT_FOUND_ERROR);
     }
-
     return authentication.getPrincipal();
   }
 }

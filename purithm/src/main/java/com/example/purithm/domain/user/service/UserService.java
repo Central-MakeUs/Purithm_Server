@@ -1,5 +1,7 @@
 package com.example.purithm.domain.user.service;
 
+import java.time.LocalDateTime;
+
 import com.example.purithm.domain.filter.entity.Membership;
 import com.example.purithm.domain.user.dto.request.UserInfoRequestDto;
 import com.example.purithm.domain.user.dto.response.AccountInfoDto;
@@ -25,28 +27,35 @@ public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
-  public Long signUp(SignUpUserInfoDto socialUserInfoDto) {
-    if (socialUserInfoDto.getProvider().equals(Provider.PURITHM)
-        && userRepository.existsByProviderId(socialUserInfoDto.getProviderId())) {
-      throw CustomException.of(Error.NICKNAME_ALREADY_USED_ERROR);
-    }
-
+  public Long signUp(SignUpUserInfoDto signUpUserInfoDto) {
     User existUser = userRepository
-        .findByProviderAndProviderId(socialUserInfoDto.getProvider(), socialUserInfoDto.getProviderId());
+        .findByProviderAndProviderId(signUpUserInfoDto.getProvider(), signUpUserInfoDto.getProviderId());
 
     if (existUser != null) {
+      if (existUser.getProvider().equals(Provider.PURITHM)) {
+        throw CustomException.of(Error.NICKNAME_ALREADY_USED_ERROR);
+      }
       return existUser.getId();
     }
 
+    boolean isWithdrawnUser = userRepository.existsWithdrawnUser(
+        signUpUserInfoDto.getProvider(),
+        signUpUserInfoDto.getProviderId(),
+        LocalDateTime.now().minusDays(7));
+    if (isWithdrawnUser) {
+      throw CustomException.of(Error.WIRHDRAWN_USER_ERROR);
+    }
+
     User user = User.builder()
-        .profile(socialUserInfoDto.getProfile())
-        .provider(socialUserInfoDto.getProvider())
-        .providerId(socialUserInfoDto.getProviderId())
-        .username(socialUserInfoDto.getUsername())
-        .email(socialUserInfoDto.getEmail())
+        .profile(signUpUserInfoDto.getProfile())
+        .provider(signUpUserInfoDto.getProvider())
+        .providerId(signUpUserInfoDto.getProviderId())
+        .username(signUpUserInfoDto.getUsername())
+        .email(signUpUserInfoDto.getEmail())
         .terms(false)
         .membership(Membership.BASIC)
-        .password(passwordEncoder.encode(socialUserInfoDto.getPassword()))
+        .password(passwordEncoder.encode(signUpUserInfoDto.getPassword()))
+        .deletedAt(null)
         .build();
 
     User savedUser = userRepository.save(user);
@@ -104,12 +113,21 @@ public class UserService {
   }
 
   public Long getUserId(LoginRequestDto loginRequestDto) {
-    User user = userRepository.findByProviderId(loginRequestDto.id())
-        .orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+    User user = userRepository.findByProviderAndProviderId(Provider.PURITHM, loginRequestDto.id());
+    if (user == null) {
+      throw CustomException.of(Error.NOT_FOUND_ERROR);
+    }
 
     if (!passwordEncoder.matches(loginRequestDto.password(), user.getPassword())) {
       throw CustomException.of(Error.INVALID_ID_PASSWORD);
     }
     return user.getId();
+  }
+
+  public void deleteUser(Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+    user.withdraw();
+    userRepository.save(user);
   }
 }

@@ -1,5 +1,6 @@
 package com.example.purithm.domain.user.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -55,6 +56,9 @@ public class User {
   @Column(updatable = false)
   private Date createdAt;
 
+  @Column(updatable = false)
+  private LocalDateTime deletedAt;
+
   public void agreeToTerms() {
     this.terms = true;
   }
@@ -67,6 +71,10 @@ public class User {
   public void updateProfile(UserInfoRequestDto userInfo) {
     this.profile = userInfo.profile();
     this.username = userInfo.name();
+  }
+
+  public void withdraw() {
+    this.deletedAt = LocalDateTime.now();
   }
 
 }
