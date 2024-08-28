@@ -30,7 +30,8 @@ public interface FilterControllerDocs {
               {@ExampleObject(name = "최신순", summary = "최신순 정렬", value = "latest"),
                   @ExampleObject(name = "오래된순", summary = "오래된순 정렬", value = "earliest"),
                   @ExampleObject(name = "퓨어지수 높은순", summary = "퓨어지수 높은순 정렬", value = "popular"),
-                  @ExampleObject(name = "이름순", summary = "이름순 정렬", value = "name")}) String sortedBy,
+                  @ExampleObject(name = "이름순", summary = "이름순 정렬", value = "name"),
+                  @ExampleObject(name = "등급 낮은순", summary = "등급 낮은순 정렬", value = "membership")}) String sortedBy,
       @RequestParam(value = "page") int page,
       @RequestParam(value = "size") int size
   );

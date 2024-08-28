@@ -155,6 +155,26 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 		return new PageImpl<>(results, pageable, total);
 	}
 
+	@Override
+	public Page<Filter> findAllWithMembershipSorting(OS os, Tag tag, Long photographerId, Pageable pageable) {
+		BooleanBuilder builder = this.createBuilder(os, tag, photographerId);
+
+		List<Filter> results = jpaQueryFactory
+			.selectFrom(filter)
+			.where(builder)
+			.orderBy(filter.membership.asc(), filter.name.asc())
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+
+		long total = jpaQueryFactory
+			.select(filter.count())
+			.from(filter)
+			.where(builder).fetchOne();
+
+		return new PageImpl<>(results, pageable, total);
+	}
+
 	private BooleanBuilder createBuilder(OS os, Tag tag, Long photographerId) {
 		BooleanBuilder builder = new BooleanBuilder();
 
