@@ -60,8 +60,8 @@ class GroupedFilterLogDto {
 				.build();
 			groupedFilters.add(groupedFilter);
 		}
-
-		Collections.sort(groupedFilters, (s1, s2) -> s1.getDate().compareTo(s2.getDate()));
+		
+		Collections.sort(groupedFilters, (s1, s2) -> s2.getDate().compareTo(s1.getDate()));
 		return groupedFilters;
 	}
 }
