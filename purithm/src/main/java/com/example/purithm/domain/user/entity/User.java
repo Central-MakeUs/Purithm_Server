@@ -62,12 +62,11 @@ public class User {
   public void agreeToTerms() {
     this.terms = true;
   }
-  public void upgradeToPremium() {
-    this.membership = Membership.PREMIUM;
+
+  public void updateMembership(int numOfReviews) {
+    this.membership = Membership.checkMembership(numOfReviews);
   }
-  public void upgradeToPremiumPlus() {
-    this.membership = Membership.PREMIUM_PLUS;
-  }
+
   public void updateProfile(UserInfoRequestDto userInfo) {
     this.profile = userInfo.profile();
     this.username = userInfo.name();

@@ -73,13 +73,8 @@ public class ReviewService {
 
 	private void upgradeMembership(User user) {
 		int numOfReviews = reviewRepository.countAllByUser(user);
-		if (numOfReviews == 16) {
-			user.upgradeToPremiumPlus();
-			userRepository.save(user);
-		} else if (numOfReviews == 8) {
-			user.upgradeToPremium();
-			userRepository.save(user);
-		}
+		user.updateMembership(numOfReviews);
+		userRepository.save(user);
 	}
 
 	public List<FeedDto> getFeeds(OS os, String sortedBy, Long userId) {
