@@ -114,6 +114,17 @@ public class FilterService {
 					isLike(((Filter) filter[0]).getId(), id),
 					filterLikeRepository.getLikes((Filter) filter[0]),
 					checkAccess(user.getMembership(), ((Filter)filter[0]).getMembership()))).toList();
+		} else if (sortedBy.equals("name")) {
+			Page<Filter> filterByName = filterRepository.findAllWithNameSorting(os, tag, photographerId, pageRequest);
+			isLast = filterByName.isLast();
+			totalPage = filterByName.getTotalPages();
+			totalElement = filterByName.getTotalElements();
+			filterDtos = filterByName.getContent().stream().map(filter ->
+				FilterDto.of(
+					filter,
+					isLike((filter).getId(), id),
+					filterLikeRepository.getLikes(filter),
+					checkAccess(user.getMembership(), (filter).getMembership()))).toList();
 		} else {
 			pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending()); // 정렬 없을 때는 최신 순
 			Page<Filter> filterByLatest = filterRepository.findAllByOs(os, tag, photographerId, pageRequest);
