@@ -20,6 +20,7 @@ public enum Error {
 
   /* 403 */
   NOT_AGREED_TERM(HttpStatus.FORBIDDEN, 40300, "이용약관 동의가 필요합니다"),
+  WIRHDRAWN_USER_ERROR(HttpStatus.FORBIDDEN, 40301, "탈퇴 후 7일이 지나지 않은 재가입 사용자입니다."),
 
   /* 404 */
   NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, 40400, "리소스를 찾을 수 없습니다."),

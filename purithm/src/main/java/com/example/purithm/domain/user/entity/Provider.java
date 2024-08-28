@@ -6,8 +6,7 @@ import lombok.AllArgsConstructor;
 public enum Provider {
 	KAKAO("KAKAO"),
 	APPLE("APPLE"),
-	PURITHM("자체 가입"),
-	WITHDRAW("탈퇴");
+	PURITHM("자체 가입");
 
 	private final String provider;
 }
