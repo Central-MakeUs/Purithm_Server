@@ -91,7 +91,11 @@ public class AuthController implements AuthControllerDocs {
         })
         .onErrorResume(err -> {
             log.error(err.getMessage());
-          throw CustomException.of(Error.INVALID_TOKEN_ERROR);
+            if (err instanceof CustomException) {
+                return Mono.error(err);
+            } else {
+                throw CustomException.of(Error.INVALID_TOKEN_ERROR);
+            }
         });
   }
 
@@ -117,9 +121,13 @@ public class AuthController implements AuthControllerDocs {
         LoginDto loginDto = LoginDto.builder()
             .accessToken(jwtToken).build();
         return SuccessResponse.of(loginDto);
-    } catch (Exception e) {
-        log.error(e.getMessage());
-        throw CustomException.of(Error.INVALID_TOKEN_ERROR);
+    } catch (Exception err) {
+        log.error(err.getMessage());
+        if (err instanceof CustomException) {
+            throw err;
+        } else {
+            throw CustomException.of(Error.INVALID_TOKEN_ERROR);
+        }
     }
   }
 }
