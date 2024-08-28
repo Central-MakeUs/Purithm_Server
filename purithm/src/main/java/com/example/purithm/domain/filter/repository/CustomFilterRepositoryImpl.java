@@ -30,14 +30,7 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 
 	@Override
 	public Page<Filter> findAllByOs(OS os, Tag tag, Long photographerId, Pageable pageable) {
-		BooleanBuilder builder = new BooleanBuilder();
-		builder.and(filter.os.eq(os));
-		if (tag != null) {
-			builder.and(filter.tag.eq(tag));
-		}
-		if (photographerId != null) {
-			builder.and(filter.photographer.id.eq(photographerId));
-		}
+		BooleanBuilder builder = this.createBuilder(os, tag, photographerId);
 
 		List<Filter> results = jpaQueryFactory
 			.selectFrom(filter)
@@ -57,14 +50,7 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 
 	@Override
 	public Page<Object[]> findAllWithLikeSorting(OS os, Tag tag, Long photographerId, Pageable pageable) {
-		BooleanBuilder builder = new BooleanBuilder();
-		builder.and(filter.os.eq(os));
-		if (tag != null) {
-			builder.and(filter.tag.eq(tag));
-		}
-		if (photographerId != null) {
-			builder.and(filter.photographer.id.eq(photographerId));
-		}
+		BooleanBuilder builder = this.createBuilder(os, tag, photographerId);
 
 		List<Tuple> tuples = jpaQueryFactory
 			.select(filter, filterLike.count())
@@ -93,14 +79,7 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 
 	@Override
 	public Page<Object[]> findAllWithReviewSorting(OS os, Tag tag, Long photographerId, Pageable pageable) {
-		BooleanBuilder builder = new BooleanBuilder();
-		builder.and(filter.os.eq(os));
-		if (tag != null) {
-			builder.and(filter.tag.eq(tag));
-		}
-		if (photographerId != null) {
-			builder.and(filter.photographer.id.eq(photographerId));
-		}
+		BooleanBuilder builder = this.createBuilder(os, tag, photographerId);
 
 		List<Tuple> tuples = jpaQueryFactory
 			.select(filter, review.pureDegree.avg().as("avg"))
@@ -129,11 +108,7 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 
 	@Override
 	public Page<Object[]> findAllWithViewsSorting(OS os, Long photographerId, Pageable pageable) {
-		BooleanBuilder builder = new BooleanBuilder();
-		builder.and(filter.os.eq(os));
-		if (photographerId != null) {
-			builder.and(filter.photographer.id.eq(photographerId));
-		}
+		BooleanBuilder builder = this.createBuilder(os, null, photographerId);
 
 		List<Tuple> tuples = jpaQueryFactory
 			.select(filter, userFilterLog.filterId.count().as("count"))
@@ -159,4 +134,58 @@ public class CustomFilterRepositoryImpl implements CustomFilterRepository {
 
 		return new PageImpl<>(results, pageable, total);
 	}
+
+	@Override
+	public Page<Filter> findAllWithNameSorting(OS os, Tag tag, Long photographerId, Pageable pageable) {
+		BooleanBuilder builder = this.createBuilder(os, tag, photographerId);
+
+		List<Filter> results = jpaQueryFactory
+			.selectFrom(filter)
+			.where(builder)
+			.orderBy(filter.name.asc())
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+
+		long total = jpaQueryFactory
+			.select(filter.count())
+			.from(filter)
+			.where(builder).fetchOne();
+
+		return new PageImpl<>(results, pageable, total);
+	}
+
+	@Override
+	public Page<Filter> findAllWithMembershipSorting(OS os, Tag tag, Long photographerId, Pageable pageable) {
+		BooleanBuilder builder = this.createBuilder(os, tag, photographerId);
+
+		List<Filter> results = jpaQueryFactory
+			.selectFrom(filter)
+			.where(builder)
+			.orderBy(filter.membership.asc(), filter.name.asc())
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+
+		long total = jpaQueryFactory
+			.select(filter.count())
+			.from(filter)
+			.where(builder).fetchOne();
+
+		return new PageImpl<>(results, pageable, total);
+	}
+
+	private BooleanBuilder createBuilder(OS os, Tag tag, Long photographerId) {
+		BooleanBuilder builder = new BooleanBuilder();
+
+		builder.and(filter.os.eq(os));
+		if (tag != null) {
+			builder.and(filter.tag.eq(tag));
+		}
+		if (photographerId != null) {
+			builder.and(filter.photographer.id.eq(photographerId));
+		}
+		return builder;
+	}
+
 }

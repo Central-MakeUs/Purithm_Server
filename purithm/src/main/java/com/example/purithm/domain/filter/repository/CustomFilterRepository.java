@@ -12,4 +12,6 @@ public interface CustomFilterRepository {
 	Page<Object[]> findAllWithLikeSorting(OS os, Tag tag, Long photographerId, Pageable pageable);
 	Page<Object[]> findAllWithReviewSorting(OS os, Tag tag, Long photographerId, Pageable pageable);
 	Page<Object[]> findAllWithViewsSorting(OS os, Long photographerId, Pageable pageable);
+	Page<Filter> findAllWithNameSorting(OS os, Tag tag, Long photographerId, Pageable pageable);
+	Page<Filter> findAllWithMembershipSorting(OS os, Tag tag, Long photographerId, Pageable pageable);
 }
