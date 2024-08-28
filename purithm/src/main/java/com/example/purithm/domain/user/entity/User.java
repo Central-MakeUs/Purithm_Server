@@ -56,7 +56,6 @@ public class User {
   @Column(updatable = false)
   private Date createdAt;
 
-  @Column(updatable = false)
   private LocalDateTime deletedAt;
 
   public void agreeToTerms() {
