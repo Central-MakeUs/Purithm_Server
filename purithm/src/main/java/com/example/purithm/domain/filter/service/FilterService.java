@@ -288,6 +288,7 @@ public class FilterService {
 	}
 
 	private static boolean checkAccess(Membership membership, Membership filter) {
-		return filter.compareTo(membership) > 0 ? false : true;
+		//return filter.compareTo(membership) > 0 ? false : true;
+		return true;
 	}
 }
