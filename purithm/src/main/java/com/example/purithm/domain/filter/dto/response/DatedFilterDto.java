@@ -2,6 +2,7 @@ package com.example.purithm.domain.filter.dto.response;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +61,7 @@ class GroupedFilterLogDto {
 			groupedFilters.add(groupedFilter);
 		}
 
+		Collections.sort(groupedFilters, (s1, s2) -> s1.getDate().compareTo(s2.getDate()));
 		return groupedFilters;
 	}
 }
