@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.purithm.domain.feed.dto.response.FeedDto;
 import com.example.purithm.domain.filter.dto.response.DatedStampDto;
 import com.example.purithm.domain.filter.entity.Filter;
+import com.example.purithm.domain.filter.entity.Membership;
 import com.example.purithm.domain.filter.entity.OS;
 import com.example.purithm.domain.filter.repository.FilterRepository;
 import com.example.purithm.domain.review.dto.request.ReviewRequestDto;
@@ -78,6 +79,9 @@ public class ReviewService {
 	}
 
 	public List<FeedDto> getFeeds(OS os, String sortedBy, Long userId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+
 		List<Review> reviews;
 		if (sortedBy.equals("earliest")) {
 			reviews = reviewRepository.findAllOrderByCreatedAtAsc(os, userId);
@@ -89,12 +93,15 @@ public class ReviewService {
 			reviews = reviewRepository.findAllOrderByCreatedAtDesc(os, userId);
 		}
 
-		return changeReviewToFeedDto(reviews);
+		return changeReviewToFeedDto(reviews, user.getMembership());
 	}
 
 	public List<FeedDto> getMyReviews(Long userId) {
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> CustomException.of(Error.NOT_FOUND_ERROR));
+
 		List<Review> reviews = reviewRepository.findAllByUserId(userId);
-		return changeReviewToFeedDto(reviews);
+		return changeReviewToFeedDto(reviews, user.getMembership());
 	}
 
 	@Transactional
@@ -125,7 +132,7 @@ public class ReviewService {
 		}
 	}
 
-	private List<FeedDto> changeReviewToFeedDto(List<Review> reviews) {
+	private List<FeedDto> changeReviewToFeedDto(List<Review> reviews, Membership membership) {
 		return reviews.stream().map(review ->
 			FeedDto.builder()
 				.filterId(review.getFilter().getId())
@@ -138,6 +145,11 @@ public class ReviewService {
 				.pictures(review.getPictures())
 				.id(review.getId())
 				.os(review.getFilter().getOs())
-				.filterThumbnail(review.getFilter().getThumbnail()).build()).toList();
+				.filterThumbnail(review.getFilter().getThumbnail())
+				.canAccess(checkAccess(membership, review.getFilter().getMembership())).build()).toList();
+	}
+
+	private static boolean checkAccess(Membership membership, Membership filter) {
+		return filter.compareTo(membership) > 0 ? false : true;
 	}
 }

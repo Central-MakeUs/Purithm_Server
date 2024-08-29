@@ -45,4 +45,7 @@ public class FeedDto {
 
     @Schema(description = "필터 OS 정보")
     OS os;
+
+    @Schema(description = "필터 조회 가능 여부")
+    boolean canAccess;
 }
