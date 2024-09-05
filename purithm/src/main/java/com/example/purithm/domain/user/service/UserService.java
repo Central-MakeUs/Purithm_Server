@@ -64,8 +64,7 @@ public class UserService {
       User savedUser = userRepository.save(user);
       savedUserId = savedUser.getId();
     } catch (DuplicateKeyException e) {
-      log.error("try to save duplicated user");
-      throw CustomException.of(Error.INTERNAL_SERVER_ERROR);
+      throw new RuntimeException("try to save duplicated user");
     }
     return savedUserId;
   }
